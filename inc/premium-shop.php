@@ -12,9 +12,15 @@ add_action( 'wp_enqueue_scripts', 'jofme_catalog_assets', 25 );
 
 function jofme_catalog_header() {
  if ( ! is_shop() && ! is_product_taxonomy() ) { return; }
- echo '<header class="jofme-catalog-heading"><p class="jofme-eyebrow">' . esc_html__( 'The collection', 'jofme' ) . '</p><h1>' . esc_html( woocommerce_page_title( false ) ) . '</h1>';
+ $cover = jofme_category_cover_image();
+ echo '<header class="jofme-catalog-heading' . ( $cover ? ' jofme-catalog-heading--cover' : '' ) . '">' . $cover . '<div class="jofme-catalog-heading__content"><p class="jofme-eyebrow">' . esc_html__( 'The collection', 'jofme' ) . '</p><h1>' . esc_html( woocommerce_page_title( false ) ) . '</h1>';
  do_action( 'woocommerce_archive_description' );
- echo '</header>';
+ echo '</div></header>';
+}
+
+/** Category navigation and filters stay with the product results. */
+function jofme_catalog_tools() {
+ if ( ! is_shop() && ! is_product_taxonomy() ) { return; }
  $categories = get_terms( array( 'taxonomy' => 'product_cat', 'parent' => is_product_category() ? get_queried_object_id() : 0, 'hide_empty' => true ) );
  if ( ! is_wp_error( $categories ) && $categories ) {
   echo '<nav class="jofme-category-nav" aria-label="' . esc_attr__( 'Product categories', 'jofme' ) . '">';
@@ -23,7 +29,7 @@ function jofme_catalog_header() {
  }
  jofme_catalog_filters();
 }
-add_action( 'woocommerce_before_main_content', 'jofme_catalog_header', 25 );
+add_action( 'woocommerce_before_main_content', 'jofme_catalog_tools', 25 );
 
 function jofme_filter_value( $key ) {
  return isset( $_GET[ $key ] ) && is_scalar( $_GET[ $key ] ) ? sanitize_text_field( wp_unslash( $_GET[ $key ] ) ) : ''; // Public read-only catalog parameters.
@@ -60,9 +66,29 @@ function jofme_collection_query( $query ) {
 }
 add_action( 'woocommerce_product_query', 'jofme_collection_query' );
 
+/** One default view for server markup, the Customizer and visitor controls. */
+function jofme_catalog_default_view() {
+ $view = (string) get_theme_mod( 'jofme_default_view', '' );
+ if ( in_array( $view, array( '1', '2', '3', '4', 'list' ), true ) ) { return $view; }
+ return (string) max( 1, min( 4, absint( get_theme_mod( 'jofme_shop_columns', 3 ) ) ) );
+}
+
 function jofme_catalog_view() {
  echo '<div class="jofme-view" role="group" aria-label="' . esc_attr__( 'Product view', 'jofme' ) . '">';
- foreach ( array( '1' => '1 col', '2' => '2 col', '3' => '3 col', 'list' => __( 'List', 'jofme' ) ) as $view => $label ) { echo '<button type="button" data-view="' . esc_attr( $view ) . '" aria-pressed="false">' . esc_html( $label ) . '</button>'; }
+ $views = array( '1' => __( '1 column', 'jofme' ), '2' => __( '2 columns', 'jofme' ), '3' => __( '3 columns', 'jofme' ), '4' => __( '4 columns', 'jofme' ), 'list' => __( 'List view', 'jofme' ) );
+ foreach ( $views as $view => $label ) {
+  echo '<button type="button" data-view="' . esc_attr( $view ) . '" aria-pressed="false" aria-label="' . esc_attr( $label ) . '" title="' . esc_attr( $label ) . '"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true" focusable="false">';
+  if ( 'list' === $view ) {
+   echo '<path d="M4 6h16M4 12h16M4 18h16"/>';
+  } else {
+   $columns = (int) $view;
+   for ( $i = 0; $i < $columns; $i++ ) {
+    $x = 12 - ( $columns - 1 ) * 3 + $i * 6;
+    echo '<path d="M' . absint( $x ) . ' 4v16"/>';
+   }
+  }
+  echo '</svg></button>';
+ }
  echo '</div>';
 }
 add_action( 'woocommerce_before_shop_loop', 'jofme_catalog_view', 35 );
@@ -93,7 +119,8 @@ function jofme_card_actions() {
 }
 function jofme_card_description() { global $product; echo '<p class="jofme-card-description">' . esc_html( wp_trim_words( wp_strip_all_tags( $product->get_short_description() ), 28 ) ) . '</p>'; }
 add_action( 'woocommerce_after_shop_loop_item', 'jofme_card_actions', 12 );
-add_action( 'woocommerce_after_shop_loop_item_title', 'jofme_card_swatches', 15 );
+// Swatch links must follow the main product link, never be nested inside it.
+add_action( 'woocommerce_after_shop_loop_item', 'jofme_card_swatches', 7 );
 add_action( 'woocommerce_after_shop_loop_item_title', 'jofme_card_description', 16 );
 
 function jofme_quick_view() {
@@ -111,7 +138,8 @@ function jofme_preview_dialog() {
 }
 add_action( 'wp_footer', 'jofme_preview_dialog' );
 function jofme_premium_customizer( $manager ) {
- foreach ( array( 'jofme_card_layout' => array( __( 'Product card layout', 'jofme' ), 'minimal', array( 'minimal' => __( 'Minimal', 'jofme' ), 'framed' => __( 'Framed', 'jofme' ), 'editorial' => __( 'Editorial', 'jofme' ), 'gallery' => __( 'Gallery (minimal product grid)', 'jofme' ) ) ), 'jofme_default_view' => array( __( 'Default catalog view', 'jofme' ), '3', array( '1' => '1 col', '2' => '2 col', '3' => '3 col', 'list' => __( 'List', 'jofme' ) ) ) ) as $key => $config ) {
+ $manager->remove_control( 'jofme_shop_columns' );
+ foreach ( array( 'jofme_card_layout' => array( __( 'Product card layout', 'jofme' ), 'minimal', array( 'minimal' => __( 'Minimal', 'jofme' ), 'framed' => __( 'Framed', 'jofme' ), 'editorial' => __( 'Editorial', 'jofme' ), 'gallery' => __( 'Gallery (minimal product grid)', 'jofme' ) ) ), 'jofme_default_view' => array( __( 'Default catalog view', 'jofme' ), jofme_catalog_default_view(), array( '1' => '1 col', '2' => '2 col', '3' => '3 col', '4' => '4 col', 'list' => __( 'List', 'jofme' ) ) ) ) as $key => $config ) {
   $manager->add_setting( $key, array( 'default' => $config[1], 'sanitize_callback' => 'jofme_sanitize_select' ) );
   $manager->add_control( $key, array( 'label' => $config[0], 'section' => 'jofme_shop', 'type' => 'select', 'choices' => $config[2] ) );
  }
@@ -119,9 +147,9 @@ function jofme_premium_customizer( $manager ) {
 add_action( 'customize_register', 'jofme_premium_customizer', 20 );
 function jofme_premium_classes( $classes ) {
  $layout = get_theme_mod( 'jofme_card_layout', 'minimal' );
- $view = get_theme_mod( 'jofme_default_view', '3' );
+ $view = jofme_catalog_default_view();
  $classes[] = 'jofme-card-' . ( in_array( $layout, array( 'minimal', 'framed', 'editorial', 'gallery' ), true ) ? $layout : 'minimal' );
- $classes[] = 'jofme-default-view-' . ( in_array( (string) $view, array( '1', '2', '3', 'list' ), true ) ? $view : '3' );
+ $classes[] = 'jofme-default-view-' . ( in_array( (string) $view, array( '1', '2', '3', '4', 'list' ), true ) ? $view : '3' );
  return $classes;
 }
 add_filter( 'body_class', 'jofme_premium_classes' );

@@ -10,3 +10,20 @@
 #jofme-preview-dialog{width:min(920px,calc(100% - 2rem));max-height:90dvh;overflow:auto;border:1px solid var(--jofme-color-border);padding:3rem;background:var(--jofme-color-bg);color:var(--jofme-color-text)}#jofme-preview-dialog::backdrop{background:#17131099;backdrop-filter:blur(4px)}.jofme-preview-close{position:absolute;inset-inline-end:12px;top:8px;background:none;border:0;font-size:30px;cursor:pointer;color:inherit}.jofme-preview-grid{display:grid;grid-template-columns:1fr 1fr;gap:2.5rem;align-items:center}.jofme-preview-grid img{width:100%;height:auto;max-height:65vh;object-fit:contain}.jofme-preview-grid h2{font-family:var(--jofme-font-display);font-size:2.5rem;font-weight:400;line-height:1.15}.jofme-preview-grid .price{font-size:1.15rem;margin-bottom:1rem}.jofme-preview-grid p{font-size:14px}.jofme-preview-open{overflow:hidden}.jofme-view button:focus-visible,.jofme-card-actions :focus-visible,.jofme-swatch:focus-visible{outline:2px solid var(--jofme-color-accent);outline-offset:3px}
 @media(max-width:767px){.woocommerce .jofme-shop[data-view="3"] ul.products{grid-template-columns:repeat(2,minmax(0,1fr))!important}.jofme-preview-grid{grid-template-columns:1fr;gap:1rem}#jofme-preview-dialog{padding:2.5rem 1.25rem}.jofme-preview-grid img{max-height:35vh}.jofme-preview-grid h2{font-size:2rem}.woocommerce .jofme-shop[data-view] ul.products{gap:1.5rem .75rem}.jofme-card-actions{inset-inline-end:6px;top:6px}.jofme-card-actions button,.jofme-card-actions a{width:34px;height:34px}.woocommerce .jofme-shop[data-view="list"] ul.products li.product{padding-inline-start:calc(34% + 1rem)!important}.woocommerce .jofme-shop[data-view="list"] ul.products li.product .woocommerce-loop-product__link img{width:34%;height:180px}.woocommerce .jofme-shop[data-view="list"] .jofme-card-actions{position:static;flex-direction:row;margin-top:.75rem}.woocommerce .jofme-shop[data-view="list"] .jofme-card-description{padding:0}}
 @media(prefers-reduced-motion:reduce){.woocommerce ul.products li.product img{transition:none}}
+
+/* Column controls are drawings, independent of the selected site font. */
+.jofme-view button{display:inline-flex;align-items:center;justify-content:center;width:40px;height:40px;padding:0}
+.jofme-view button svg{display:block;flex-shrink:0;pointer-events:none}
+.woocommerce .jofme-shop[data-view="4"] ul.products{grid-template-columns:repeat(4,minmax(0,1fr))!important}
+@media(max-width:767px){.woocommerce .jofme-shop[data-view="4"] ul.products{grid-template-columns:repeat(2,minmax(0,1fr))!important}}
+
+/* Catalog heading occupies the complete first row above both shop columns. */
+.jofme-layout--shop>.jofme-catalog-heading{grid-column:1/-1;grid-row:1;max-width:none;margin:0}
+@media(min-width:960px){body.jofme-sidebar-left .jofme-layout--shop:has(>.jofme-catalog-heading)>.content-area,body.jofme-sidebar-left .jofme-layout--shop:has(>.jofme-catalog-heading)>.widget-area{grid-row:2}}
+
+/* A category's optional cover belongs to the full-width catalog heading. */
+.jofme-catalog-heading--cover{position:relative;overflow:hidden;display:flex;align-items:center;min-height:clamp(240px,28vw,420px);padding:clamp(2rem,5vw,5rem);background:#2a2623;color:#fff}
+.jofme-catalog-heading--cover .jofme-catalog-cover{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.jofme-catalog-heading--cover::after{content:'';position:absolute;inset:0;background:rgba(0,0,0,.55);pointer-events:none}
+.jofme-catalog-heading--cover .jofme-catalog-heading__content{position:relative;z-index:1;width:100%}
+.jofme-catalog-heading--cover h1,.jofme-catalog-heading--cover .jofme-eyebrow,.jofme-catalog-heading--cover .term-description{color:inherit}

@@ -3,7 +3,7 @@ Contributors: jofme
 Requires at least: 6.4
 Tested up to: 6.8
 Requires PHP: 7.4
-Stable tag: 1.4.0
+Stable tag: 1.5.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -30,6 +30,12 @@ strings / wpml-config.xml.
 * WPML or Polylang
 
 == Changelog ==
+
+= 1.5.0 =
+* Per-category covers and full-width catalog heading.
+* Icon view controls with 4-column support.
+* Gallery intro boundary and native zoom fixes.
+* Consistent loop columns, centered header and swatch link structure.
 
 = 1.4.0 =
 * Fix hover image paint order after the opacity transition ends.

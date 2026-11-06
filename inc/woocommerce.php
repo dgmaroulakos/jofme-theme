@@ -24,9 +24,9 @@ function jofme_woocommerce_setup() {
 			'default_rows'    => 4,
 			'min_rows'        => 1,
 			'max_rows'        => 8,
-			'default_columns' => 4,
-			'min_columns'     => 2,
-			'max_columns'     => 5,
+			'default_columns' => 3,
+			'min_columns'     => 1,
+			'max_columns'     => 4,
 		),
 	) );
 
@@ -55,7 +55,7 @@ add_action( 'wp_enqueue_scripts', 'jofme_woocommerce_scripts' );
  * @return int
  */
 function jofme_products_per_page() {
-	return (int) get_theme_mod( 'jofme_products_per_page', 12 );
+	return max( 4, min( 48, (int) get_theme_mod( 'jofme_products_per_page', 12 ) ) );
 }
 add_filter( 'loop_shop_per_page', 'jofme_products_per_page' );
 
@@ -65,7 +65,8 @@ add_filter( 'loop_shop_per_page', 'jofme_products_per_page' );
  * @return int
  */
 function jofme_loop_columns() {
-	return (int) get_theme_mod( 'jofme_shop_columns', 4 );
+	$view = jofme_catalog_default_view();
+	return 'list' === $view ? 1 : (int) $view;
 }
 add_filter( 'loop_shop_columns', 'jofme_loop_columns' );
 

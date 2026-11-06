@@ -15,6 +15,8 @@ do_action( 'jofme_shop_layout_open' );
 
 <div class="jofme-container jofme-layout jofme-layout--shop">
 	<?php
+	// The catalog title spans the product results and sidebar.
+	jofme_catalog_header();
 	do_action( 'woocommerce_before_main_content' );
 
 	if ( woocommerce_product_loop() ) {

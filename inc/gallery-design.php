@@ -3,6 +3,8 @@
 defined( 'ABSPATH' ) || exit;
 if ( ! class_exists( 'WooCommerce' ) ) { return; }
 function jofme_gallery_design_customize( $manager ) {
+ $position_control = $manager->get_control( 'jofme_product_gallery_layout' );
+ if ( $position_control ) { $position_control->description = __( 'Applies to Classic design. Gallery design uses its own image and purchase-panel layout.', 'jofme' ); }
  $manager->add_setting( 'jofme_product_page_layout', array( 'default' => 'classic', 'sanitize_callback' => 'jofme_sanitize_select' ) );
  $manager->add_control( 'jofme_product_page_layout', array( 'label' => __( 'Product pages — Design', 'jofme' ), 'section' => 'jofme_layout', 'type' => 'select', 'choices' => array( 'classic' => __( 'Classic', 'jofme' ), 'gallery' => __( 'Gallery (large image & minimal purchase panel)', 'jofme' ) ) ) );
 }
@@ -43,6 +45,8 @@ function jofme_gallery_details() {
 }
 function jofme_gallery_single_hooks() {
  if ( ! jofme_is_gallery_product() ) { return; }
+ add_action( 'woocommerce_before_single_product_summary', 'jofme_gallery_intro_open', 0 );
+ add_action( 'woocommerce_after_single_product_summary', 'jofme_gallery_intro_close', 0 );
  remove_action( 'woocommerce_single_product_summary', 'woocommerce_template_single_meta', 40 );
  add_action( 'woocommerce_single_product_summary', 'jofme_gallery_summary_category', 4 );
  add_action( 'woocommerce_single_product_summary', 'jofme_gallery_details', 45 );
@@ -51,6 +55,8 @@ function jofme_gallery_single_hooks() {
  add_action( 'woocommerce_after_quantity_input_field', 'jofme_quantity_plus' );
 }
 add_action( 'wp', 'jofme_gallery_single_hooks' );
+function jofme_gallery_intro_open() { echo '<div class="jofme-product-intro">'; }
+function jofme_gallery_intro_close() { echo '</div>'; }
 function jofme_gallery_product_tabs( $tabs ) { unset( $tabs['description'] ); return $tabs; }
 function jofme_quantity_minus() { echo '<button type="button" class="jofme-quantity-step" data-step="-1" aria-label="' . esc_attr__( 'Decrease quantity', 'jofme' ) . '">−</button>'; }
 function jofme_quantity_plus() { echo '<button type="button" class="jofme-quantity-step" data-step="1" aria-label="' . esc_attr__( 'Increase quantity', 'jofme' ) . '">+</button>'; }

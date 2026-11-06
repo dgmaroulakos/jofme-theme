@@ -2,9 +2,9 @@
  'use strict';
  const catalog = document.querySelector('.jofme-shop');
  const controls = document.querySelectorAll('.jofme-view button');
- const allowed = ['1', '2', '3', 'list'];
+ const allowed = ['1', '2', '3', '4', 'list'];
  function setView(view) {
-  if (!allowed.includes(view) || !catalog) return;
+  if (!allowed.includes(view) || !catalog || !controls.length) return;
   catalog.dataset.view = view;
   controls.forEach(button => button.setAttribute('aria-pressed', String(button.dataset.view === view)));
  }

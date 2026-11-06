@@ -9,7 +9,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-define( 'JOFME_VERSION', '1.4.0' );
+define( 'JOFME_VERSION', '1.5.0' );
 define( 'JOFME_DIR', get_template_directory() );
 define( 'JOFME_URI', get_template_directory_uri() );
 
@@ -23,6 +23,7 @@ $jofme_includes = array(
 	'/inc/layout.php',
 	'/inc/woocommerce.php',
 	'/inc/premium-shop.php',
+	'/inc/category-cover.php',
 	'/inc/product-hover.php',
 	'/inc/gallery-design.php',
 	'/inc/elementor.php',

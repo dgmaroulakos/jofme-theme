@@ -8,3 +8,6 @@
 @media(max-width:899px){.jofme-utility-bar{display:none}.site-header--editorial .site-header__inner{grid-template-columns:minmax(0,1fr) auto;min-height:72px;gap:1rem}.site-header--editorial .site-title{font-size:1.65rem}.site-header--editorial .site-header__end{gap:.5rem}.site-header--editorial .site-header__start{gap:1rem}.jofme-transparent-header .site-header--editorial{margin-bottom:-72px}.site-header--editorial .custom-logo-link img{max-width:160px;max-height:42px}}
 
 .jofme-mobile-close:focus-visible{outline:2px solid var(--jofme-color-accent);outline-offset:4px}
+
+body.header-editorial{--jofme-header-h:88px}
+@media(max-width:899px){body.header-editorial{--jofme-header-h:72px}}

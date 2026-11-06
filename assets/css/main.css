@@ -133,7 +133,8 @@ p {
 }
 
 .site-header.is-stuck {
-	background: rgba(250, 248, 245, 0.94);
+	background: var(--jofme-color-bg);
+	background: color-mix(in srgb, var(--jofme-color-bg) 94%, transparent);
 	backdrop-filter: blur(10px);
 	border-bottom-color: var(--jofme-color-border);
 }
@@ -147,7 +148,7 @@ p {
 }
 
 .site-header--centered .site-header__inner {
-	grid-template-columns: 1fr auto 1fr;
+	grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
 }
 
 .site-header__start,
@@ -629,3 +630,12 @@ body.elementor-template-canvas #page {
 .jofme-front-page .entry-content > .elementor {
 	max-width: none;
 }
+
+/* Keep all header variants on one row and preserve the centered-logo layout. */
+.site-header__start,.site-branding{min-width:0}
+.site-title{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.site-header--centered .main-navigation--split{grid-column:1;grid-row:1}
+.site-header--centered .site-branding--center{grid-column:2;grid-row:1;max-width:min(38vw,280px)}
+.site-header--centered .site-header__end{grid-column:3;grid-row:1}
+@media(min-width:900px){.site-header--centered .site-header__start{display:none}}
+@media(max-width:899px){.site-header:not(.site-header--centered) .site-header__inner{grid-template-columns:minmax(0,1fr) auto}.site-header--centered .site-header__start{grid-column:1;grid-row:1}.site-title{font-size:clamp(1.15rem,4vw,1.65rem)}}

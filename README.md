@@ -1,6 +1,6 @@
 # Jofme Premium
 
-WordPress/WooCommerce theme, version 1.4.0. Theme files live at the repository root.
+WordPress/WooCommerce theme, version 1.5.0. Theme files live at the repository root.
 
 ## Εγκατάσταση
 
@@ -67,3 +67,27 @@ WordPress/WooCommerce theme, version 1.4.0. Theme files live at the repository r
 Τα υπάρχοντα επιλεγμένα layouts παραμένουν. Για εμφάνιση αντίστοιχη των references, επιλέξτε Gallery στα δύο layouts και Aeonik Pro Light στη Typography. Η διόρθωση hover εφαρμόζεται σε όλα τα card layouts.
 
 Έλεγχοι: visual regression που ελέγχει το πραγματικό χρώμα του εμφανιζόμενου image μετά το fade (grid/list), πραγματικό variable product με αλλαγή παραλλαγής/εικόνας/τιμής και ποσότητας, native add to cart, CDN font και responsive widths 390/768/1024/1440px.
+
+## Covers, view controls και διορθώσεις layouts (1.5.0)
+
+Διαθέσιμα από την έκδοση 1.5.0.
+
+- Επιλογέας στηλών με SVG κάθετες γραμμές για 1/2/3/4 στήλες και εικονίδιο λίστας. Η προβολή 4 στηλών διατηρείται στον browser και προσαρμόζεται σε 2 στο κινητό.
+- Η επικεφαλίδα του καταλόγου εκτείνεται πάνω από το grid και το sidebar, αριστερό ή δεξί.
+- Προϊόντα → Κατηγορίες → Προσθήκη/Επεξεργασία → **Category cover**: ξεχωριστή εικόνα cover πίσω από την επικεφαλίδα, με native Media Library, preview και αφαίρεση. Δεν αντικαθιστά το category thumbnail. Χωρίς cover παραμένει απλή επικεφαλίδα.
+
+### Review συνοχής layouts
+
+Διορθώθηκαν συγκρούσεις που εντοπίστηκαν σε πραγματική σελίδα προϊόντος και σε local WordPress/WooCommerce:
+
+- Το αποθηκευμένο grid/list view εφαρμόζεται μόνο στα archives με επιλογέα, όχι στα related/upsell προϊόντα ή στο single product.
+- Η Gallery gallery και το purchase panel έχουν κοινό intro container, ώστε το sticky image να μη συνεχίζει πάνω από tabs και related products.
+- Οι κανόνες διαστάσεων/padding της Gallery εφαρμόζονται στις φωτογραφίες των slides, όχι στο native zoom overlay.
+- Τα swatch links βρίσκονται έξω από το κύριο product link, αποφεύγοντας άκυρα nested anchors.
+- Οι βασικές στήλες προκύπτουν από τα WooCommerce loop classes. Related products και shortcodes διατηρούν δική τους διάταξη και responsive συμπεριφορά.
+- Υπάρχει μία ρύθμιση Default catalog view στα Jofme Options. Οι παλιές τιμές στηλών διαβάζονται ως fallback, χωρίς δεύτερο αντικρουόμενο control.
+- Διορθώθηκαν οι grid θέσεις και το κεντράρισμα του Centered header, καθώς και η συμπεριφορά μεγάλου site title στο κινητό.
+- Το sticky header και τα Gallery controls χρησιμοποιούν τα κοινά color tokens. Το ύψος του Editorial header δηλώνεται στο κοινό header-height token.
+- Το announcement text ανανεώνει σωστά το preview του Customizer.
+
+Έλεγχοι: 3 headers σε desktop/mobile, 4 card layouts × 3 sidebar positions × desktop/mobile, Classic galleries left/right/stacked και Gallery product design, όριο sticky στο scroll, native zoom, cover heading, 4-col/list controls, swatches και μηδενικά JavaScript errors στον συνδυαστικό έλεγχο. Το cover ελέγχθηκε και με το πραγματικό WordPress media modal, ενώ η αποθήκευση/αφαίρεση ελέγχθηκε με έγκυρο και άκυρο nonce.

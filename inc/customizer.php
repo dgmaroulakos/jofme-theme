@@ -73,7 +73,7 @@ function jofme_customize_register( $wp_customize ) {
 		array(
 			'default'           => '',
 			'sanitize_callback' => 'sanitize_text_field',
-			'transport'         => 'postMessage',
+			'transport'         => 'refresh',
 		)
 	);
 	$wp_customize->add_control(
