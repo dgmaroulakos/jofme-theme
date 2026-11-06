@@ -30,9 +30,11 @@ jobs:
           node --check assets/js/gallery-design.js
           node --check assets/js/swatches.js
           node --check assets/js/swatches-admin.js
+          node --check assets/js/bestsellers-tabs.js
           node scripts/verify-catalog.cjs
           node scripts/verify-hover.cjs
           node scripts/verify-gallery.cjs
+          node scripts/verify-bestsellers.cjs
       - name: Match release tag to theme versions
         if: startsWith(github.ref, 'refs/tags/')
         env:
