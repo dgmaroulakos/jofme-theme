@@ -1,0 +1,18 @@
+<wpml-config>
+	<custom-types>
+		<custom-type translate="1">product</custom-type>
+	</custom-types>
+	<taxonomies>
+		<taxonomy translate="1">product_cat</taxonomy>
+		<taxonomy translate="1">product_tag</taxonomy>
+	</taxonomies>
+	<admin-texts>
+		<key name="theme_mods_jofme">
+			<key name="jofme_announcement_text" />
+			<key name="jofme_footer_copyright" />
+		</key>
+	</admin-texts>
+	<shortcodes>
+		<!-- Reserved for future Jofme shortcodes -->
+	</shortcodes>
+</wpml-config>

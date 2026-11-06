@@ -1,0 +1,55 @@
+name: Validate and release theme
+on:
+  push:
+    branches: [main]
+    tags: ['v*']
+  pull_request:
+permissions:
+  contents: read
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: PHP syntax
+        run: find . -name '*.php' -not -path './.git/*' -print0 | xargs -0 -n1 php -l
+      - name: JavaScript syntax
+        run: |
+          node --check assets/js/main.js
+          node --check assets/js/premium-shop.js
+          node scripts/verify-catalog.cjs
+      - name: Match release tag to theme versions
+        if: startsWith(github.ref, 'refs/tags/')
+        env:
+          RELEASE_TAG: ${{ github.ref_name }}
+        run: |
+          python3 - <<'PY'
+          import os, re
+          from pathlib import Path
+          version = os.environ['RELEASE_TAG'].removeprefix('v')
+          assert re.fullmatch(r'\d+\.\d+\.\d+', version), 'Use vX.Y.Z'
+          assert re.search(r'^Version:\s*' + re.escape(version) + r'\s*$', Path('style.css').read_text(), re.M), 'style.css version mismatch'
+          assert "define( 'JOFME_VERSION', '" + version + "' );" in Path('functions.php').read_text(), 'functions.php version mismatch'
+          PY
+      - run: python3 scripts/package.py
+      - uses: actions/upload-artifact@v4
+        with:
+          name: jofme-theme
+          path: dist/jofme.zip
+  release:
+    if: startsWith(github.ref, 'refs/tags/')
+    needs: validate
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: jofme-theme
+          path: dist
+      - name: Publish installable release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+          RELEASE_TAG: ${{ github.ref_name }}
+        run: gh release create "$RELEASE_TAG" dist/jofme.zip --title "Jofme $RELEASE_TAG" --generate-notes --verify-tag
