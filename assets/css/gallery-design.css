@@ -7,7 +7,7 @@ body.jofme-card-gallery.woocommerce ul.products li.product .woocommerce-loop-pro
 body.jofme-card-gallery.woocommerce ul.products li.product .price{font-size:11px;letter-spacing:.04em;color:inherit;margin:0}
 .jofme-card-category{display:block;font-size:10px;line-height:1.5;text-transform:uppercase;text-decoration:underline;text-underline-offset:3px;letter-spacing:.02em}
 body.jofme-card-gallery.woocommerce ul.products li.product>.button,body.jofme-card-gallery.woocommerce ul.products li.product>.added_to_cart{display:none}
-body.jofme-card-gallery .jofme-swatches{justify-content:flex-start}body.jofme-card-gallery .jofme-shop[data-view] ul.products{gap:1px}
+body.jofme-card-gallery .jofme-shop[data-view] ul.products{gap:1px}
 @media(hover:hover) and (pointer:fine){body.jofme-card-gallery .jofme-card-actions{opacity:0;transform:translateY(4px);pointer-events:none;transition:opacity .2s,transform .2s}body.jofme-card-gallery li.product:hover .jofme-card-actions,body.jofme-card-gallery li.product:focus-within .jofme-card-actions{opacity:1;transform:none;pointer-events:auto}}
 body.jofme-card-gallery.woocommerce .jofme-shop[data-view="list"] ul.products{gap:1rem}body.jofme-card-gallery.woocommerce .jofme-shop[data-view="list"] ul.products li.product{padding-top:24px!important}body.jofme-card-gallery.woocommerce .jofme-shop[data-view="list"] ul.products li.product .jofme-card-media{margin:0;width:30%}body.jofme-card-gallery.woocommerce .jofme-shop[data-view="list"] ul.products li.product .woocommerce-loop-product__link>img{margin:0;width:30%}
 /* Native WooCommerce gallery and forms remain responsible for image/variation changes. */

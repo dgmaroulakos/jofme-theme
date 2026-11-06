@@ -43,7 +43,7 @@ function jofme_catalog_filters() {
  if ( is_product_taxonomy() && ! get_option( 'permalink_structure' ) ) { $term = get_queried_object(); echo '<input type="hidden" name="' . esc_attr( $term->taxonomy ) . '" value="' . esc_attr( $term->slug ) . '">'; }
  foreach ( wc_get_attribute_taxonomies() as $attribute ) {
   $taxonomy = wc_attribute_taxonomy_name( $attribute->attribute_name );
-  jofme_filter_select( $taxonomy, 'filter_' . $attribute->attribute_name, $attribute->attribute_label );
+  jofme_filter_attribute_control( $taxonomy, 'filter_' . $attribute->attribute_name, $attribute->attribute_label );
  }
  jofme_filter_select( 'product_tag', 'jofme_collection', __( 'Collection', 'jofme' ) );
  echo '<fieldset><legend>' . esc_html__( 'Price range', 'jofme' ) . ' (' . esc_html( get_woocommerce_currency_symbol() ) . ')</legend>';
@@ -93,34 +93,12 @@ function jofme_catalog_view() {
 }
 add_action( 'woocommerce_before_shop_loop', 'jofme_catalog_view', 35 );
 
-function jofme_card_swatches() {
- global $product;
- if ( ! $product ) { return; }
- $colors = apply_filters( 'jofme_swatch_colors', array( 'gold' => '#c6a15b', 'silver' => '#c5c8cc', 'rose-gold' => '#c68f83', 'black' => '#222222', 'white' => '#ffffff', 'red' => '#9c2534', 'blue' => '#355575', 'green' => '#476653', 'beige' => '#d5c5aa' ) );
- foreach ( $product->get_attributes() as $attribute ) {
-  if ( ! $attribute->is_taxonomy() ) { continue; }
-  $terms = wc_get_product_terms( $product->get_id(), $attribute->get_name() );
-  if ( is_wp_error( $terms ) || ! $terms ) { continue; }
-  $is_color = (bool) preg_match( '/color|colour|χρωμ|finish|metal/', $attribute->get_name() );
-  if ( ! $is_color ) { continue; }
-  echo '<div class="jofme-swatches" aria-label="' . esc_attr( wc_attribute_label( $attribute->get_name() ) ) . '">';
-  foreach ( $terms as $term ) {
-   $color = sanitize_hex_color( get_term_meta( $term->term_id, 'jofme_swatch_color', true ) );
-   if ( ! $color && isset( $colors[ $term->slug ] ) ) { $color = sanitize_hex_color( $colors[ $term->slug ] ); }
-   $url = add_query_arg( 'attribute_' . $attribute->get_name(), $term->slug, get_permalink( $product->get_id() ) );
-   echo '<a class="jofme-swatch' . ( $color ? ' is-color' : '' ) . '" href="' . esc_url( $url ) . '" title="' . esc_attr( $term->name ) . '"' . ( $color ? ' style="--swatch:' . esc_attr( $color ) . '"' : '' ) . '><span' . ( $color ? ' class="screen-reader-text"' : '' ) . '>' . esc_html( $term->name ) . '</span></a>';
-  }
-  echo '</div>';
- }
-}
 function jofme_card_actions() {
  global $product;
  echo '<div class="jofme-card-actions"><button type="button" class="jofme-preview" data-product="' . absint( $product->get_id() ) . '" aria-label="' . esc_attr__( 'Quick view', 'jofme' ) . '"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true"><path d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7S2 12 2 12Z"/><circle cx="12" cy="12" r="3"/></svg></button><a href="' . esc_url( get_permalink( $product->get_id() ) ) . '" aria-label="' . esc_attr__( 'Product details', 'jofme' ) . '"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true"><path d="M5 19 19 5M5 5h14v14"/></svg></a></div>';
 }
 function jofme_card_description() { global $product; echo '<p class="jofme-card-description">' . esc_html( wp_trim_words( wp_strip_all_tags( $product->get_short_description() ), 28 ) ) . '</p>'; }
 add_action( 'woocommerce_after_shop_loop_item', 'jofme_card_actions', 12 );
-// Swatch links must follow the main product link, never be nested inside it.
-add_action( 'woocommerce_after_shop_loop_item', 'jofme_card_swatches', 7 );
 add_action( 'woocommerce_after_shop_loop_item_title', 'jofme_card_description', 16 );
 
 function jofme_quick_view() {
@@ -153,25 +131,3 @@ function jofme_premium_classes( $classes ) {
  return $classes;
 }
 add_filter( 'body_class', 'jofme_premium_classes' );
-
-/** Attribute term color editor; WooCommerce secures the surrounding term form. */
-function jofme_swatch_term_field( $term = null ) {
- $value = $term instanceof WP_Term ? get_term_meta( $term->term_id, 'jofme_swatch_color', true ) : '';
- $nonce = wp_nonce_field( 'jofme_save_swatch', 'jofme_swatch_nonce', true, false );
- $input = $nonce . '<label for="jofme-swatch-color">' . esc_html__( 'Swatch color (hex)', 'jofme' ) . '</label><input id="jofme-swatch-color" name="jofme_swatch_color" type="text" placeholder="#c6a15b" value="' . esc_attr( $value ) . '"><p>' . esc_html__( 'For color, finish and metal attributes. Leave blank to use the default color or a text label.', 'jofme' ) . '</p>';
- if ( $term instanceof WP_Term ) { echo '<tr class="form-field"><th>' . esc_html__( 'Swatch', 'jofme' ) . '</th><td>' . $input . '</td></tr>'; } else { echo '<div class="form-field">' . $input . '</div>'; }
-}
-function jofme_save_swatch( $term_id ) {
- if ( ! current_user_can( 'manage_product_terms' ) || ! isset( $_POST['jofme_swatch_nonce'], $_POST['jofme_swatch_color'] ) || ! is_scalar( $_POST['jofme_swatch_nonce'] ) || ! is_scalar( $_POST['jofme_swatch_color'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['jofme_swatch_nonce'] ) ), 'jofme_save_swatch' ) ) { return; }
- update_term_meta( $term_id, 'jofme_swatch_color', sanitize_hex_color( wp_unslash( $_POST['jofme_swatch_color'] ) ) ?: '' );
-}
-function jofme_register_swatch_fields() {
- foreach ( wc_get_attribute_taxonomies() as $attribute ) {
-  $taxonomy = wc_attribute_taxonomy_name( $attribute->attribute_name );
-  add_action( $taxonomy . '_add_form_fields', 'jofme_swatch_term_field' );
-  add_action( $taxonomy . '_edit_form_fields', 'jofme_swatch_term_field' );
-  add_action( 'created_' . $taxonomy, 'jofme_save_swatch' );
-  add_action( 'edited_' . $taxonomy, 'jofme_save_swatch' );
- }
-}
-add_action( 'init', 'jofme_register_swatch_fields', 20 );

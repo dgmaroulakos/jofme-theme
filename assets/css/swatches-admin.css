@@ -1,0 +1,3 @@
+.jofme-swatch-picker{display:flex;align-items:center;gap:.75rem;max-width:280px}
+.jofme-swatch-picker input[type=color]{width:42px;height:36px;padding:0;border:1px solid #8c8f94;background:#fff;cursor:pointer}
+.jofme-swatch-picker input[type=text]{flex:1;min-width:0}

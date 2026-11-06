@@ -3,7 +3,7 @@ Contributors: jofme
 Requires at least: 6.4
 Tested up to: 6.8
 Requires PHP: 7.4
-Stable tag: 1.5.0
+Stable tag: 1.6.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -30,6 +30,11 @@ strings / wpml-config.xml.
 * WPML or Polylang
 
 == Changelog ==
+
+= 1.6.0 =
+* Attribute-level “Display as color swatches” option.
+* Term color picker for swatch hex values.
+* Color swatches on product cards, catalog filters and variation forms.
 
 = 1.5.0 =
 * Per-category covers and full-width catalog heading.

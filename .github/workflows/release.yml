@@ -20,12 +20,15 @@ jobs:
           php .tests/editorial.php
           php .tests/header.php
           php .tests/typography.php
+          php .tests/swatches.php
       - name: JavaScript syntax
         run: |
           node --check assets/js/main.js
           node --check assets/js/premium-shop.js
           node --check assets/js/product-hover.js
           node --check assets/js/gallery-design.js
+          node --check assets/js/swatches.js
+          node --check assets/js/swatches-admin.js
           node scripts/verify-catalog.cjs
           node scripts/verify-hover.cjs
       - name: Match release tag to theme versions

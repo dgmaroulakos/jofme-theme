@@ -1,6 +1,6 @@
 # Jofme Premium
 
-WordPress/WooCommerce theme, version 1.5.0. Theme files live at the repository root.
+WordPress/WooCommerce theme, version 1.6.0. Theme files live at the repository root.
 
 ## Εγκατάσταση
 
@@ -24,7 +24,7 @@ WordPress/WooCommerce theme, version 1.5.0. Theme files live at the repository r
 - Εμφάνιση → Προσαρμογή → Jofme Options → Shop: Minimal, Framed ή Editorial κάρτα και αρχική προβολή 1/2/3 στηλών ή λίστας.
 - Η επιλογή προβολής του επισκέπτη αποθηκεύεται στον browser. Σε μικρές οθόνες οι 3 στήλες γίνονται 2.
 - Attributes: χρησιμοποιήστε τα καθολικά attributes του WooCommerce. Τα φίλτρα εφαρμόζονται με κανονικό GET request και ανανέωση σελίδας, μαζί με τιμή και collection από product tags.
-- Για swatches χρησιμοποιήστε attribute slug που περιέχει `color`, `colour`, `finish`, `metal` ή `χρωμ`. Προϊόντα → Χαρακτηριστικά → Διαμόρφωση όρων: ορίστε “Swatch color (hex)”. Τα swatches οδηγούν στη σελίδα προϊόντος με επιλεγμένο attribute. Άγνωστο χρώμα εμφανίζεται ως ετικέτα κειμένου.
+- **Color swatches:** Προϊόντα → Χαρακτηριστικά → επεξεργασία attribute → ενεργοποιήστε **Display as color swatches**. Στη Διαμόρφωση όρων ορίστε χρώμα με color picker ή hex. Εμφανίζονται στις κάρτες προϊόντων, ως κύκλοι στα φίλτρα καταλόγου και ως επιλογές παραλλαγής στη σελίδα προϊόντος. Χωρίς ρητή ρύθμιση, attributes με slug `color` / `colour` / `finish` / `metal` / `χρωμ` συνεχίζουν να λειτουργούν ως swatches. Άγνωστο χρώμα εμφανίζεται ως ετικέτα κειμένου.
 - Quick view με εικόνα, τιμή, σύντομη περιγραφή και διαθεσιμότητα. Η επιλογή παραλλαγής και η αγορά γίνονται στη σελίδα προϊόντος.
 - Εικονίδια κάρτας: quick view και σύνδεσμος λεπτομερειών.
 
@@ -67,6 +67,17 @@ WordPress/WooCommerce theme, version 1.5.0. Theme files live at the repository r
 Τα υπάρχοντα επιλεγμένα layouts παραμένουν. Για εμφάνιση αντίστοιχη των references, επιλέξτε Gallery στα δύο layouts και Aeonik Pro Light στη Typography. Η διόρθωση hover εφαρμόζεται σε όλα τα card layouts.
 
 Έλεγχοι: visual regression που ελέγχει το πραγματικό χρώμα του εμφανιζόμενου image μετά το fade (grid/list), πραγματικό variable product με αλλαγή παραλλαγής/εικόνας/τιμής και ποσότητας, native add to cart, CDN font και responsive widths 390/768/1024/1440px.
+
+## Attribute color swatches (1.6.0)
+
+Διαθέσιμα από την έκδοση 1.6.0.
+
+- Προϊόντα → Χαρακτηριστικά: checkbox **Display as color swatches** ανά attribute.
+- Διαμόρφωση όρων: native color picker + hex πεδίο (`jofme_swatch_color`).
+- Κατάλογος: χρωματιστά φίλτρα (radio swatches) αντί για dropdown στα color attributes.
+- Κάρτες προϊόντων: swatch links προς την παραλλαγή.
+- Σελίδα προϊόντος: swatches αντί για dropdown στις παραλλαγές· το native select παραμένει για το WooCommerce variation JS.
+- Ρητό `no` απενεργοποιεί τα swatches ακόμα και σε color slug· κενή ρύθμιση διατηρεί το προηγούμενο slug heuristic.
 
 ## Covers, view controls και διορθώσεις layouts (1.5.0)
 
