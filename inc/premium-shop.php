@@ -111,7 +111,7 @@ function jofme_preview_dialog() {
 }
 add_action( 'wp_footer', 'jofme_preview_dialog' );
 function jofme_premium_customizer( $manager ) {
- foreach ( array( 'jofme_card_layout' => array( __( 'Product card layout', 'jofme' ), 'minimal', array( 'minimal' => __( 'Minimal', 'jofme' ), 'framed' => __( 'Framed', 'jofme' ), 'editorial' => __( 'Editorial', 'jofme' ) ) ), 'jofme_default_view' => array( __( 'Default catalog view', 'jofme' ), '3', array( '1' => '1 col', '2' => '2 col', '3' => '3 col', 'list' => __( 'List', 'jofme' ) ) ) ) as $key => $config ) {
+ foreach ( array( 'jofme_card_layout' => array( __( 'Product card layout', 'jofme' ), 'minimal', array( 'minimal' => __( 'Minimal', 'jofme' ), 'framed' => __( 'Framed', 'jofme' ), 'editorial' => __( 'Editorial', 'jofme' ), 'gallery' => __( 'Gallery (minimal product grid)', 'jofme' ) ) ), 'jofme_default_view' => array( __( 'Default catalog view', 'jofme' ), '3', array( '1' => '1 col', '2' => '2 col', '3' => '3 col', 'list' => __( 'List', 'jofme' ) ) ) ) as $key => $config ) {
   $manager->add_setting( $key, array( 'default' => $config[1], 'sanitize_callback' => 'jofme_sanitize_select' ) );
   $manager->add_control( $key, array( 'label' => $config[0], 'section' => 'jofme_shop', 'type' => 'select', 'choices' => $config[2] ) );
  }
@@ -120,7 +120,7 @@ add_action( 'customize_register', 'jofme_premium_customizer', 20 );
 function jofme_premium_classes( $classes ) {
  $layout = get_theme_mod( 'jofme_card_layout', 'minimal' );
  $view = get_theme_mod( 'jofme_default_view', '3' );
- $classes[] = 'jofme-card-' . ( in_array( $layout, array( 'minimal', 'framed', 'editorial' ), true ) ? $layout : 'minimal' );
+ $classes[] = 'jofme-card-' . ( in_array( $layout, array( 'minimal', 'framed', 'editorial', 'gallery' ), true ) ? $layout : 'minimal' );
  $classes[] = 'jofme-default-view-' . ( in_array( (string) $view, array( '1', '2', '3', 'list' ), true ) ? $view : '3' );
  return $classes;
 }

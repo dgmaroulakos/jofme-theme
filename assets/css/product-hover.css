@@ -1,7 +1,7 @@
 /* Overlay the secondary image so unavailable photos never hide the primary. */
-.woocommerce ul.products li.product .jofme-card-media{display:grid;margin-bottom:1rem;overflow:hidden;background:#f0ebe4}
-.woocommerce ul.products li.product .jofme-card-media img{grid-area:1 / 1;width:100%;margin:0;object-fit:cover}
-.woocommerce ul.products li.product .jofme-card-media .jofme-hover-image{opacity:0;pointer-events:none;transition:opacity .3s ease}
+.woocommerce ul.products li.product .jofme-card-media{display:grid;margin-bottom:1rem;overflow:hidden;isolation:isolate;background:#f0ebe4}
+.woocommerce ul.products li.product .jofme-card-media img{grid-area:1 / 1;z-index:0;width:100%;margin:0;object-fit:cover}
+.woocommerce ul.products li.product .jofme-card-media .jofme-hover-image{z-index:1;opacity:0;pointer-events:none;transition:opacity .3s ease}
 @media(hover:hover) and (pointer:fine){.woocommerce ul.products li.product:hover .jofme-card-media .jofme-hover-image.is-ready{opacity:1}}
 .woocommerce ul.products li.product .woocommerce-loop-product__link:focus-visible .jofme-card-media .jofme-hover-image.is-ready{opacity:1}
 /* Preserve the dedicated image column in list view. */

@@ -3,7 +3,7 @@ Contributors: jofme
 Requires at least: 6.4
 Tested up to: 6.8
 Requires PHP: 7.4
-Stable tag: 1.3.0
+Stable tag: 1.4.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -30,6 +30,12 @@ strings / wpml-config.xml.
 * WPML or Polylang
 
 == Changelog ==
+
+= 1.4.0 =
+* Fix hover image paint order after the opacity transition ends.
+* Gallery product cards and Gallery single-product design.
+* Aeonik Pro Light CDN and configurable text/heading fonts.
+* Native variation, gallery, quantity and product care controls.
 
 = 1.3.0 =
 * Editorial header with utility menus and optional transparent homepage navigation.

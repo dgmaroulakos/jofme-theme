@@ -1,6 +1,6 @@
 # Jofme Premium
 
-WordPress/WooCommerce theme, version 1.3.0. Theme files live at the repository root.
+WordPress/WooCommerce theme, version 1.4.0. Theme files live at the repository root.
 
 ## Εγκατάσταση
 
@@ -55,3 +55,15 @@ WordPress/WooCommerce theme, version 1.3.0. Theme files live at the repository r
 - Επιλέξτε δικές σας εικόνες από τη βιβλιοθήκη πολυμέσων. Δεν περιλαμβάνονται εικόνες ή αρχεία από το demo αναφοράς. Για full-bleed section χρησιμοποιήστε full-width Elementor container και την αντίστοιχη ρύθμιση πλάτους στο theme· τα Elementor Canvas templates ελέγχονται από το Elementor.
 
 Έλεγχοι: PHP/JS syntax, tests rendering/escaping/product visibility, πραγματικό runtime WordPress 7.1.4 + Elementor 4.3.6 + WooCommerce 11.2.2, και browser tests στα 390/768/1024/1440px για layout, mobile menu, focus, search και sticky header. Ο τελικός έλεγχος στο περιβάλλον του καταστήματος παραμένει απαραίτητος πριν τη δημοσίευση.
+
+## Gallery design & Typography (1.4.0)
+
+- **Διόρθωση hover:** η δεύτερη εικόνα παραμένει πάνω από την κύρια μετά το fade, με ρητό z-index μέσα σε απομονωμένο container. Η κύρια παραμένει διαθέσιμη αν δεν φορτωθεί η δεύτερη.
+- **Κάρτες:** Προσαρμογή → Jofme Options → Shop → Product card layout → **Gallery (minimal product grid)**. Λευκή κάρτα με στρογγυλεμένες γωνίες, εικόνα σε contain, κατηγορία και μικρό sans-serif τίτλο/τιμή. Quick view και λεπτομέρειες εμφανίζονται στο hover/focus και παραμένουν προσβάσιμα στο κινητό. Η προβολή list συνεχίζει να λειτουργεί.
+- **Σελίδα προϊόντος:** Προσαρμογή → Jofme Options → Layout Settings → Product pages — Design → **Gallery**. Μεγάλη native gallery αριστερά, minimal purchase panel δεξιά, πλήκτρα ποσότητας, collapsible Description / Care instructions. Στο κινητό το purchase panel εμφανίζεται κάτω από τη φωτογραφία. Οι επιλογές παραλλαγών, τιμές, αλλαγές εικόνας, zoom/lightbox, έλεγχος αποθέματος και add to cart παραμένουν λειτουργίες WooCommerce.
+- **Οδηγίες φροντίδας:** επεξεργασία προϊόντος → Δεδομένα προϊόντος → Γενικά → Care instructions. Εμφανίζονται μόνο όταν υπάρχει κείμενο.
+- **Γραμματοσειρές:** Προσαρμογή → Jofme Options → Typography. Ξεχωριστές επιλογές για Text & navigation και Headings. Η **Aeonik Pro Light (CDN)** χρησιμοποιεί το stylesheet του OnlineWebFonts που δόθηκε για το project. Φορτώνεται μόνο όταν επιλεγεί. Εναλλακτικά υπάρχουν Manrope, Cormorant, system fonts και custom Aeonik Pro με δικό σας WOFF/WOFF2 upload ή direct CDN URL για regular/medium/bold. Αν ο πάροχος CDN δεν είναι διαθέσιμος, χρησιμοποιείται fallback font.
+
+Τα υπάρχοντα επιλεγμένα layouts παραμένουν. Για εμφάνιση αντίστοιχη των references, επιλέξτε Gallery στα δύο layouts και Aeonik Pro Light στη Typography. Η διόρθωση hover εφαρμόζεται σε όλα τα card layouts.
+
+Έλεγχοι: visual regression που ελέγχει το πραγματικό χρώμα του εμφανιζόμενου image μετά το fade (grid/list), πραγματικό variable product με αλλαγή παραλλαγής/εικόνας/τιμής και ποσότητας, native add to cart, CDN font και responsive widths 390/768/1024/1440px.
