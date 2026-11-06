@@ -17,6 +17,8 @@ jobs:
         run: |
           php .tests/layout.php
           php .tests/product-hover.php
+          php .tests/editorial.php
+          php .tests/header.php
       - name: JavaScript syntax
         run: |
           node --check assets/js/main.js

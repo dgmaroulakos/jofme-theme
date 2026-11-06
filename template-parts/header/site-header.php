@@ -11,6 +11,10 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 $announcement = jofme_get_announcement_text();
 $layout       = get_theme_mod( 'jofme_header_layout', 'classic' );
+if ( 'editorial' === $layout ) {
+	get_template_part( 'template-parts/header/editorial-header' );
+	return;
+}
 ?>
 
 <?php if ( $announcement ) : ?>
@@ -24,7 +28,7 @@ $layout       = get_theme_mod( 'jofme_header_layout', 'classic' );
 <header id="masthead" class="site-header site-header--<?php echo esc_attr( $layout ); ?>">
 	<div class="jofme-container site-header__inner">
 		<div class="site-header__start">
-			<button type="button" class="jofme-menu-toggle" aria-controls="primary-menu" aria-expanded="false">
+			<button type="button" class="jofme-menu-toggle" aria-controls="jofme-mobile-drawer" aria-expanded="false">
 				<span class="screen-reader-text"><?php esc_html_e( 'Menu', 'jofme' ); ?></span>
 				<span class="jofme-menu-toggle__bars" aria-hidden="true"></span>
 			</button>
@@ -82,29 +86,6 @@ $layout       = get_theme_mod( 'jofme_header_layout', 'classic' );
 		</div>
 	</div>
 
-	<div id="jofme-header-search" class="jofme-header-search" hidden>
-		<div class="jofme-container">
-			<?php
-			if ( class_exists( 'WooCommerce' ) ) {
-				get_product_search_form();
-			} else {
-				get_search_form();
-			}
-			?>
-		</div>
-	</div>
+	<?php get_template_part( 'template-parts/header/panels' ); ?>
 
-	<div class="jofme-mobile-drawer" id="jofme-mobile-drawer" hidden>
-		<nav class="jofme-mobile-nav" aria-label="<?php esc_attr_e( 'Mobile', 'jofme' ); ?>">
-			<?php
-			wp_nav_menu(
-				array(
-					'theme_location' => has_nav_menu( 'mobile' ) ? 'mobile' : 'primary',
-					'container'      => false,
-					'fallback_cb'    => false,
-				)
-			);
-			?>
-		</nav>
-	</div>
 </header>

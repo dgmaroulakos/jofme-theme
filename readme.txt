@@ -3,7 +3,7 @@ Contributors: jofme
 Requires at least: 6.4
 Tested up to: 6.8
 Requires PHP: 7.4
-Stable tag: 1.2.1
+Stable tag: 1.3.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -30,6 +30,11 @@ strings / wpml-config.xml.
 * WPML or Polylang
 
 == Changelog ==
+
+= 1.3.0 =
+* Editorial header with utility menus and optional transparent homepage navigation.
+* Elementor Editorial Story and Weekly Sales widgets.
+* Mobile menu focus management and shared header panels.
 
 = 1.0.0 =
 * Initial release — theme foundation

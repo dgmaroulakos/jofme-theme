@@ -17,31 +17,51 @@
 	const drawer = qs('#jofme-mobile-drawer');
 
 	if (menuToggle && drawer) {
-		menuToggle.addEventListener('click', function () {
-			const open = drawer.hasAttribute('hidden');
-			if (open) {
-				drawer.removeAttribute('hidden');
-				requestAnimationFrame(function () {
-					drawer.classList.add('is-open');
-				});
-				body.classList.add('jofme-nav-open');
-				menuToggle.setAttribute('aria-expanded', 'true');
-			} else {
-				drawer.classList.remove('is-open');
-				body.classList.remove('jofme-nav-open');
-				menuToggle.setAttribute('aria-expanded', 'false');
-				setTimeout(function () {
-					drawer.setAttribute('hidden', '');
-				}, 250);
-			}
-		});
-
-		drawer.addEventListener('click', function (e) {
-			if (e.target === drawer) {
-				menuToggle.click();
-			}
-		});
-	}
+        // Keep the fixed drawer outside sticky/backdrop-filter ancestors.
+        body.appendChild(drawer);
+        let closeTimer;
+        function closeMenu() {
+            clearTimeout(closeTimer);
+            drawer.classList.remove('is-open');
+            body.classList.remove('jofme-nav-open');
+            menuToggle.setAttribute('aria-expanded', 'false');
+            menuToggle.focus();
+            closeTimer = setTimeout(() => drawer.setAttribute('hidden', ''), 250);
+        }
+        menuToggle.addEventListener('click', function () {
+            if (menuToggle.getAttribute('aria-expanded') === 'true') {
+                closeMenu();
+                return;
+            }
+            clearTimeout(closeTimer);
+            drawer.removeAttribute('hidden');
+            requestAnimationFrame(() => drawer.classList.add('is-open'));
+            body.classList.add('jofme-nav-open');
+            menuToggle.setAttribute('aria-expanded', 'true');
+            const first = qs('button, a[href]', drawer);
+            if (first) first.focus();
+        });
+        const closeButton = qs('.jofme-mobile-close', drawer);
+        if (closeButton) closeButton.addEventListener('click', closeMenu);
+        drawer.addEventListener('click', e => { if (e.target === drawer) closeMenu(); });
+        drawer.addEventListener('keydown', e => {
+            if (e.key !== 'Tab') return;
+            const focusable = qsa('button, a[href], input, select, textarea, [tabindex="0"]', drawer).filter(el => el.getClientRects().length);
+            const first = focusable[0], last = focusable[focusable.length - 1];
+            if (!first) return;
+            if (e.shiftKey && doc.activeElement === first) { e.preventDefault(); last.focus(); }
+            else if (!e.shiftKey && doc.activeElement === last) { e.preventDefault(); first.focus(); }
+        });
+        window.addEventListener('resize', () => {
+            if (window.innerWidth >= 900 && menuToggle.getAttribute('aria-expanded') === 'true') {
+                clearTimeout(closeTimer);
+                drawer.setAttribute('hidden', '');
+                drawer.classList.remove('is-open');
+                body.classList.remove('jofme-nav-open');
+                menuToggle.setAttribute('aria-expanded', 'false');
+            }
+        });
+    }
 
 	/* Header search */
 	const searchToggle = qs('.jofme-search-toggle');
@@ -60,6 +80,7 @@
 			} else {
 				searchPanel.setAttribute('hidden', '');
 				searchToggle.setAttribute('aria-expanded', 'false');
+                searchToggle.focus();
 			}
 		});
 	}
@@ -103,7 +124,7 @@
 		if (e.key !== 'Escape') {
 			return;
 		}
-		if (drawer && !drawer.hasAttribute('hidden') && menuToggle) {
+		if (drawer && menuToggle && menuToggle.getAttribute('aria-expanded') === 'true') {
 			menuToggle.click();
 		}
 		if (searchPanel && !searchPanel.hasAttribute('hidden') && searchToggle) {

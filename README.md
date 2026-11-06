@@ -1,6 +1,6 @@
 # Jofme Premium
 
-WordPress/WooCommerce theme, version 1.2.1. Theme files live at the repository root.
+WordPress/WooCommerce theme, version 1.3.0. Theme files live at the repository root.
 
 ## Εγκατάσταση
 
@@ -43,3 +43,15 @@ WordPress/WooCommerce theme, version 1.2.1. Theme files live at the repository r
 ## Εναλλαγή εικόνας στο hover (1.2.1)
 
 Εμφάνιση → Προσαρμογή → Jofme Options → Shop → **Change product image on hover**. Προεπιλογή: απενεργοποιημένο. Χρησιμοποιείται η πρώτη έγκυρη εικόνα της gallery που διαφέρει από την κύρια. Εφαρμόζεται στις κάρτες προϊόντων, μαζί με τις προβολές grid/list και τις related products. Χωρίς δεύτερη εικόνα ή αν αποτύχει η φόρτωσή της παραμένει η κύρια. Η εναλλαγή λειτουργεί και με keyboard focus· στις συσκευές αφής διατηρείται η κύρια φωτογραφία και η κανονική πλοήγηση.
+
+## Editorial header & Elementor widgets (1.3.0)
+
+Διαθέσιμα από την έκδοση 1.3.0.
+
+- **Header:** Εμφάνιση → Προσαρμογή → Jofme Options → Header → Header layout → Editorial. Οι θέσεις μενού “Header utility left” και “Header utility right” ρυθμίζονται στο Εμφάνιση → Μενού. Υπάρχουν επιλογές utility bar και transparent header στη στατική αρχική σελίδα. Το transparent ενεργοποιείται όταν η αρχική ξεκινά με μεγάλη φωτογραφία/hero. Sticky header από την υπάρχουσα ρύθμιση. Account και cart χρησιμοποιούν WooCommerce, η αναζήτηση ανοίγει το πραγματικό search form. Οι γλώσσες εμφανίζονται όταν λειτουργεί WPML.
+- **Elementor → κατηγορία Jofme → Editorial Story (Paola Dias):** μεγάλη εικόνα, τίτλος, εισαγωγή, δεύτερη εικόνα, περιγραφή και link συλλογής. Επιλογή εικόνας αριστερά/δεξιά, χρώματα, τυπογραφία, responsive padding και μέγεθος detail image.
+- **Elementor → κατηγορία Jofme → Weekly Sales:** τίτλος section, πραγματικό προϊόν WooCommerce, κεντρική καμπάνια με εικόνα/overlay/κείμενο/link και δεξιά στήλη κειμένου/εικόνας. Product ID 0 = αυτόματη επιλογή προϊόντος σε έκπτωση. Μπορεί να οριστεί συγκεκριμένο δημοσιευμένο/ορατό product ID. Η τιμή προέρχεται από το WooCommerce· badge προσφοράς μόνο όταν υπάρχει πραγματική έκπτωση.
+- Χωρίς διαθέσιμο προϊόν, το δημόσιο section προσαρμόζεται σε δύο στήλες και ο editor εμφανίζει οδηγία. Χωρίς Elementor το theme συνεχίζει να λειτουργεί χωρίς να φορτώνει τις κλάσεις widgets. Δεν απαιτείται Elementor Pro.
+- Επιλέξτε δικές σας εικόνες από τη βιβλιοθήκη πολυμέσων. Δεν περιλαμβάνονται εικόνες ή αρχεία από το demo αναφοράς. Για full-bleed section χρησιμοποιήστε full-width Elementor container και την αντίστοιχη ρύθμιση πλάτους στο theme· τα Elementor Canvas templates ελέγχονται από το Elementor.
+
+Έλεγχοι: PHP/JS syntax, tests rendering/escaping/product visibility, πραγματικό runtime WordPress 7.1.4 + Elementor 4.3.6 + WooCommerce 11.2.2, και browser tests στα 390/768/1024/1440px για layout, mobile menu, focus, search και sticky header. Ο τελικός έλεγχος στο περιβάλλον του καταστήματος παραμένει απαραίτητος πριν τη δημοσίευση.
