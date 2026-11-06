@@ -2,42 +2,57 @@
 body.jofme-card-bestsellers.woocommerce ul.products{gap:clamp(1.25rem,3vw,2rem) clamp(1rem,2vw,1.5rem)}
 body.jofme-card-bestsellers.woocommerce ul.products li.product{min-width:0;text-align:start;padding:0!important;background:transparent;border:0;margin:0 0 1rem}
 body.jofme-card-bestsellers.woocommerce ul.products li.product .woocommerce-loop-product__link{color:var(--jofme-color-text);display:flex;flex-direction:column;gap:.85rem}
-body.jofme-card-bestsellers.woocommerce ul.products li.product .woocommerce-loop-product__link>img,
+
+/* Single image (no hover pair). */
+body.jofme-card-bestsellers.woocommerce ul.products li.product .woocommerce-loop-product__link>img{
+ display:block;width:100%;margin:0;aspect-ratio:1;object-fit:contain;padding:clamp(12px,2vw,28px);background:var(--jofme-color-surface)
+}
+
+/*
+ * Hover pair must stay a 1-cell grid overlay.
+ * display:block here would stack the invisible secondary image and create a huge blank gap.
+ */
 body.jofme-card-bestsellers.woocommerce ul.products li.product .jofme-card-media{
- display:block;width:100%;margin:0;background:var(--jofme-color-surface);overflow:hidden
+ position:relative;display:grid;width:100%;aspect-ratio:1;margin:0;overflow:hidden;isolation:isolate;background:var(--jofme-color-surface)
 }
-body.jofme-card-bestsellers.woocommerce ul.products li.product .woocommerce-loop-product__link>img,
 body.jofme-card-bestsellers.woocommerce ul.products li.product .jofme-card-media img{
- aspect-ratio:1;object-fit:contain;padding:clamp(12px,2vw,28px);background:var(--jofme-color-surface);width:100%;margin:0
+ grid-area:1/1;z-index:0;width:100%;height:100%;margin:0;aspect-ratio:auto;object-fit:contain;padding:clamp(12px,2vw,28px);background:transparent
 }
+body.jofme-card-bestsellers.woocommerce ul.products li.product .jofme-card-media .jofme-hover-image{z-index:1;opacity:0;pointer-events:none;transition:opacity .3s ease}
+body.jofme-card-bestsellers.woocommerce ul.products li.product:hover img{opacity:1}
+@media(hover:hover) and (pointer:fine){
+ body.jofme-card-bestsellers.woocommerce ul.products li.product:hover .jofme-card-media .jofme-hover-image.is-ready{opacity:1}
+}
+body.jofme-card-bestsellers.woocommerce ul.products li.product .woocommerce-loop-product__link:focus-visible .jofme-card-media .jofme-hover-image.is-ready{opacity:1}
+
 body.jofme-card-bestsellers .jofme-card-category{
  display:block;margin:0;font-size:10px;line-height:1.5;text-transform:uppercase;letter-spacing:.08em;color:var(--jofme-color-text-muted);text-decoration:none
 }
 body.jofme-card-bestsellers.woocommerce ul.products li.product .woocommerce-loop-product__title{
- font-family:var(--jofme-font-body);font-size:14px;font-weight:500;line-height:1.4;letter-spacing:0;text-transform:none;margin:0 0 .35rem
+ font-family:var(--jofme-font-body);font-size:14px;font-weight:500;line-height:1.4;letter-spacing:0;text-transform:none;margin:0 0 .35rem;color:inherit
 }
 body.jofme-card-bestsellers.woocommerce ul.products li.product .price{
  font-size:14px;letter-spacing:0;color:inherit;margin:0
 }
 body.jofme-card-bestsellers.woocommerce ul.products li.product .price del{opacity:.55;margin-inline-end:.35rem}
-body.jofme-card-bestsellers.woocommerce ul.products li.product .price ins{text-decoration:none}
+body.jofme-card-bestsellers.woocommerce ul.products li.product .price ins{text-decoration:none;color:inherit}
 body.jofme-card-bestsellers.woocommerce ul.products li.product .onsale,
 body.jofme-card-bestsellers .jofme-sale-badge,
 .jofme-bestsellers__badge{
  position:absolute;top:12px;inset-inline-start:12px;z-index:2;min-width:42px;height:42px;padding:0 8px;margin:0;border-radius:50%;display:inline-grid;place-items:center;background:#5f8f7a;color:#fff;font-size:11px;font-weight:600;letter-spacing:.02em;line-height:1;border:0;text-transform:none
 }
 body.jofme-card-bestsellers.woocommerce ul.products li.product>.button,
-body.jofme-card-bestsellers.woocommerce ul.products li.product>.added_to_cart{display:none}
+body.jofme-card-bestsellers.woocommerce ul.products li.product>.added_to_cart{display:none!important}
 body.jofme-card-bestsellers .jofme-card-actions{inset-block-start:12px;inset-inline-end:12px}
 body.jofme-card-bestsellers .jofme-swatches{justify-content:flex-start;margin:.25rem 0 0}
+body.jofme-card-bestsellers .jofme-card-description{display:none}
 
 /* Align Elementor bestsellers cards with the shared layout. */
 .jofme-bestsellers__card{min-width:0;display:flex;flex-direction:column;gap:.85rem}
 .jofme-bestsellers__media{position:relative;display:block;background:var(--jofme-color-surface);overflow:hidden;color:inherit}
-.jofme-bestsellers__media img,
-.jofme-bestsellers__media .jofme-card-media img{display:block;width:100%;aspect-ratio:1;object-fit:contain;padding:clamp(12px,2vw,28px);background:var(--jofme-color-surface);margin:0}
-.jofme-bestsellers__media .jofme-card-media{display:grid;margin:0;overflow:hidden;isolation:isolate;background:var(--jofme-color-surface)}
-.jofme-bestsellers__media .jofme-card-media img{grid-area:1/1;z-index:0}
+.jofme-bestsellers__media>img{display:block;width:100%;aspect-ratio:1;object-fit:contain;padding:clamp(12px,2vw,28px);background:var(--jofme-color-surface);margin:0}
+.jofme-bestsellers__media .jofme-card-media{position:relative;display:grid;width:100%;aspect-ratio:1;margin:0;overflow:hidden;isolation:isolate;background:var(--jofme-color-surface)}
+.jofme-bestsellers__media .jofme-card-media img{grid-area:1/1;z-index:0;display:block;width:100%;height:100%;aspect-ratio:auto;object-fit:contain;padding:clamp(12px,2vw,28px);background:transparent;margin:0}
 .jofme-bestsellers__media .jofme-card-media .jofme-hover-image{z-index:1;opacity:0;pointer-events:none;transition:opacity .3s ease}
 @media(hover:hover) and (pointer:fine){
  .jofme-bestsellers__card:hover .jofme-hover-image.is-ready,
@@ -64,11 +79,12 @@ body.jofme-card-bestsellers.woocommerce .jofme-shop[data-view=list] ul.products 
 body.jofme-card-bestsellers.woocommerce .jofme-shop[data-view=list] ul.products li.product .jofme-card-media img{
  height:220px;padding:16px;aspect-ratio:auto
 }
+body.jofme-card-bestsellers.woocommerce .jofme-shop[data-view=list] .jofme-card-description{display:block}
 
 @media(max-width:767px){
  body.jofme-card-bestsellers.woocommerce ul.products li.product .woocommerce-loop-product__link>img,
  body.jofme-card-bestsellers.woocommerce ul.products li.product .jofme-card-media img,
- .jofme-bestsellers__media img,
+ .jofme-bestsellers__media>img,
  .jofme-bestsellers__media .jofme-card-media img{padding:12px}
  body.jofme-card-bestsellers.woocommerce ul.products li.product .onsale,
  body.jofme-card-bestsellers .jofme-sale-badge,
@@ -79,5 +95,6 @@ body.jofme-card-bestsellers.woocommerce .jofme-shop[data-view=list] ul.products 
  body.jofme-card-bestsellers.woocommerce .jofme-shop[data-view=list] ul.products li.product .jofme-card-media img{height:180px}
 }
 @media(prefers-reduced-motion:reduce){
+ body.jofme-card-bestsellers.woocommerce ul.products li.product .jofme-card-media .jofme-hover-image,
  .jofme-bestsellers__media .jofme-card-media .jofme-hover-image{transition:none}
 }
