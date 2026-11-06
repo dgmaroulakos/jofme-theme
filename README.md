@@ -1,6 +1,6 @@
 # Jofme Premium
 
-WordPress/WooCommerce theme, version 1.2.0. Theme files live at the repository root.
+WordPress/WooCommerce theme, version 1.2.1. Theme files live at the repository root.
 
 ## Εγκατάσταση
 
@@ -39,3 +39,7 @@ WordPress/WooCommerce theme, version 1.2.0. Theme files live at the repository r
 Εμφάνιση → Προσαρμογή → Jofme Options → Layout Settings. Ξεχωριστές επιλογές για Pages, Blog categories, Shop & product categories και Product pages: πλάτος Boxed / Wide / Narrow / Full width και sidebar None / Left / Right. Στα προϊόντα υπάρχει και Gallery left / Gallery right / Gallery above summary.
 
 Προσθέστε widgets στις περιοχές Page Sidebar, Blog Sidebar, Shop Sidebar ή Product Sidebar αντίστοιχα. Χωρίς widgets δεν μένει κενή στήλη. Σε κινητό το sidebar ακολουθεί το περιεχόμενο. Οι επιλογές αφορούν τα templates του theme· τα Elementor Canvas/Full Width templates διατηρούν τον έλεγχο του Elementor. Οι στατικές αρχικές σελίδες χρησιμοποιούν τις ρυθμίσεις Pages.
+
+## Εναλλαγή εικόνας στο hover (1.2.1)
+
+Εμφάνιση → Προσαρμογή → Jofme Options → Shop → **Change product image on hover**. Προεπιλογή: απενεργοποιημένο. Χρησιμοποιείται η πρώτη έγκυρη εικόνα της gallery που διαφέρει από την κύρια. Εφαρμόζεται στις κάρτες προϊόντων, μαζί με τις προβολές grid/list και τις related products. Χωρίς δεύτερη εικόνα ή αν αποτύχει η φόρτωσή της παραμένει η κύρια. Η εναλλαγή λειτουργεί και με keyboard focus· στις συσκευές αφής διατηρείται η κύρια φωτογραφία και η κανονική πλοήγηση.
