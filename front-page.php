@@ -8,6 +8,7 @@
 get_header();
 ?>
 
+<div class="jofme-container jofme-layout jofme-layout--page">
 <div id="primary" class="content-area">
 	<main id="main" class="site-main">
 		<?php
@@ -25,5 +26,7 @@ get_header();
 	</main>
 </div>
 
+<?php jofme_layout_sidebar(); ?>
+</div>
 <?php
 get_footer();

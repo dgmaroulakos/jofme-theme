@@ -101,6 +101,9 @@ remove_action( 'woocommerce_before_main_content', 'woocommerce_output_content_wr
 function jofme_woocommerce_wrapper_after() {
 	echo '</main></div>';
 	if ( ! did_action( 'jofme_shop_layout_open' ) ) {
+		jofme_layout_sidebar();
+	}
+	if ( ! did_action( 'jofme_shop_layout_open' ) ) {
 		echo '</div>';
 	}
 }
@@ -135,3 +138,6 @@ function jofme_woocommerce_body_class( $classes ) {
 	return $classes;
 }
 add_filter( 'body_class', 'jofme_woocommerce_body_class' );
+
+// Sidebars are rendered inside the theme layout wrappers.
+remove_action( 'woocommerce_sidebar', 'woocommerce_get_sidebar', 10 );

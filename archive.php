@@ -31,7 +31,7 @@ get_header();
 			<?php endif; ?>
 		</main>
 	</div>
-	<?php get_sidebar(); ?>
+	<?php if ( is_category() ) { jofme_layout_sidebar(); } else { get_sidebar(); } ?>
 </div>
 
 <?php

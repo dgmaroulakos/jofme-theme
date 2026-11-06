@@ -23,6 +23,7 @@ get_header();
 			?>
 		</main>
 	</div>
+	<?php jofme_layout_sidebar(); ?>
 </div>
 
 <?php

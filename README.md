@@ -1,6 +1,6 @@
 # Jofme Premium
 
-WordPress/WooCommerce theme, version 1.1.0. Theme files live at the repository root.
+WordPress/WooCommerce theme, version 1.2.0. Theme files live at the repository root.
 
 ## Εγκατάσταση
 
@@ -33,3 +33,9 @@ WordPress/WooCommerce theme, version 1.1.0. Theme files live at the repository r
 Απαιτείται staging WordPress με WooCommerce και πραγματικά προϊόντα: μεταβλητά προϊόντα, συνδυασμός φίλτρων, κατηγορίες, σελιδοποίηση, φόροι/νόμισμα, κινητό, πληκτρολόγιο, Elementor/WPML και ενημέρωση από προηγούμενη έκδοση. Οι έλεγχοι σύνταξης δεν αντικαθιστούν αυτά τα integration tests.
 
 Τοπικό πακέτο: `python3 scripts/package.py`. PHP 7.4+, WordPress 6.4+. GPL-2.0-or-later όπως το αρχικό theme.
+
+## Layout Settings (1.2.0)
+
+Εμφάνιση → Προσαρμογή → Jofme Options → Layout Settings. Ξεχωριστές επιλογές για Pages, Blog categories, Shop & product categories και Product pages: πλάτος Boxed / Wide / Narrow / Full width και sidebar None / Left / Right. Στα προϊόντα υπάρχει και Gallery left / Gallery right / Gallery above summary.
+
+Προσθέστε widgets στις περιοχές Page Sidebar, Blog Sidebar, Shop Sidebar ή Product Sidebar αντίστοιχα. Χωρίς widgets δεν μένει κενή στήλη. Σε κινητό το sidebar ακολουθεί το περιεχόμενο. Οι επιλογές αφορούν τα templates του theme· τα Elementor Canvas/Full Width templates διατηρούν τον έλεγχο του Elementor. Οι στατικές αρχικές σελίδες χρησιμοποιούν τις ρυθμίσεις Pages.

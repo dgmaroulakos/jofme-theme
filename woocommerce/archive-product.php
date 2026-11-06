@@ -40,11 +40,7 @@ do_action( 'jofme_shop_layout_open' );
 	/**
 	 * Shop sidebar.
 	 */
-	if ( is_active_sidebar( 'shop-sidebar' ) ) {
-		echo '<aside id="secondary" class="widget-area shop-sidebar" role="complementary">';
-		dynamic_sidebar( 'shop-sidebar' );
-		echo '</aside>';
-	}
+	jofme_layout_sidebar();
 	?>
 </div>
 

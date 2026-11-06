@@ -69,6 +69,8 @@ add_action( 'after_setup_theme', 'jofme_content_width', 0 );
 function jofme_widgets_init() {
 	$sidebars = array(
 		'sidebar-1'       => __( 'Blog Sidebar', 'jofme' ),
+		'page-sidebar'    => __( 'Page Sidebar', 'jofme' ),
+		'product-sidebar' => __( 'Product Sidebar', 'jofme' ),
 		'shop-sidebar'    => __( 'Shop Sidebar', 'jofme' ),
 		'footer-1'        => __( 'Footer Column 1', 'jofme' ),
 		'footer-2'        => __( 'Footer Column 2', 'jofme' ),
