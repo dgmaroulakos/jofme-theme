@@ -329,25 +329,6 @@ class Jofme_Bestsellers_Tabs_Widget extends \Elementor\Widget_Base {
 	}
 
 	/**
-	 * Discount percent badge markup.
-	 *
-	 * @param WC_Product $product Product.
-	 * @return string
-	 */
-	protected function sale_badge( $product ) {
-		if ( ! $product->is_on_sale() ) {
-			return '';
-		}
-		$regular = (float) $product->get_regular_price();
-		$sale    = (float) $product->get_sale_price();
-		if ( $regular <= 0 || $sale <= 0 || $sale >= $regular ) {
-			return '<span class="jofme-bestsellers__badge">' . esc_html__( 'Sale', 'jofme' ) . '</span>';
-		}
-		$percent = (int) round( ( ( $regular - $sale ) / $regular ) * 100 );
-		return '<span class="jofme-bestsellers__badge">-' . absint( $percent ) . '%</span>';
-	}
-
-	/**
 	 * Render one product card.
 	 *
 	 * @param WC_Product $product Product.
@@ -356,11 +337,17 @@ class Jofme_Bestsellers_Tabs_Widget extends \Elementor\Widget_Base {
 		$url      = $product->get_permalink();
 		$terms    = get_the_terms( $product->get_id(), 'product_cat' );
 		$category = ( ! is_wp_error( $terms ) && ! empty( $terms[0] ) ) ? $terms[0]->name : '';
+		$media    = function_exists( 'jofme_product_card_media_html' )
+			? jofme_product_card_media_html( $product )
+			: $product->get_image( 'woocommerce_thumbnail' );
+		$badge    = function_exists( 'jofme_product_sale_badge_html' )
+			? jofme_product_sale_badge_html( $product, 'jofme-bestsellers__badge' )
+			: '';
 
 		echo '<article class="jofme-bestsellers__card">';
 		echo '<a class="jofme-bestsellers__media" href="' . esc_url( $url ) . '">';
-		echo wp_kses_post( $product->get_image( 'woocommerce_thumbnail' ) );
-		echo $this->sale_badge( $product ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- escaped in helper.
+		echo wp_kses_post( $media );
+		echo $badge; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- escaped in helper.
 		echo '</a><div class="jofme-bestsellers__meta">';
 		if ( $category ) {
 			echo '<p class="jofme-bestsellers__category">' . esc_html( $category ) . '</p>';

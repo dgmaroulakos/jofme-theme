@@ -23,6 +23,41 @@ function jofme_hover_image_id( $product ) {
  }
  return 0;
 }
+
+/**
+ * Markup for primary + optional hover image (shop loop and widgets).
+ *
+ * @param WC_Product $product Product.
+ * @param string     $size    Image size.
+ * @return string
+ */
+function jofme_product_card_media_html( $product, $size = 'woocommerce_thumbnail' ) {
+ if ( ! $product ) {
+  return '';
+ }
+ $primary = $product->get_image( $size );
+ $id      = jofme_hover_image_id( $product );
+ if ( ! $id ) {
+  return $primary;
+ }
+ $secondary = wp_get_attachment_image(
+  $id,
+  $size,
+  false,
+  array(
+   'class'       => 'jofme-hover-image',
+   'alt'         => '',
+   'aria-hidden' => 'true',
+   'loading'     => 'lazy',
+   'decoding'    => 'async',
+  )
+ );
+ if ( ! $secondary ) {
+  return $primary;
+ }
+ return '<span class="jofme-card-media">' . $primary . $secondary . '</span>';
+}
+
 function jofme_loop_product_images() {
  global $product;
  $id = jofme_hover_image_id( $product );

@@ -5,7 +5,7 @@ defined( 'ABSPATH' ) || exit;
 function jofme_editorial_assets() {
  wp_enqueue_style( 'jofme-editorial-header', JOFME_URI . '/assets/css/editorial-header.css', array( 'jofme-main' ), JOFME_VERSION );
  wp_register_style( 'jofme-editorial-widgets', JOFME_URI . '/assets/css/editorial-widgets.css', array( 'jofme-main' ), JOFME_VERSION );
- wp_register_style( 'jofme-bestsellers-tabs', JOFME_URI . '/assets/css/bestsellers-tabs.css', array( 'jofme-main', 'jofme-editorial-widgets' ), JOFME_VERSION );
+ wp_register_style( 'jofme-bestsellers-tabs', JOFME_URI . '/assets/css/bestsellers-tabs.css', array( 'jofme-main', 'jofme-editorial-widgets', 'jofme-product-cards' ), JOFME_VERSION );
  wp_register_script( 'jofme-bestsellers-tabs', JOFME_URI . '/assets/js/bestsellers-tabs.js', array(), JOFME_VERSION, true );
 }
 add_action( 'wp_enqueue_scripts', 'jofme_editorial_assets', 22 );

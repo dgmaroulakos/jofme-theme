@@ -112,7 +112,8 @@ function jofme_stacked_product_gallery() {
  echo '</div></div>';
 }
 function jofme_gallery_card_category() {
- if ( 'gallery' !== get_theme_mod( 'jofme_card_layout', 'minimal' ) ) { return; }
+ $layout = get_theme_mod( 'jofme_card_layout', 'bestsellers' );
+ if ( ! in_array( $layout, array( 'gallery', 'bestsellers' ), true ) ) { return; }
  global $product;
  if ( ! $product ) { return; }
  $terms = get_the_terms( $product->get_id(), 'product_cat' );

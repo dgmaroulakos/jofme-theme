@@ -117,17 +117,58 @@ function jofme_preview_dialog() {
 add_action( 'wp_footer', 'jofme_preview_dialog' );
 function jofme_premium_customizer( $manager ) {
  $manager->remove_control( 'jofme_shop_columns' );
- foreach ( array( 'jofme_card_layout' => array( __( 'Product card layout', 'jofme' ), 'minimal', array( 'minimal' => __( 'Minimal', 'jofme' ), 'framed' => __( 'Framed', 'jofme' ), 'editorial' => __( 'Editorial', 'jofme' ), 'gallery' => __( 'Gallery (minimal product grid)', 'jofme' ) ) ), 'jofme_default_view' => array( __( 'Default catalog view', 'jofme' ), jofme_catalog_default_view(), array( '1' => '1 col', '2' => '2 col', '3' => '3 col', '4' => '4 col', 'list' => __( 'List', 'jofme' ) ) ) ) as $key => $config ) {
+ foreach ( array( 'jofme_card_layout' => array( __( 'Product card layout', 'jofme' ), 'bestsellers', array( 'bestsellers' => __( 'Bestsellers (tabs card)', 'jofme' ), 'minimal' => __( 'Minimal', 'jofme' ), 'framed' => __( 'Framed', 'jofme' ), 'editorial' => __( 'Editorial', 'jofme' ), 'gallery' => __( 'Gallery (minimal product grid)', 'jofme' ) ) ), 'jofme_default_view' => array( __( 'Default catalog view', 'jofme' ), jofme_catalog_default_view(), array( '1' => '1 col', '2' => '2 col', '3' => '3 col', '4' => '4 col', 'list' => __( 'List', 'jofme' ) ) ) ) as $key => $config ) {
   $manager->add_setting( $key, array( 'default' => $config[1], 'sanitize_callback' => 'jofme_sanitize_select' ) );
   $manager->add_control( $key, array( 'label' => $config[0], 'section' => 'jofme_shop', 'type' => 'select', 'choices' => $config[2] ) );
  }
 }
 add_action( 'customize_register', 'jofme_premium_customizer', 20 );
 function jofme_premium_classes( $classes ) {
- $layout = get_theme_mod( 'jofme_card_layout', 'minimal' );
+ $layout = get_theme_mod( 'jofme_card_layout', 'bestsellers' );
  $view = jofme_catalog_default_view();
- $classes[] = 'jofme-card-' . ( in_array( $layout, array( 'minimal', 'framed', 'editorial', 'gallery' ), true ) ? $layout : 'minimal' );
+ $classes[] = 'jofme-card-' . ( in_array( $layout, array( 'bestsellers', 'minimal', 'framed', 'editorial', 'gallery' ), true ) ? $layout : 'bestsellers' );
  $classes[] = 'jofme-default-view-' . ( in_array( (string) $view, array( '1', '2', '3', '4', 'list' ), true ) ? $view : '3' );
  return $classes;
 }
 add_filter( 'body_class', 'jofme_premium_classes' );
+
+/**
+ * Circular sale badge with discount percent when available.
+ *
+ * @param WC_Product $product Product.
+ * @param string     $class   Extra class.
+ * @return string
+ */
+function jofme_product_sale_badge_html( $product, $class = 'jofme-sale-badge' ) {
+ if ( ! $product || ! $product->is_on_sale() ) {
+  return '';
+ }
+ $regular = (float) $product->get_regular_price();
+ $sale    = (float) $product->get_sale_price();
+ if ( $regular > 0 && $sale > 0 && $sale < $regular ) {
+  $percent = (int) round( ( ( $regular - $sale ) / $regular ) * 100 );
+  return '<span class="' . esc_attr( $class ) . '">-' . absint( $percent ) . '%</span>';
+ }
+ return '<span class="' . esc_attr( $class ) . '">' . esc_html__( 'Sale', 'jofme' ) . '</span>';
+}
+
+/**
+ * Replace WooCommerce sale flash on bestsellers cards.
+ *
+ * @param string     $html    Flash HTML.
+ * @param WP_Post    $post    Post.
+ * @param WC_Product $product Product.
+ * @return string
+ */
+function jofme_bestsellers_sale_flash( $html, $post, $product ) {
+ if ( 'bestsellers' !== get_theme_mod( 'jofme_card_layout', 'bestsellers' ) || ! $product ) {
+  return $html;
+ }
+ return jofme_product_sale_badge_html( $product, 'onsale jofme-sale-badge' );
+}
+add_filter( 'woocommerce_sale_flash', 'jofme_bestsellers_sale_flash', 20, 3 );
+
+function jofme_product_card_assets() {
+ wp_enqueue_style( 'jofme-product-cards', JOFME_URI . '/assets/css/product-cards.css', array( 'jofme-premium' ), JOFME_VERSION );
+}
+add_action( 'wp_enqueue_scripts', 'jofme_product_card_assets', 28 );

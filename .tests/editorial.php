@@ -55,6 +55,10 @@ namespace {
   public function get_regular_price(){return '120';} public function get_sale_price(){return '95';}
  }
  class WooCommerce {}
+ function jofme_product_sale_badge_html($product,$class='jofme-sale-badge'){return $product&&$product->is_on_sale()?'<span class="'.esc_attr($class).'">-21%</span>':'';}
+ function jofme_product_card_media_html($product,$size='woocommerce_thumbnail'){
+  return '<span class="jofme-card-media">'.$product->get_image($size).'<img class="jofme-hover-image" src="/hover.jpg" alt=""></span>';
+ }
  function verify($truth,$label){if(!$truth){throw new \RuntimeException($label);}}
  $product_status='publish';$password=false;$products=array(8=>new FixtureProduct());
  require JOFME_DIR.'/inc/editorial.php';
@@ -79,6 +83,7 @@ namespace {
  verify(strpos($html,'role="tablist"')!==false && strpos($html,'role="tab"')!==false,'Accessible tabs');
  verify(strpos($html,'Sculpted gold earrings')!==false,'Bestsellers product card');
  verify(strpos($html,'jofme-bestsellers__badge')!==false,'Discount badge');
+ verify(strpos($html,'jofme-card-media')!==false && strpos($html,'jofme-hover-image')!==false,'Hover image media');
  verify(substr_count($html,'role="tabpanel"')>=2,'Tab panels rendered');
  $best->settings['title']='<img src=x onerror=alert(1)>';
  verify(strpos($best->output(),'<img src=x')===false,'Escaped bestsellers title');
