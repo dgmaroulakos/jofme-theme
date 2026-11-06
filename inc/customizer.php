@@ -69,6 +69,44 @@ function jofme_customize_register( $wp_customize ) {
 	);
 
 	$wp_customize->add_setting(
+		'jofme_smooth_scroll',
+		array(
+			'default'           => true,
+			'sanitize_callback' => 'wp_validate_boolean',
+		)
+	);
+	$wp_customize->add_control(
+		'jofme_smooth_scroll',
+		array(
+			'label'       => __( 'Smooth page scroll', 'jofme' ),
+			'description' => __( 'Adds a controlled scroll feel across the site. Disabled automatically when the visitor prefers reduced motion.', 'jofme' ),
+			'section'     => 'jofme_header',
+			'type'        => 'checkbox',
+		)
+	);
+
+	$wp_customize->add_setting(
+		'jofme_scroll_speed',
+		array(
+			'default'           => 'medium',
+			'sanitize_callback' => 'jofme_sanitize_select',
+		)
+	);
+	$wp_customize->add_control(
+		'jofme_scroll_speed',
+		array(
+			'label'   => __( 'Scroll speed', 'jofme' ),
+			'section' => 'jofme_header',
+			'type'    => 'select',
+			'choices' => array(
+				'slow'   => __( 'Slow', 'jofme' ),
+				'medium' => __( 'Medium', 'jofme' ),
+				'fast'   => __( 'Fast', 'jofme' ),
+			),
+		)
+	);
+
+	$wp_customize->add_setting(
 		'jofme_announcement_text',
 		array(
 			'default'           => '',

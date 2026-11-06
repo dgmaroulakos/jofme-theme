@@ -35,12 +35,21 @@ function jofme_scripts() {
 		true
 	);
 
+	$scroll_speed = get_theme_mod( 'jofme_scroll_speed', 'medium' );
+	if ( ! in_array( $scroll_speed, array( 'slow', 'medium', 'fast' ), true ) ) {
+		$scroll_speed = 'medium';
+	}
+
 	wp_localize_script(
 		'jofme-main',
 		'jofmeData',
 		array(
 			'ajaxUrl' => admin_url( 'admin-ajax.php' ),
 			'nonce'   => wp_create_nonce( 'jofme_nonce' ),
+			'scroll'  => array(
+				'enabled' => (bool) get_theme_mod( 'jofme_smooth_scroll', true ),
+				'speed'   => $scroll_speed,
+			),
 			'i18n'    => array(
 				'menuOpen'  => __( 'Open menu', 'jofme' ),
 				'menuClose' => __( 'Close menu', 'jofme' ),
@@ -54,3 +63,17 @@ function jofme_scripts() {
 	}
 }
 add_action( 'wp_enqueue_scripts', 'jofme_scripts' );
+
+/**
+ * Body class when controlled smooth scroll is enabled.
+ *
+ * @param array $classes Classes.
+ * @return array
+ */
+function jofme_smooth_scroll_body_class( $classes ) {
+	if ( get_theme_mod( 'jofme_smooth_scroll', true ) ) {
+		$classes[] = 'jofme-smooth-scroll';
+	}
+	return $classes;
+}
+add_filter( 'body_class', 'jofme_smooth_scroll_body_class' );

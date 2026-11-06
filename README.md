@@ -79,6 +79,16 @@ Elementor → κατηγορία **Jofme** → **Bestsellers Tabs**.
 - Προαιρετικό “View all” link.
 - Keyboard-accessible tabs (βέλη / Home / End). Δεν απαιτεί Elementor Pro.
 
+## Global scroll speed (1.6.1)
+
+Εμφάνιση → Προσαρμογή → Jofme Options → Header:
+
+- **Smooth page scroll:** ενεργό από προεπιλογή.
+- **Scroll speed:** Slow / Medium / Fast.
+- Χρησιμοποιεί πραγματικό window scroll (τα sticky panels παραμένουν σωστά).
+- Σέβεται `prefers-reduced-motion` και δεν παρεμβαίνει σε nested scroll areas ή σε touch drag.
+- Τα in-page anchors, back-to-top και gallery dots χρησιμοποιούν την ίδια ταχύτητα.
+
 ## Attribute color swatches & product scroll gallery (1.6.0)
 
 Διαθέσιμα από την έκδοση 1.6.0.

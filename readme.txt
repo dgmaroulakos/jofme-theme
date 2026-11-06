@@ -34,6 +34,9 @@ strings / wpml-config.xml.
 = 1.7.0 =
 * Elementor Bestsellers Tabs widget with category filters and product grid.
 
+= 1.6.1 =
+* Global smooth page scroll with Customizer speed control (slow / medium / fast).
+
 = 1.6.0 =
 * Attribute-level “Display as color swatches” option.
 * Term color picker for swatch hex values.
