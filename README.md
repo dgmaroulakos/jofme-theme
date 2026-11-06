@@ -1,6 +1,6 @@
 # Jofme Premium
 
-WordPress/WooCommerce theme, version 1.6.0. Theme files live at the repository root.
+WordPress/WooCommerce theme, version 1.6.1. Theme files live at the repository root.
 
 ## Εγκατάσταση
 
@@ -67,6 +67,16 @@ WordPress/WooCommerce theme, version 1.6.0. Theme files live at the repository r
 Τα υπάρχοντα επιλεγμένα layouts παραμένουν. Για εμφάνιση αντίστοιχη των references, επιλέξτε Gallery στα δύο layouts και Aeonik Pro Light στη Typography. Η διόρθωση hover εφαρμόζεται σε όλα τα card layouts.
 
 Έλεγχοι: visual regression που ελέγχει το πραγματικό χρώμα του εμφανιζόμενου image μετά το fade (grid/list), πραγματικό variable product με αλλαγή παραλλαγής/εικόνας/τιμής και ποσότητας, native add to cart, CDN font και responsive widths 390/768/1024/1440px.
+
+## Global scroll speed (1.6.1)
+
+Εμφάνιση → Προσαρμογή → Jofme Options → Header:
+
+- **Smooth page scroll:** ενεργό από προεπιλογή.
+- **Scroll speed:** Slow / Medium / Fast.
+- Χρησιμοποιεί πραγματικό window scroll (τα sticky panels παραμένουν σωστά).
+- Σέβεται `prefers-reduced-motion` και δεν παρεμβαίνει σε nested scroll areas ή σε touch drag.
+- Τα in-page anchors, back-to-top και gallery dots χρησιμοποιούν την ίδια ταχύτητα.
 
 ## Attribute color swatches & product scroll gallery (1.6.0)
 
