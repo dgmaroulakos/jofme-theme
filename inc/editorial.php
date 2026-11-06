@@ -5,6 +5,8 @@ defined( 'ABSPATH' ) || exit;
 function jofme_editorial_assets() {
  wp_enqueue_style( 'jofme-editorial-header', JOFME_URI . '/assets/css/editorial-header.css', array( 'jofme-main' ), JOFME_VERSION );
  wp_register_style( 'jofme-editorial-widgets', JOFME_URI . '/assets/css/editorial-widgets.css', array( 'jofme-main' ), JOFME_VERSION );
+ wp_register_style( 'jofme-bestsellers-tabs', JOFME_URI . '/assets/css/bestsellers-tabs.css', array( 'jofme-main', 'jofme-editorial-widgets' ), JOFME_VERSION );
+ wp_register_script( 'jofme-bestsellers-tabs', JOFME_URI . '/assets/js/bestsellers-tabs.js', array(), JOFME_VERSION, true );
 }
 add_action( 'wp_enqueue_scripts', 'jofme_editorial_assets', 22 );
 function jofme_editorial_menus() {
@@ -30,8 +32,10 @@ add_action( 'elementor/elements/categories_registered', 'jofme_widget_category' 
 function jofme_register_editorial_widgets( $manager ) {
  require_once JOFME_DIR . '/inc/widgets/class-editorial-story.php';
  require_once JOFME_DIR . '/inc/widgets/class-weekly-sales.php';
+ require_once JOFME_DIR . '/inc/widgets/class-bestsellers-tabs.php';
  $manager->register( new Jofme_Editorial_Story_Widget() );
  $manager->register( new Jofme_Weekly_Sales_Widget() );
+ $manager->register( new Jofme_Bestsellers_Tabs_Widget() );
 }
 add_action( 'elementor/widgets/register', 'jofme_register_editorial_widgets' );
 

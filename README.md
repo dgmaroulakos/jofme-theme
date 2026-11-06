@@ -1,6 +1,6 @@
 # Jofme Premium
 
-WordPress/WooCommerce theme, version 1.6.1. Theme files live at the repository root.
+WordPress/WooCommerce theme, version 1.7.0. Theme files live at the repository root.
 
 ## Εγκατάσταση
 
@@ -67,6 +67,17 @@ WordPress/WooCommerce theme, version 1.6.1. Theme files live at the repository r
 Τα υπάρχοντα επιλεγμένα layouts παραμένουν. Για εμφάνιση αντίστοιχη των references, επιλέξτε Gallery στα δύο layouts και Aeonik Pro Light στη Typography. Η διόρθωση hover εφαρμόζεται σε όλα τα card layouts.
 
 Έλεγχοι: visual regression που ελέγχει το πραγματικό χρώμα του εμφανιζόμενου image μετά το fade (grid/list), πραγματικό variable product με αλλαγή παραλλαγής/εικόνας/τιμής και ποσότητας, native add to cart, CDN font και responsive widths 390/768/1024/1440px.
+
+## Bestsellers Tabs Elementor widget (1.7.0)
+
+Elementor → κατηγορία **Jofme** → **Bestsellers Tabs**.
+
+- Τίτλος section (προεπιλογή: “Bestsellers for a Reason”).
+- Tabs με underline active state: προαιρετικό “All” + repeater κατηγοριών WooCommerce.
+- Grid προϊόντων 2/3/4 στηλών, όριο προϊόντων, order by popularity/date/price.
+- Κάρτα με εικόνα, κατηγορία, τίτλο, τιμή και % sale badge.
+- Προαιρετικό “View all” link.
+- Keyboard-accessible tabs (βέλη / Home / End). Δεν απαιτεί Elementor Pro.
 
 ## Global scroll speed (1.6.1)
 

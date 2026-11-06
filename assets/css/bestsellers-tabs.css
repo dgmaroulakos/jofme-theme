@@ -1,0 +1,40 @@
+/* Bestsellers tabs — Shinao-inspired, Jofme tokens. */
+.jofme-bestsellers{color:var(--jofme-color-text);padding:clamp(3rem,7vw,6rem) 0}
+.jofme-bestsellers__header{display:flex;flex-wrap:wrap;align-items:end;justify-content:space-between;gap:1.25rem 2rem;margin-bottom:clamp(1.75rem,4vw,3rem)}
+.jofme-bestsellers__title{font-family:var(--jofme-font-display);font-size:clamp(2rem,3.6vw,3.25rem);font-weight:400;letter-spacing:-.02em;line-height:1.15;margin:0;color:inherit}
+.jofme-bestsellers__tabs{display:flex;flex-wrap:wrap;gap:.35rem 1.5rem;align-items:center}
+.jofme-bestsellers__tab{appearance:none;background:none;border:0;border-bottom:1px solid transparent;padding:.2rem 0 .35rem;margin:0;font:inherit;font-size:13px;letter-spacing:.02em;color:var(--jofme-color-text-muted);cursor:pointer;line-height:1.3}
+.jofme-bestsellers__tab[aria-selected=true]{color:var(--jofme-color-text);border-bottom-color:currentColor}
+.jofme-bestsellers__tab:hover{color:var(--jofme-color-text)}
+.jofme-bestsellers__tab:focus-visible{outline:2px solid var(--jofme-color-accent);outline-offset:4px}
+.jofme-bestsellers__panel[hidden]{display:none}
+.jofme-bestsellers__grid{display:grid;gap:clamp(1.25rem,3vw,2rem) clamp(1rem,2vw,1.5rem);grid-template-columns:repeat(4,minmax(0,1fr))}
+.jofme-bestsellers__grid--2{grid-template-columns:repeat(2,minmax(0,1fr))}
+.jofme-bestsellers__grid--3{grid-template-columns:repeat(3,minmax(0,1fr))}
+.jofme-bestsellers__grid--4{grid-template-columns:repeat(4,minmax(0,1fr))}
+.jofme-bestsellers__card{min-width:0;display:flex;flex-direction:column;gap:.85rem}
+.jofme-bestsellers__media{position:relative;display:block;background:var(--jofme-color-surface);overflow:hidden}
+.jofme-bestsellers__media img{display:block;width:100%;aspect-ratio:1;object-fit:contain;padding:clamp(12px,2vw,28px)}
+.jofme-bestsellers__badge{position:absolute;top:12px;inset-inline-start:12px;min-width:42px;height:42px;padding:0 8px;border-radius:50%;display:inline-grid;place-items:center;background:#5f8f7a;color:#fff;font-size:11px;font-weight:600;letter-spacing:.02em;line-height:1}
+.jofme-bestsellers__meta{display:flex;flex-direction:column;gap:.35rem}
+.jofme-bestsellers__category{margin:0;font-size:10px;text-transform:uppercase;letter-spacing:.08em;color:var(--jofme-color-text-muted)}
+.jofme-bestsellers__name{margin:0;font-family:var(--jofme-font-body);font-size:14px;font-weight:500;line-height:1.4}
+.jofme-bestsellers__name a{color:inherit;text-decoration:none}
+.jofme-bestsellers__name a:hover{color:var(--jofme-color-accent)}
+.jofme-bestsellers__price{font-size:14px}
+.jofme-bestsellers__price del{opacity:.55;margin-inline-end:.35rem}
+.jofme-bestsellers__price ins{text-decoration:none}
+.jofme-bestsellers__footer{margin-top:clamp(1.75rem,4vw,2.75rem);text-align:center}
+.jofme-bestsellers .jofme-widget-notice{margin:0;padding:1rem;background:#faf5e9;border:1px dashed var(--jofme-color-accent);font-size:13px}
+
+@media(max-width:1024px){
+ .jofme-bestsellers__grid--4{grid-template-columns:repeat(3,minmax(0,1fr))}
+}
+@media(max-width:767px){
+ .jofme-bestsellers__header{flex-direction:column;align-items:flex-start}
+ .jofme-bestsellers__tabs{width:100%;overflow-x:auto;flex-wrap:nowrap;padding-bottom:.25rem;-webkit-overflow-scrolling:touch}
+ .jofme-bestsellers__tab{flex:0 0 auto}
+ .jofme-bestsellers__grid,.jofme-bestsellers__grid--2,.jofme-bestsellers__grid--3,.jofme-bestsellers__grid--4{grid-template-columns:repeat(2,minmax(0,1fr));gap:1rem .75rem}
+ .jofme-bestsellers__media img{padding:12px}
+ .jofme-bestsellers__badge{min-width:36px;height:36px;font-size:10px}
+}
