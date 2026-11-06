@@ -35,6 +35,7 @@ strings / wpml-config.xml.
 * Attribute-level “Display as color swatches” option.
 * Term color picker for swatch hex values.
 * Color swatches on product cards, catalog filters and variation forms.
+* Gallery product design: stacked scroll images with sticky purchase panel.
 
 = 1.5.0 =
 * Per-category covers and full-width catalog heading.

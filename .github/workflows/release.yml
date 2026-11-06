@@ -21,6 +21,7 @@ jobs:
           php .tests/header.php
           php .tests/typography.php
           php .tests/swatches.php
+          php .tests/gallery-design.php
       - name: JavaScript syntax
         run: |
           node --check assets/js/main.js
@@ -31,6 +32,7 @@ jobs:
           node --check assets/js/swatches-admin.js
           node scripts/verify-catalog.cjs
           node scripts/verify-hover.cjs
+          node scripts/verify-gallery.cjs
       - name: Match release tag to theme versions
         if: startsWith(github.ref, 'refs/tags/')
         env:

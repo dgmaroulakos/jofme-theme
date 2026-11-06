@@ -17,9 +17,100 @@ function jofme_gallery_product_body( $classes ) {
 add_filter( 'body_class', 'jofme_gallery_product_body', 35 );
 function jofme_gallery_design_assets() {
  wp_enqueue_style( 'jofme-gallery-design', JOFME_URI . '/assets/css/gallery-design.css', array( 'jofme-layout', 'jofme-premium' ), JOFME_VERSION );
- if ( jofme_is_gallery_product() ) { wp_enqueue_script( 'jofme-gallery-design', JOFME_URI . '/assets/js/gallery-design.js', array( 'jquery', 'wc-single-product' ), JOFME_VERSION, true ); wp_localize_script( 'jofme-gallery-design', 'jofmeGallery', array( 'image' => __( 'Product image', 'jofme' ) ) ); }
+ if ( jofme_is_gallery_product() ) {
+  wp_enqueue_script( 'jofme-gallery-design', JOFME_URI . '/assets/js/gallery-design.js', array( 'jquery', 'wc-add-to-cart-variation' ), JOFME_VERSION, true );
+  wp_localize_script(
+   'jofme-gallery-design',
+   'jofmeGallery',
+   array(
+    'image' => __( 'Product image', 'jofme' ),
+   )
+  );
+ }
 }
 add_action( 'wp_enqueue_scripts', 'jofme_gallery_design_assets', 35 );
+
+/**
+ * Attachment IDs for the stacked product gallery (featured + gallery, unique).
+ *
+ * @param WC_Product|null $product Product.
+ * @return int[]
+ */
+function jofme_stacked_gallery_ids( $product = null ) {
+ if ( ! $product && isset( $GLOBALS['product'] ) ) {
+  $product = $GLOBALS['product'];
+ }
+ if ( ! $product || ! is_a( $product, 'WC_Product' ) ) {
+  return array();
+ }
+ $ids = array();
+ $main = (int) $product->get_image_id();
+ if ( $main ) {
+  $ids[] = $main;
+ }
+ foreach ( $product->get_gallery_image_ids() as $id ) {
+  $id = (int) $id;
+  if ( $id && ! in_array( $id, $ids, true ) ) {
+   $ids[] = $id;
+  }
+ }
+ return $ids;
+}
+
+/**
+ * Vertical stacked gallery that scrolls beside a sticky purchase panel.
+ */
+function jofme_stacked_product_gallery() {
+ global $product;
+ if ( ! $product ) {
+  return;
+ }
+
+ $ids = jofme_stacked_gallery_ids( $product );
+ echo '<div class="images jofme-stacked-gallery">';
+
+ if ( ! $ids ) {
+  echo '<figure class="jofme-stacked-gallery__item">' . wp_kses_post( wc_placeholder_img( 'woocommerce_single' ) ) . '</figure>';
+  echo '</div>';
+  return;
+ }
+
+ if ( count( $ids ) > 1 ) {
+  echo '<div class="jofme-stacked-gallery__rail"><nav class="jofme-stacked-gallery__dots" aria-label="' . esc_attr__( 'Product images', 'jofme' ) . '">';
+  foreach ( $ids as $index => $attachment_id ) {
+   $item_id = 'jofme-gallery-image-' . ( $index + 1 );
+   echo '<button type="button" class="jofme-stacked-gallery__dot" data-target="' . esc_attr( $item_id ) . '" aria-label="' . esc_attr( sprintf( /* translators: %d image number */ __( 'Go to image %d', 'jofme' ), $index + 1 ) ) . '"' . ( 0 === $index ? ' aria-current="true"' : '' ) . '></button>';
+  }
+  echo '</nav></div>';
+ }
+
+ echo '<div class="jofme-stacked-gallery__track">';
+ foreach ( $ids as $index => $attachment_id ) {
+  $full    = wp_get_attachment_image_src( $attachment_id, 'full' );
+  $href    = $full ? $full[0] : wp_get_attachment_url( $attachment_id );
+  $item_id = 'jofme-gallery-image-' . ( $index + 1 );
+  echo '<figure class="jofme-stacked-gallery__item" id="' . esc_attr( $item_id ) . '" data-index="' . absint( $index ) . '"' . ( 0 === $index ? ' data-primary="1"' : '' ) . '>';
+  if ( $href ) {
+   echo '<a href="' . esc_url( $href ) . '">';
+  }
+  echo wp_get_attachment_image(
+   $attachment_id,
+   'woocommerce_single',
+   false,
+   array(
+    'class'              => 0 === $index ? 'wp-post-image' : '',
+    'loading'            => 0 === $index ? 'eager' : 'lazy',
+    'decoding'           => 'async',
+    'data-attachment_id' => (string) $attachment_id,
+   )
+  );
+  if ( $href ) {
+   echo '</a>';
+  }
+  echo '</figure>';
+ }
+ echo '</div></div>';
+}
 function jofme_gallery_card_category() {
  if ( 'gallery' !== get_theme_mod( 'jofme_card_layout', 'minimal' ) ) { return; }
  global $product;
@@ -47,6 +138,8 @@ function jofme_gallery_single_hooks() {
  if ( ! jofme_is_gallery_product() ) { return; }
  add_action( 'woocommerce_before_single_product_summary', 'jofme_gallery_intro_open', 0 );
  add_action( 'woocommerce_after_single_product_summary', 'jofme_gallery_intro_close', 0 );
+ remove_action( 'woocommerce_before_single_product_summary', 'woocommerce_show_product_images', 20 );
+ add_action( 'woocommerce_before_single_product_summary', 'jofme_stacked_product_gallery', 20 );
  remove_action( 'woocommerce_single_product_summary', 'woocommerce_template_single_meta', 40 );
  add_action( 'woocommerce_single_product_summary', 'jofme_gallery_summary_category', 4 );
  add_action( 'woocommerce_single_product_summary', 'jofme_gallery_details', 45 );

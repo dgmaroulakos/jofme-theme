@@ -60,7 +60,7 @@ WordPress/WooCommerce theme, version 1.6.0. Theme files live at the repository r
 
 - **Διόρθωση hover:** η δεύτερη εικόνα παραμένει πάνω από την κύρια μετά το fade, με ρητό z-index μέσα σε απομονωμένο container. Η κύρια παραμένει διαθέσιμη αν δεν φορτωθεί η δεύτερη.
 - **Κάρτες:** Προσαρμογή → Jofme Options → Shop → Product card layout → **Gallery (minimal product grid)**. Λευκή κάρτα με στρογγυλεμένες γωνίες, εικόνα σε contain, κατηγορία και μικρό sans-serif τίτλο/τιμή. Quick view και λεπτομέρειες εμφανίζονται στο hover/focus και παραμένουν προσβάσιμα στο κινητό. Η προβολή list συνεχίζει να λειτουργεί.
-- **Σελίδα προϊόντος:** Προσαρμογή → Jofme Options → Layout Settings → Product pages — Design → **Gallery**. Μεγάλη native gallery αριστερά, minimal purchase panel δεξιά, πλήκτρα ποσότητας, collapsible Description / Care instructions. Στο κινητό το purchase panel εμφανίζεται κάτω από τη φωτογραφία. Οι επιλογές παραλλαγών, τιμές, αλλαγές εικόνας, zoom/lightbox, έλεγχος αποθέματος και add to cart παραμένουν λειτουργίες WooCommerce.
+- **Σελίδα προϊόντος:** Προσαρμογή → Jofme Options → Layout Settings → Product pages — Design → **Gallery**. Κάθετες stacked φωτογραφίες αριστερά με scroll, sticky purchase panel δεξιά, πλήκτρα ποσότητας, collapsible Description / Care instructions. Στο κινητό το purchase panel εμφανίζεται κάτω από τις φωτογραφίες. Οι επιλογές παραλλαγών, τιμές, αλλαγή κύριας εικόνας στην παραλλαγή, έλεγχος αποθέματος και add to cart παραμένουν λειτουργίες WooCommerce.
 - **Οδηγίες φροντίδας:** επεξεργασία προϊόντος → Δεδομένα προϊόντος → Γενικά → Care instructions. Εμφανίζονται μόνο όταν υπάρχει κείμενο.
 - **Γραμματοσειρές:** Προσαρμογή → Jofme Options → Typography. Ξεχωριστές επιλογές για Text & navigation και Headings. Η **Aeonik Pro Light (CDN)** χρησιμοποιεί το stylesheet του OnlineWebFonts που δόθηκε για το project. Φορτώνεται μόνο όταν επιλεγεί. Εναλλακτικά υπάρχουν Manrope, Cormorant, system fonts και custom Aeonik Pro με δικό σας WOFF/WOFF2 upload ή direct CDN URL για regular/medium/bold. Αν ο πάροχος CDN δεν είναι διαθέσιμος, χρησιμοποιείται fallback font.
 
@@ -68,7 +68,7 @@ WordPress/WooCommerce theme, version 1.6.0. Theme files live at the repository r
 
 Έλεγχοι: visual regression που ελέγχει το πραγματικό χρώμα του εμφανιζόμενου image μετά το fade (grid/list), πραγματικό variable product με αλλαγή παραλλαγής/εικόνας/τιμής και ποσότητας, native add to cart, CDN font και responsive widths 390/768/1024/1440px.
 
-## Attribute color swatches (1.6.0)
+## Attribute color swatches & product scroll gallery (1.6.0)
 
 Διαθέσιμα από την έκδοση 1.6.0.
 
@@ -78,6 +78,7 @@ WordPress/WooCommerce theme, version 1.6.0. Theme files live at the repository r
 - Κάρτες προϊόντων: swatch links προς την παραλλαγή.
 - Σελίδα προϊόντος: swatches αντί για dropdown στις παραλλαγές· το native select παραμένει για το WooCommerce variation JS.
 - Ρητό `no` απενεργοποιεί τα swatches ακόμα και σε color slug· κενή ρύθμιση διατηρεί το προηγούμενο slug heuristic.
+- **Gallery product scroll:** στο Product pages — Design → Gallery, οι εικόνες στοιβάζονται κάθετα και κάνουν scroll· το purchase panel μένει sticky δεξιά (όπως στο Minas reference). Dots πλοήγησης με scroll-spy στο desktop· στο κινητό οι εικόνες μένουν stacked full-width και το panel ακολουθεί από κάτω.
 
 ## Covers, view controls και διορθώσεις layouts (1.5.0)
 
@@ -92,7 +93,7 @@ WordPress/WooCommerce theme, version 1.6.0. Theme files live at the repository r
 Διορθώθηκαν συγκρούσεις που εντοπίστηκαν σε πραγματική σελίδα προϊόντος και σε local WordPress/WooCommerce:
 
 - Το αποθηκευμένο grid/list view εφαρμόζεται μόνο στα archives με επιλογέα, όχι στα related/upsell προϊόντα ή στο single product.
-- Η Gallery gallery και το purchase panel έχουν κοινό intro container, ώστε το sticky image να μη συνεχίζει πάνω από tabs και related products.
+- Η Gallery gallery και το purchase panel έχουν κοινό intro container, ώστε το sticky purchase panel να μη συνεχίζει πάνω από tabs και related products.
 - Οι κανόνες διαστάσεων/padding της Gallery εφαρμόζονται στις φωτογραφίες των slides, όχι στο native zoom overlay.
 - Τα swatch links βρίσκονται έξω από το κύριο product link, αποφεύγοντας άκυρα nested anchors.
 - Οι βασικές στήλες προκύπτουν από τα WooCommerce loop classes. Related products και shortcodes διατηρούν δική τους διάταξη και responsive συμπεριφορά.
