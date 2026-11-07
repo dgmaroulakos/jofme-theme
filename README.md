@@ -1,6 +1,6 @@
 # Jofme Premium
 
-WordPress/WooCommerce theme, version 1.7.3. Theme files live at the repository root.
+WordPress/WooCommerce theme, version 1.7.4. Theme files live at the repository root.
 
 ## Εγκατάσταση
 
@@ -67,6 +67,12 @@ WordPress/WooCommerce theme, version 1.7.3. Theme files live at the repository r
 Τα υπάρχοντα επιλεγμένα layouts παραμένουν. Για εμφάνιση αντίστοιχη των references, επιλέξτε Gallery στα δύο layouts και Aeonik Pro Light στη Typography. Η διόρθωση hover εφαρμόζεται σε όλα τα card layouts.
 
 Έλεγχοι: visual regression που ελέγχει το πραγματικό χρώμα του εμφανιζόμενου image μετά το fade (grid/list), πραγματικό variable product με αλλαγή παραλλαγής/εικόνας/τιμής και ποσότητας, native add to cart, CDN font και responsive widths 390/768/1024/1440px.
+
+## Shop sidebar off-canvas (1.7.4)
+
+- Σε mobile/tablet (<960px) το shop sidebar ανοίγει ως off-canvas panel από το κουμπί **Filters**.
+- Εμφάνιση → Προσαρμογή → Jofme Options → Layout Settings → **Shop & product categories — Off-canvas open effect**:
+  - Slide from left / right / bottom, Fade, Scale.
 
 ## Bestsellers card layout + hover (1.7.1 / 1.7.2)
 
