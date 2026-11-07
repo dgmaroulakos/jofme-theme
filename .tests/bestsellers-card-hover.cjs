@@ -54,18 +54,26 @@ body{margin:0;width:1100px}
    const title = document.querySelector('.woocommerce-loop-product__title');
    const mediaBox = media.getBoundingClientRect();
    const titleBox = title.getBoundingClientRect();
+   const img0 = imgs[0].getBoundingClientRect();
    return {
     display: getComputedStyle(media).display,
     mediaHeight: mediaBox.height,
-    img0Top: imgs[0].getBoundingClientRect().top,
+    mediaWidth: mediaBox.width,
+    img0Top: img0.top,
     img1Top: imgs[1].getBoundingClientRect().top,
+    img0Height: img0.height,
+    img0Width: img0.width,
     titleGap: titleBox.top - mediaBox.bottom,
+    imgPosition: getComputedStyle(imgs[0]).position,
    };
   });
 
-  assert.equal(measure.display, 'grid', 'Card media must remain display:grid for overlay');
+  assert.equal(measure.display, 'block', 'Card media uses a positioned block frame');
+  assert.equal(measure.imgPosition, 'absolute', 'Images must be absolutely overlaid in the frame');
   assert.ok(Math.abs(measure.img0Top - measure.img1Top) < 1, 'Primary and hover images must share the same top edge');
   assert.ok(measure.mediaHeight > 250 && measure.mediaHeight < 420, `Media height should be one square cell, got ${measure.mediaHeight}`);
+  assert.ok(Math.abs(measure.img0Height - measure.mediaHeight) < 1, `Image height must match media frame, got ${measure.img0Height} vs ${measure.mediaHeight}`);
+  assert.ok(Math.abs(measure.img0Width - measure.mediaWidth) < 1, `Image width must match media frame, got ${measure.img0Width} vs ${measure.mediaWidth}`);
   assert.ok(measure.titleGap >= 0 && measure.titleGap < 80, `Title must sit just under media, gap=${measure.titleGap}`);
 
   const clip = await page.evaluate(() => {
