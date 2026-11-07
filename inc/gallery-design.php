@@ -24,6 +24,11 @@ function jofme_gallery_design_assets() {
    'jofmeGallery',
    array(
     'image' => __( 'Product image', 'jofme' ),
+    'close' => __( 'Close', 'jofme' ),
+    'prev'  => __( 'Previous image', 'jofme' ),
+    'next'  => __( 'Next image', 'jofme' ),
+    /* translators: 1: current image number, 2: total images */
+    'of'    => __( '%1$s of %2$s', 'jofme' ),
    )
   );
  }
@@ -91,7 +96,7 @@ function jofme_stacked_product_gallery() {
   $item_id = 'jofme-gallery-image-' . ( $index + 1 );
   echo '<figure class="jofme-stacked-gallery__item" id="' . esc_attr( $item_id ) . '" data-index="' . absint( $index ) . '"' . ( 0 === $index ? ' data-primary="1"' : '' ) . '>';
   if ( $href ) {
-   echo '<a href="' . esc_url( $href ) . '">';
+   echo '<a class="jofme-stacked-gallery__link" href="' . esc_url( $href ) . '" data-lightbox-index="' . absint( $index ) . '">';
   }
   echo wp_get_attachment_image(
    $attachment_id,
@@ -128,19 +133,38 @@ function jofme_gallery_summary_category() {
 function jofme_gallery_details() {
  global $product;
  if ( ! $product ) { return; }
- $description = $product->get_description(); $care = $product->get_meta( '_jofme_care_instructions' );
+ $description = $product->get_description();
+ $care        = $product->get_meta( '_jofme_care_instructions' );
  if ( ! $description && ! $care ) { return; }
  echo '<div class="jofme-product-details">';
- if ( $description ) { echo '<details><summary>' . esc_html__( 'Description', 'jofme' ) . '</summary><div>' . wp_kses_post( apply_filters( 'the_content', $description ) ) . '</div></details>'; }
- if ( $care ) { echo '<details><summary>' . esc_html__( 'Care instructions', 'jofme' ) . '</summary><div>' . wp_kses_post( wpautop( $care ) ) . '</div></details>'; }
+ if ( $description ) {
+  echo '<details open class="jofme-product-details__description"><summary>' . esc_html__( 'Description', 'jofme' ) . '</summary><div>' . wp_kses_post( apply_filters( 'the_content', $description ) ) . '</div></details>';
+ }
+ if ( $care ) {
+  echo '<details class="jofme-product-details__care"><summary>' . esc_html__( 'Care instructions', 'jofme' ) . '</summary><div>' . wp_kses_post( wpautop( $care ) ) . '</div></details>';
+ }
  echo '</div>';
 }
+
+/**
+ * Product title above the gallery on small screens (summary title stays for desktop).
+ */
+function jofme_gallery_mobile_title() {
+ global $product;
+ if ( ! $product ) {
+  return;
+ }
+ echo '<h1 class="product_title entry-title jofme-product-title--mobile">' . esc_html( $product->get_name() ) . '</h1>';
+}
+
 function jofme_gallery_single_hooks() {
  if ( ! jofme_is_gallery_product() ) { return; }
  add_action( 'woocommerce_before_single_product_summary', 'jofme_gallery_intro_open', 0 );
  add_action( 'woocommerce_after_single_product_summary', 'jofme_gallery_intro_close', 0 );
  remove_action( 'woocommerce_before_single_product_summary', 'woocommerce_show_product_images', 20 );
+ add_action( 'woocommerce_before_single_product_summary', 'jofme_gallery_mobile_title', 15 );
  add_action( 'woocommerce_before_single_product_summary', 'jofme_stacked_product_gallery', 20 );
+ remove_action( 'woocommerce_single_product_summary', 'woocommerce_template_single_excerpt', 20 );
  remove_action( 'woocommerce_single_product_summary', 'woocommerce_template_single_meta', 40 );
  add_action( 'woocommerce_single_product_summary', 'jofme_gallery_summary_category', 4 );
  add_action( 'woocommerce_single_product_summary', 'jofme_gallery_details', 45 );
