@@ -6,3 +6,58 @@ body.jofme-layout-settings .jofme-layout>.content-area,body.jofme-layout-setting
 body.single-product.jofme-gallery-stacked.woocommerce div.product div.images,body.single-product.jofme-gallery-stacked.woocommerce div.product div.summary{float:none;width:100%}
 body.single-product.jofme-gallery-stacked.woocommerce div.product div.images{max-width:800px;margin-inline:auto;margin-bottom:2rem}
 @media(min-width:769px){body.single-product.jofme-gallery-right.woocommerce div.product div.images{float:right}body.single-product.jofme-gallery-right.woocommerce div.product div.summary{float:left}}
+
+/* Shop sidebar off-canvas — mobile & tablet (<960px). */
+.jofme-shop-sidebar-toggle{
+ display:none;align-items:center;gap:.55rem;margin:0 0 1rem;padding:.7rem 1rem;border:1px solid var(--jofme-color-border);background:transparent;color:inherit;font:inherit;font-size:11px;letter-spacing:.12em;text-transform:uppercase;cursor:pointer
+}
+.jofme-shop-sidebar-toggle:hover,.jofme-shop-sidebar-toggle[aria-expanded=true]{border-color:var(--jofme-color-text);color:var(--jofme-color-accent)}
+.jofme-shop-sidebar-panel__header{display:none}
+.jofme-shop-sidebar-backdrop{display:none}
+
+@media(max-width:959px){
+ body.jofme-shop-sidebar-offcanvas .jofme-shop-sidebar-toggle{display:inline-flex}
+ body.jofme-shop-sidebar-offcanvas .jofme-shop-sidebar-panel__header{
+  display:flex;align-items:center;justify-content:space-between;gap:1rem;margin:0 0 1.25rem;padding-bottom:.85rem;border-bottom:1px solid var(--jofme-color-border)
+ }
+ body.jofme-shop-sidebar-offcanvas .jofme-shop-sidebar-panel__title{margin:0;font-size:12px;letter-spacing:.14em;text-transform:uppercase}
+ body.jofme-shop-sidebar-offcanvas .jofme-shop-sidebar-close{
+  appearance:none;border:0;background:transparent;color:inherit;font-size:1.75rem;line-height:1;cursor:pointer;padding:.15rem .35rem
+ }
+ body.jofme-shop-sidebar-offcanvas .jofme-shop-sidebar-backdrop{
+  display:block;position:fixed;inset:0;z-index:1190;background:rgba(26,21,18,.4);opacity:0;visibility:hidden;pointer-events:none;transition:opacity .28s ease,visibility .28s ease
+ }
+ body.jofme-shop-sidebar-offcanvas.jofme-sidebar-open .jofme-shop-sidebar-backdrop{opacity:1;visibility:visible;pointer-events:auto}
+ body.jofme-shop-sidebar-offcanvas .jofme-layout--shop>.jofme-shop-sidebar-panel,
+ body.jofme-shop-sidebar-offcanvas .jofme-shop-sidebar-panel.is-detached{
+  position:fixed;z-index:1200;top:0;bottom:0;width:min(88vw,360px);max-width:100%;margin:0;padding:1.25rem 1.25rem 2rem;background:var(--jofme-color-bg);color:var(--jofme-color-text);overflow:auto;-webkit-overflow-scrolling:touch;box-shadow:0 18px 48px rgba(26,21,18,.18);visibility:hidden;pointer-events:none;transition:transform .32s ease,opacity .28s ease,visibility .28s ease
+ }
+ /* Default closed transforms per effect. */
+ body.jofme-sidebar-effect-slide-left .jofme-shop-sidebar-panel{left:0;right:auto;transform:translateX(-105%)}
+ body.jofme-sidebar-effect-slide-right .jofme-shop-sidebar-panel{right:0;left:auto;transform:translateX(105%)}
+ body.jofme-sidebar-effect-slide-bottom .jofme-shop-sidebar-panel{
+  top:auto;left:0;right:0;bottom:0;width:100%;max-height:min(88vh,720px);border-radius:18px 18px 0 0;transform:translateY(105%)
+ }
+ body.jofme-sidebar-effect-fade .jofme-shop-sidebar-panel{left:0;right:auto;opacity:0;transform:none}
+ body.jofme-sidebar-effect-scale .jofme-shop-sidebar-panel{left:50%;right:auto;top:50%;bottom:auto;width:min(92vw,400px);max-height:min(86vh,720px);border-radius:16px;opacity:0;transform:translate(-50%,-50%) scale(.92)}
+ /* Open state. */
+ body.jofme-shop-sidebar-offcanvas.jofme-sidebar-open .jofme-shop-sidebar-panel{
+  visibility:visible;pointer-events:auto;opacity:1;transform:none
+ }
+ body.jofme-sidebar-effect-scale.jofme-sidebar-open .jofme-shop-sidebar-panel{transform:translate(-50%,-50%) scale(1)}
+ body.jofme-sidebar-open{overflow:hidden}
+}
+
+@media(min-width:960px){
+ body.jofme-shop-sidebar-offcanvas .jofme-shop-sidebar-toggle,
+ body.jofme-shop-sidebar-offcanvas .jofme-shop-sidebar-panel__header,
+ body.jofme-shop-sidebar-offcanvas .jofme-shop-sidebar-backdrop{display:none!important}
+ body.jofme-shop-sidebar-offcanvas .jofme-shop-sidebar-panel.is-detached{
+  position:static;width:auto;height:auto;max-height:none;padding:0;overflow:visible;box-shadow:none;transform:none;opacity:1;visibility:visible;pointer-events:auto;inset:auto
+ }
+}
+
+@media(prefers-reduced-motion:reduce){
+ .jofme-shop-sidebar-backdrop,
+ body.jofme-shop-sidebar-offcanvas .jofme-shop-sidebar-panel{transition:none}
+}

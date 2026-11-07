@@ -16,6 +16,93 @@
   setView(button.dataset.view);
   try { localStorage.setItem('jofme-catalog-view', button.dataset.view); } catch (_) {}
  }));
+
+ /* Shop sidebar off-canvas (mobile / tablet). */
+ const panel = document.querySelector('.jofme-shop-sidebar-panel');
+ const toggle = document.querySelector('.jofme-shop-sidebar-toggle');
+ if (panel && toggle && document.body.classList.contains('jofme-shop-sidebar-offcanvas')) {
+  const layout = panel.parentElement;
+  const placeholder = document.createComment('jofme-shop-sidebar');
+  const backdrop = document.createElement('div');
+  backdrop.className = 'jofme-shop-sidebar-backdrop';
+  backdrop.hidden = true;
+  document.body.appendChild(backdrop);
+  let closeTimer;
+  const mobile = () => window.matchMedia('(max-width: 959px)').matches;
+  const focusable = () => [...panel.querySelectorAll('button, a[href], input, select, textarea, [tabindex]:not([tabindex="-1"])')].filter((el) => el.getClientRects().length && !el.disabled);
+  function detach() {
+   if (panel.classList.contains('is-detached')) return;
+   layout.insertBefore(placeholder, panel);
+   document.body.appendChild(panel);
+   panel.classList.add('is-detached');
+  }
+  function restore() {
+   if (!panel.classList.contains('is-detached') || !placeholder.parentNode) return;
+   placeholder.parentNode.insertBefore(panel, placeholder);
+   placeholder.remove();
+   panel.classList.remove('is-detached');
+  }
+  function closeSidebar() {
+   clearTimeout(closeTimer);
+   document.body.classList.remove('jofme-sidebar-open');
+   toggle.setAttribute('aria-expanded', 'false');
+   backdrop.hidden = true;
+   closeTimer = setTimeout(() => {
+    if (!mobile()) restore();
+    else if (!document.body.classList.contains('jofme-sidebar-open')) {
+     // Keep detached while mobile so fixed positioning stays outside sticky ancestors.
+    }
+    toggle.focus();
+   }, 280);
+  }
+  function openSidebar() {
+   clearTimeout(closeTimer);
+   if (!mobile()) return;
+   detach();
+   backdrop.hidden = false;
+   requestAnimationFrame(() => document.body.classList.add('jofme-sidebar-open'));
+   toggle.setAttribute('aria-expanded', 'true');
+   const first = focusable()[0] || panel.querySelector('.jofme-shop-sidebar-close');
+   if (first) first.focus();
+  }
+  toggle.addEventListener('click', () => {
+   if (toggle.getAttribute('aria-expanded') === 'true') closeSidebar();
+   else openSidebar();
+  });
+  const closeButton = panel.querySelector('.jofme-shop-sidebar-close');
+  if (closeButton) closeButton.addEventListener('click', closeSidebar);
+  backdrop.addEventListener('click', closeSidebar);
+  document.addEventListener('keydown', (event) => {
+   if (event.key === 'Escape' && document.body.classList.contains('jofme-sidebar-open')) {
+    event.preventDefault();
+    closeSidebar();
+   }
+  });
+  panel.addEventListener('keydown', (event) => {
+   if (event.key !== 'Tab' || !document.body.classList.contains('jofme-sidebar-open')) return;
+   const items = focusable();
+   if (!items.length) return;
+   const first = items[0];
+   const last = items[items.length - 1];
+   if (event.shiftKey && document.activeElement === first) {
+    event.preventDefault();
+    last.focus();
+   } else if (!event.shiftKey && document.activeElement === last) {
+    event.preventDefault();
+    first.focus();
+   }
+  });
+  window.addEventListener('resize', () => {
+   if (!mobile() && document.body.classList.contains('jofme-sidebar-open')) {
+    clearTimeout(closeTimer);
+    document.body.classList.remove('jofme-sidebar-open');
+    toggle.setAttribute('aria-expanded', 'false');
+    backdrop.hidden = true;
+    restore();
+   }
+  });
+ }
+
  const dialog = document.getElementById('jofme-preview-dialog');
  if (!dialog) return;
  const content = dialog.querySelector('.jofme-preview-content');

@@ -93,6 +93,19 @@ function jofme_catalog_view() {
 }
 add_action( 'woocommerce_before_shop_loop', 'jofme_catalog_view', 35 );
 
+/** Mobile/tablet control that opens the shop sidebar off-canvas panel. */
+function jofme_shop_sidebar_toggle() {
+ if ( ! function_exists( 'jofme_layout_sidebar_is_offcanvas' ) || ! jofme_layout_sidebar_is_offcanvas() ) {
+  return;
+ }
+ echo '<button type="button" class="jofme-shop-sidebar-toggle" aria-expanded="false" aria-controls="secondary">';
+ echo '<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true" focusable="false"><path d="M4 6h16M4 12h10M4 18h14"/></svg>';
+ echo '<span>' . esc_html__( 'Filters', 'jofme' ) . '</span>';
+ echo '</button>';
+}
+add_action( 'woocommerce_before_shop_loop', 'jofme_shop_sidebar_toggle', 15 );
+add_action( 'woocommerce_no_products_found', 'jofme_shop_sidebar_toggle', 5 );
+
 function jofme_card_actions() {
  global $product;
  echo '<div class="jofme-card-actions"><button type="button" class="jofme-preview" data-product="' . absint( $product->get_id() ) . '" aria-label="' . esc_attr__( 'Quick view', 'jofme' ) . '"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true"><path d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7S2 12 2 12Z"/><circle cx="12" cy="12" r="3"/></svg></button><a href="' . esc_url( get_permalink( $product->get_id() ) ) . '" aria-label="' . esc_attr__( 'Product details', 'jofme' ) . '"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true"><path d="M5 19 19 5M5 5h14v14"/></svg></a></div>';
