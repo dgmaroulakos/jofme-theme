@@ -11,7 +11,7 @@
 	--jofme-font-display: "Cormorant Garamond", Georgia, serif;
 	--jofme-font-body: "Manrope", system-ui, sans-serif;
 	--jofme-container: 1320px;
-	--jofme-header-h: 72px;
+	--jofme-header-h: 132px;
 	--jofme-radius: 0;
 	--jofme-transition: 0.25s ease;
 }
@@ -156,6 +156,7 @@ p {
 	align-items: center;
 	gap: 1.5rem;
 	min-height: var(--jofme-header-h);
+	padding-block: 1.15rem;
 }
 
 .site-header--centered .site-header__inner {
@@ -166,11 +167,20 @@ p {
 .site-header__end {
 	display: flex;
 	align-items: center;
+	align-self: center;
 	gap: 0.85rem;
+	min-height: 0;
 }
 
 .site-header__end {
 	justify-content: flex-end;
+}
+
+.site-branding,
+.custom-logo-link {
+	display: inline-flex;
+	align-items: center;
+	line-height: 0;
 }
 
 .site-title {
@@ -191,8 +201,10 @@ p {
 }
 
 .custom-logo-link img {
-	max-height: 48px;
+	display: block;
+	max-height: 100px;
 	width: auto;
+	height: auto;
 }
 
 /* Navigation */
@@ -256,7 +268,17 @@ p {
 	display: inline-flex;
 	align-items: center;
 	justify-content: center;
+	align-self: center;
 	position: relative;
+	line-height: 0;
+}
+
+.jofme-menu-toggle svg,
+.jofme-search-toggle svg,
+.jofme-account-link svg,
+.jofme-cart-link svg {
+	display: block;
+	flex-shrink: 0;
 }
 
 .jofme-menu-toggle__bars,
