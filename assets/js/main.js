@@ -375,6 +375,45 @@
 		});
 	}
 
+	/* Shop / category archives: smooth-scroll to the product grid on entry. */
+	function isProductArchive() {
+		return (
+			body.classList.contains('woocommerce') &&
+			(body.classList.contains('post-type-archive-product') ||
+				body.classList.contains('tax-product_cat') ||
+				body.classList.contains('tax-product_tag') ||
+				body.classList.contains('woocommerce-shop'))
+		);
+	}
+	function scrollArchiveToProducts() {
+		if (!scrollConfig.archiveProducts || !isProductArchive()) {
+			return;
+		}
+		if (window.location.hash) {
+			return;
+		}
+		if ((window.scrollY || window.pageYOffset || 0) > 16) {
+			return;
+		}
+		const target = qs('#jofme-catalog-products') || qs('.jofme-shop ul.products') || qs('ul.products');
+		if (!target) {
+			return;
+		}
+		const headerOffset = parseFloat(getComputedStyle(doc.documentElement).getPropertyValue('--jofme-header-h')) || 0;
+		const top = target.getBoundingClientRect().top + (window.scrollY || 0) - headerOffset - 12;
+		if (top <= 24) {
+			return;
+		}
+		window.setTimeout(function () {
+			jofmeScrollTo(top);
+		}, 150);
+	}
+	if (doc.readyState === 'complete') {
+		scrollArchiveToProducts();
+	} else {
+		window.addEventListener('load', scrollArchiveToProducts, { once: true });
+	}
+
 	/* Escape closes overlays */
 	doc.addEventListener('keydown', function (e) {
 		if (e.key !== 'Escape') {

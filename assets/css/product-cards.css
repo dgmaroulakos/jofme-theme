@@ -5,7 +5,17 @@ body.jofme-card-bestsellers.woocommerce ul.products li.product .woocommerce-loop
 
 /* Single image (no hover pair). */
 body.jofme-card-bestsellers.woocommerce ul.products li.product .woocommerce-loop-product__link>img{
- display:block;width:100%;margin:0;aspect-ratio:1;object-fit:contain;padding:clamp(12px,2vw,28px);background:var(--jofme-color-surface)
+ display:block;width:100%;margin:0;aspect-ratio:1;object-fit:contain;padding:clamp(12px,2vw,28px);background:var(--jofme-color-surface);transition:transform .4s ease
+}
+@media(hover:hover) and (pointer:fine){
+ body.jofme-card-bestsellers.woocommerce ul.products li.product:hover .woocommerce-loop-product__link>img,
+ body.jofme-card-bestsellers.woocommerce ul.products li.product:hover .jofme-card-media img{
+  transform:scale(var(--jofme-card-hover-scale,1.05))
+ }
+}
+@media(prefers-reduced-motion:reduce){
+ body.jofme-card-bestsellers.woocommerce ul.products li.product .woocommerce-loop-product__link>img,
+ body.jofme-card-bestsellers.woocommerce ul.products li.product .jofme-card-media img{transition:none;transform:none!important}
 }
 
 /*
@@ -17,9 +27,9 @@ body.jofme-card-bestsellers.woocommerce ul.products li.product .jofme-card-media
  position:relative;display:block;width:100%;aspect-ratio:1;margin:0;overflow:hidden;isolation:isolate;background:var(--jofme-color-surface)
 }
 body.jofme-card-bestsellers.woocommerce ul.products li.product .jofme-card-media img{
- position:absolute;inset:0;z-index:0;box-sizing:border-box;width:100%;height:100%;max-width:none;margin:0;padding:clamp(12px,2vw,28px);object-fit:contain;object-position:center;aspect-ratio:auto;background:transparent
+ position:absolute;inset:0;z-index:0;box-sizing:border-box;width:100%;height:100%;max-width:none;margin:0;padding:clamp(12px,2vw,28px);object-fit:contain;object-position:center;aspect-ratio:auto;background:transparent;transition:opacity .3s ease,transform .4s ease
 }
-body.jofme-card-bestsellers.woocommerce ul.products li.product .jofme-card-media .jofme-hover-image{z-index:1;opacity:0;pointer-events:none;transition:opacity .3s ease}
+body.jofme-card-bestsellers.woocommerce ul.products li.product .jofme-card-media .jofme-hover-image{z-index:1;opacity:0;pointer-events:none}
 body.jofme-card-bestsellers.woocommerce ul.products li.product:hover img{opacity:1}
 @media(hover:hover) and (pointer:fine){
  body.jofme-card-bestsellers.woocommerce ul.products li.product:hover .jofme-card-media .jofme-hover-image.is-ready{opacity:1}

@@ -136,7 +136,7 @@ function jofme_catalog_toolbar() {
  if ( ! is_shop() && ! is_product_taxonomy() ) {
   return;
  }
- echo '<div class="jofme-catalog-toolbar">';
+ echo '<div class="jofme-catalog-toolbar" id="jofme-catalog-products">';
  echo '<div class="jofme-catalog-toolbar__controls">';
  jofme_shop_sidebar_toggle();
  if ( function_exists( 'woocommerce_catalog_ordering' ) ) {
