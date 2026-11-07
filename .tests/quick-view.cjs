@@ -20,5 +20,7 @@ assert.match(js, /add_to_cart/);
 assert.match(js, /found_variation/);
 assert.match(css, /\.jofme-preview-product form\.cart/);
 assert.match(css, /\.jofme-preview-gallery__main/);
+assert.match(css, /\.jofme-preview-grid \.images,\.jofme-preview-grid \.summary/);
+assert.match(css, /width:100%/);
 assert.match(swatches, /is_shop\(\) \|\| is_product_taxonomy\(\)/);
 console.log('PASS: quick view mirrors product page (gallery, variations, cart)');
