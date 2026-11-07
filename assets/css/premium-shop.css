@@ -11,7 +11,41 @@
 .woocommerce ul.products li.product{min-width:0}.woocommerce ul.products li.product .woocommerce-loop-product__title{font-size:1.3rem;letter-spacing:.01em}.woocommerce ul.products li.product img{transition:opacity .3s ease}.jofme-card-actions{position:absolute;inset-block-start:16px;inset-inline-end:12px;display:flex;flex-direction:column;gap:.5rem;z-index:3}.jofme-card-actions button,.jofme-card-actions a{display:grid;place-items:center;width:40px;height:40px;border:1px solid #e8e2d8;background:#fffdf9;color:#29231e;border-radius:50%;cursor:pointer;box-shadow:0 3px 12px #00000005}.jofme-card-actions button:hover,.jofme-card-actions a:hover{color:var(--jofme-color-accent)}.jofme-card-description{display:none;font-size:13px;color:var(--jofme-color-text-muted);line-height:1.5}.jofme-card-description__more{color:inherit;text-decoration:underline;text-underline-offset:.15em;white-space:nowrap}.jofme-card-description__more:hover{color:var(--jofme-color-accent)}
 .jofme-card-framed.woocommerce ul.products li.product{border:1px solid var(--jofme-color-border);padding:1rem!important;background:var(--jofme-color-surface)}.jofme-card-editorial.woocommerce ul.products li.product{text-align:start}.jofme-card-editorial.woocommerce ul.products li.product .woocommerce-loop-product__title{font-size:1.6rem}
 .woocommerce .jofme-shop[data-view="list"] ul.products li.product{text-align:start;min-height:240px;padding-inline-start:calc(30% + 2rem)!important;padding-bottom:1.5rem!important;border-bottom:1px solid var(--jofme-color-border)}.woocommerce .jofme-shop[data-view="list"] ul.products li.product .woocommerce-loop-product__link img{position:absolute;inset-inline-start:0;top:0;width:30%;height:220px;object-fit:contain}.woocommerce .jofme-shop[data-view="list"] .jofme-card-description{display:block;padding-inline-end:3.5rem;margin:.35rem 0 0}.woocommerce .jofme-shop[data-view="list"] .onsale{display:none}
-#jofme-preview-dialog{width:min(920px,calc(100% - 2rem));max-height:90dvh;overflow:auto;border:1px solid var(--jofme-color-border);padding:3rem;background:var(--jofme-color-bg);color:var(--jofme-color-text)}#jofme-preview-dialog::backdrop{background:#17131099;backdrop-filter:blur(4px)}.jofme-preview-close{position:absolute;inset-inline-end:12px;top:8px;border:0;background:none;font-size:30px;cursor:pointer;color:inherit}.jofme-preview-grid{display:grid;grid-template-columns:1fr 1fr;gap:2.5rem;align-items:center}.jofme-preview-grid img{width:100%;height:auto;max-height:65vh;object-fit:contain}.jofme-preview-grid h2{font-family:var(--jofme-font-display);font-size:2.5rem;font-weight:400;line-height:1.15}.jofme-preview-grid .price{font-size:1.15rem;margin-bottom:1rem}.jofme-preview-grid p{font-size:14px}.jofme-preview-open{overflow:hidden}.jofme-view button:focus-visible,.jofme-card-actions :focus-visible{outline:2px solid var(--jofme-color-accent);outline-offset:3px}
+#jofme-preview-dialog{width:min(1080px,calc(100% - 1.5rem));max-height:92dvh;overflow:auto;border:1px solid var(--jofme-color-border);padding:clamp(1.5rem,3vw,2.75rem);background:var(--jofme-color-bg);color:var(--jofme-color-text)}
+#jofme-preview-dialog::backdrop{background:#17131099;backdrop-filter:blur(4px)}
+.jofme-preview-close{position:sticky;inset-inline-end:0;top:0;z-index:2;float:inline-end;margin:0 0 .5rem;border:0;background:none;font-size:30px;line-height:1;cursor:pointer;color:inherit}
+.jofme-preview-open{overflow:hidden}
+.jofme-preview-grid{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(260px,.9fr);gap:clamp(1.25rem,3vw,2.5rem);align-items:start}
+.jofme-preview-gallery{display:flex;flex-direction:column;gap:1rem;min-width:0}
+.jofme-preview-gallery__main{margin:0;background:var(--jofme-color-surface);display:grid;place-items:center;aspect-ratio:1;overflow:hidden}
+.jofme-preview-gallery__main img{display:block;width:100%;height:100%;max-height:min(62vh,560px);object-fit:contain;padding:clamp(16px,3vw,40px);margin:0}
+.jofme-preview-gallery__thumbs{display:flex;flex-wrap:wrap;gap:.5rem}
+.jofme-preview-gallery__thumb{appearance:none;border:1px solid var(--jofme-color-border);background:var(--jofme-color-surface);padding:0;width:64px;height:64px;cursor:pointer;overflow:hidden}
+.jofme-preview-gallery__thumb img{display:block;width:100%;height:100%;object-fit:contain;padding:6px}
+.jofme-preview-gallery__thumb.is-active,.jofme-preview-gallery__thumb[aria-current=true]{outline:2px solid var(--jofme-color-accent);outline-offset:2px}
+.jofme-preview-product .summary{min-width:0}
+.jofme-preview-product .jofme-product-category{font-size:11px;text-transform:uppercase;text-decoration:underline;text-underline-offset:3px;margin:0 0 .35rem}
+.jofme-preview-product .product_title{font-family:var(--jofme-font-body);font-size:clamp(20px,2vw,28px);font-weight:400;line-height:1.35;text-transform:uppercase;letter-spacing:.015em;margin:12px 0}
+.jofme-preview-product p.price,.jofme-preview-product .woocommerce-variation-price .price{font-size:14px;margin:0 0 1.25rem}
+.jofme-preview-product .woocommerce-product-details__short-description{font-size:14px;line-height:1.7;color:var(--jofme-color-text-muted);margin:0 0 1.25rem}
+.jofme-preview-product form.cart{margin:1.25rem 0 0;display:flex;flex-wrap:wrap;gap:12px}
+.jofme-preview-product form.variations_form{display:block}
+.jofme-preview-product form.cart .variations{margin:0 0 1.25rem;width:100%}
+.jofme-preview-product form.cart .variations tr,.jofme-preview-product form.cart .variations th,.jofme-preview-product form.cart .variations td{display:block;width:100%;text-align:start;padding:0}
+.jofme-preview-product form.cart .variations th{font-size:11px;font-weight:400;padding:0 0 8px;text-transform:uppercase;letter-spacing:.04em}
+.jofme-preview-product form.cart .variations td{padding:0 0 1rem}
+.jofme-preview-product form.cart .variations select{width:100%;min-width:0;max-width:none;min-height:54px;border:1px solid var(--jofme-color-border);border-radius:3px;background:transparent;padding:12px;font:inherit;font-size:12px;text-transform:uppercase}
+.jofme-preview-product form.cart .quantity{display:flex;align-items:center;justify-content:space-between;width:100%;height:54px;margin:0 0 12px;border:1px solid var(--jofme-color-border);border-radius:3px;float:none}
+.jofme-preview-product .quantity .qty{border:0;width:100%;height:50px;background:transparent;font-size:12px;appearance:textfield;-moz-appearance:textfield;text-align:center}
+.jofme-preview-product .quantity .qty::-webkit-inner-spin-button{appearance:none}
+.jofme-preview-product .jofme-quantity-step{border:0;background:none;padding:12px 18px;cursor:pointer;font:inherit;color:inherit}
+.jofme-preview-product form.cart .single_add_to_cart_button{width:100%;min-height:54px;border-radius:3px;background:var(--jofme-color-text);color:var(--jofme-color-surface);font-size:11px;font-weight:400;letter-spacing:.04em;border:0;cursor:pointer}
+.jofme-preview-product form.cart .single_add_to_cart_button.loading{opacity:.7}
+.jofme-preview-product form.cart .single_add_to_cart_button.added{background:var(--jofme-color-accent)}
+.jofme-preview-product .jofme-variation-swatches select{min-height:0;min-width:0}
+.jofme-preview-more{margin:1.25rem 0 0;font-size:12px;text-transform:uppercase;letter-spacing:.04em}
+.jofme-preview-more a{color:inherit;text-decoration:underline;text-underline-offset:.2em}
+.jofme-view button:focus-visible,.jofme-card-actions :focus-visible{outline:2px solid var(--jofme-color-accent);outline-offset:3px}
 @media(max-width:767px){
  .jofme-catalog-toolbar{gap:.75rem;margin-bottom:1.15rem}
  .jofme-catalog-toolbar__controls{flex-wrap:nowrap;gap:.5rem}
@@ -21,10 +55,10 @@
  .jofme-view{margin-inline-start:0}
  .jofme-view__btn--desktop{display:none!important}
  .woocommerce .jofme-shop[data-view="3"] ul.products{grid-template-columns:repeat(2,minmax(0,1fr))!important}
- .jofme-preview-grid{grid-template-columns:1fr;gap:1rem}
- #jofme-preview-dialog{padding:2.5rem 1.25rem}
- .jofme-preview-grid img{max-height:35vh}
- .jofme-preview-grid h2{font-size:2rem}
+ .jofme-preview-grid{grid-template-columns:1fr;gap:1.25rem}
+ #jofme-preview-dialog{padding:1.25rem 1rem 1.75rem;width:calc(100% - 1rem)}
+ .jofme-preview-gallery__main img{max-height:42vh;padding:16px}
+ .jofme-preview-product .product_title{font-size:1.25rem}
  .woocommerce .jofme-shop[data-view] ul.products{gap:1.5rem .75rem}
  .jofme-card-actions{inset-inline-end:6px;top:6px}
  .jofme-card-actions button,.jofme-card-actions a{width:34px;height:34px}
