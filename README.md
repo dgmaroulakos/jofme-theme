@@ -1,6 +1,6 @@
 # Jofme Premium
 
-WordPress/WooCommerce theme, version 1.7.2. Theme files live at the repository root.
+WordPress/WooCommerce theme, version 1.7.3. Theme files live at the repository root.
 
 ## Εγκατάσταση
 
@@ -75,6 +75,7 @@ WordPress/WooCommerce theme, version 1.7.2. Theme files live at the repository r
 - Κατηγορία, τίτλος, τιμή και κυκλικό % sale badge.
 - Εμφάνιση → Jofme Options → Shop → **Change product image on hover** για εναλλαγή δεύτερης εικόνας στις κάρτες (και στο widget).
 - 1.7.2 διορθώνει το overlay των hover εικόνων (χωρίς κενό κάτω από την κύρια εικόνα).
+- 1.7.3 διορθώνει τις εικόνες που κόβονταν έξω από το frame της κάρτας.
 
 ## Bestsellers Tabs Elementor widget (1.7.0)
 
