@@ -77,7 +77,8 @@ function jofme_catalog_view() {
  echo '<div class="jofme-view" role="group" aria-label="' . esc_attr__( 'Product view', 'jofme' ) . '">';
  $views = array( '1' => __( '1 column', 'jofme' ), '2' => __( '2 columns', 'jofme' ), '3' => __( '3 columns', 'jofme' ), '4' => __( '4 columns', 'jofme' ), 'list' => __( 'List view', 'jofme' ) );
  foreach ( $views as $view => $label ) {
-  echo '<button type="button" data-view="' . esc_attr( $view ) . '" aria-pressed="false" aria-label="' . esc_attr( $label ) . '" title="' . esc_attr( $label ) . '"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true" focusable="false">';
+  $mobile = in_array( (string) $view, array( '1', '2' ), true ) ? '' : ' jofme-view__btn--desktop';
+  echo '<button type="button" class="jofme-view__btn' . esc_attr( $mobile ) . '" data-view="' . esc_attr( $view ) . '" aria-pressed="false" aria-label="' . esc_attr( $label ) . '" title="' . esc_attr( $label ) . '"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true" focusable="false">';
   if ( 'list' === $view ) {
    echo '<path d="M4 6h16M4 12h16M4 18h16"/>';
   } else {
@@ -91,19 +92,91 @@ function jofme_catalog_view() {
  }
  echo '</div>';
 }
-add_action( 'woocommerce_before_shop_loop', 'jofme_catalog_view', 35 );
 
-/** Mobile/tablet control that opens the shop sidebar off-canvas panel. */
+/**
+ * Allow SVG uploads for the filters icon Customizer control.
+ *
+ * @param array $mimes Mime types.
+ * @return array
+ */
+function jofme_allow_svg_uploads( $mimes ) {
+ $mimes['svg']  = 'image/svg+xml';
+ $mimes['svgz'] = 'image/svg+xml';
+ return $mimes;
+}
+add_filter( 'upload_mimes', 'jofme_allow_svg_uploads' );
+
+/**
+ * Keep WordPress from rejecting valid SVG uploads on filetype checks.
+ *
+ * @param array  $data     File data.
+ * @param string $file     Full path.
+ * @param string $filename File name.
+ * @param array  $mimes    Allowed mimes.
+ * @return array
+ */
+function jofme_fix_svg_filetype( $data, $file, $filename, $mimes ) {
+ $ext = strtolower( pathinfo( $filename, PATHINFO_EXTENSION ) );
+ if ( 'svg' !== $ext && 'svgz' !== $ext ) {
+  return $data;
+ }
+ $data['ext']  = 'svg';
+ $data['type'] = 'image/svg+xml';
+ return $data;
+}
+add_filter( 'wp_check_filetype_and_ext', 'jofme_fix_svg_filetype', 10, 4 );
+
+/**
+ * Icon markup for the off-canvas filters button (Customizer SVG/image or default).
+ *
+ * @return string
+ */
+function jofme_shop_filters_icon_html() {
+ $id = absint( get_theme_mod( 'jofme_shop_filters_icon', 0 ) );
+ if ( $id ) {
+  $url  = wp_get_attachment_url( $id );
+  $mime = get_post_mime_type( $id );
+  if ( $url && ( ! $mime || 0 === strpos( (string) $mime, 'image/' ) ) ) {
+   return '<img class="jofme-shop-sidebar-toggle__icon" src="' . esc_url( $url ) . '" alt="" width="20" height="20" decoding="async">';
+  }
+ }
+ return '<svg class="jofme-shop-sidebar-toggle__icon" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true" focusable="false"><path d="M4 6h16M4 12h10M4 18h14"/></svg>';
+}
+
+/** Off-canvas filters control — icon only. */
 function jofme_shop_sidebar_toggle() {
  if ( ! function_exists( 'jofme_layout_sidebar_is_offcanvas' ) || ! jofme_layout_sidebar_is_offcanvas() ) {
   return;
  }
- echo '<button type="button" class="jofme-shop-sidebar-toggle" aria-expanded="false" aria-controls="secondary">';
- echo '<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true" focusable="false"><path d="M4 6h16M4 12h10M4 18h14"/></svg>';
- echo '<span>' . esc_html__( 'Filters', 'jofme' ) . '</span>';
+ echo '<button type="button" class="jofme-shop-sidebar-toggle" aria-expanded="false" aria-controls="secondary" aria-label="' . esc_attr__( 'Filters', 'jofme' ) . '" title="' . esc_attr__( 'Filters', 'jofme' ) . '">';
+ echo jofme_shop_filters_icon_html(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- escaped in helper / trusted SVG.
+ echo '<span class="screen-reader-text">' . esc_html__( 'Filters', 'jofme' ) . '</span>';
  echo '</button>';
 }
-add_action( 'woocommerce_before_shop_loop', 'jofme_shop_sidebar_toggle', 15 );
+
+/**
+ * Catalog toolbar above products: filters + sorting + columns, then result count alone.
+ */
+function jofme_catalog_toolbar() {
+ if ( ! is_shop() && ! is_product_taxonomy() ) {
+  return;
+ }
+ echo '<div class="jofme-catalog-toolbar">';
+ echo '<div class="jofme-catalog-toolbar__controls">';
+ jofme_shop_sidebar_toggle();
+ if ( function_exists( 'woocommerce_catalog_ordering' ) ) {
+  woocommerce_catalog_ordering();
+ }
+ jofme_catalog_view();
+ echo '</div>';
+ if ( function_exists( 'woocommerce_result_count' ) ) {
+  woocommerce_result_count();
+ }
+ echo '</div>';
+}
+remove_action( 'woocommerce_before_shop_loop', 'woocommerce_result_count', 20 );
+remove_action( 'woocommerce_before_shop_loop', 'woocommerce_catalog_ordering', 30 );
+add_action( 'woocommerce_before_shop_loop', 'jofme_catalog_toolbar', 20 );
 add_action( 'woocommerce_no_products_found', 'jofme_shop_sidebar_toggle', 5 );
 
 function jofme_card_actions() {
@@ -134,6 +207,19 @@ function jofme_premium_customizer( $manager ) {
   $manager->add_setting( $key, array( 'default' => $config[1], 'sanitize_callback' => 'jofme_sanitize_select' ) );
   $manager->add_control( $key, array( 'label' => $config[0], 'section' => 'jofme_shop', 'type' => 'select', 'choices' => $config[2] ) );
  }
+ $manager->add_setting( 'jofme_shop_filters_icon', array( 'default' => 0, 'sanitize_callback' => 'absint' ) );
+ $manager->add_control(
+  new WP_Customize_Media_Control(
+   $manager,
+   'jofme_shop_filters_icon',
+   array(
+    'label'       => __( 'Filters button icon (SVG)', 'jofme' ),
+    'description' => __( 'Optional SVG (or image) for the mobile/tablet Filters off-canvas button. Leave empty for the default icon.', 'jofme' ),
+    'section'     => 'jofme_shop',
+    'mime_type'   => 'image',
+   )
+  )
+ );
 }
 add_action( 'customize_register', 'jofme_premium_customizer', 20 );
 function jofme_premium_classes( $classes ) {

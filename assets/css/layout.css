@@ -9,9 +9,10 @@ body.single-product.jofme-gallery-stacked.woocommerce div.product div.images{max
 
 /* Shop sidebar off-canvas — mobile & tablet (<960px). */
 .jofme-shop-sidebar-toggle{
- display:none;align-items:center;gap:.55rem;margin:0 0 1rem;padding:.7rem 1rem;border:1px solid var(--jofme-color-border);background:transparent;color:inherit;font:inherit;font-size:11px;letter-spacing:.12em;text-transform:uppercase;cursor:pointer
+ display:none;align-items:center;justify-content:center;width:40px;height:40px;padding:0;margin:0;border:1px solid var(--jofme-color-border);background:transparent;color:inherit;cursor:pointer;flex:0 0 auto
 }
 .jofme-shop-sidebar-toggle:hover,.jofme-shop-sidebar-toggle[aria-expanded=true]{border-color:var(--jofme-color-text);color:var(--jofme-color-accent)}
+.jofme-shop-sidebar-toggle__icon{display:block;width:20px;height:20px;object-fit:contain;pointer-events:none}
 .jofme-shop-sidebar-panel__header{display:none}
 .jofme-shop-sidebar-backdrop{display:none}
 

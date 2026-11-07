@@ -1,0 +1,23 @@
+/** node .tests/catalog-toolbar.cjs */
+const assert = require('node:assert/strict');
+const fs = require('node:fs');
+const path = require('node:path');
+const root = path.resolve(__dirname, '..');
+const php = fs.readFileSync(path.join(root, 'inc/premium-shop.php'), 'utf8');
+const css = fs.readFileSync(path.join(root, 'assets/css/premium-shop.css'), 'utf8');
+const js = fs.readFileSync(path.join(root, 'assets/js/premium-shop.js'), 'utf8');
+const layout = fs.readFileSync(path.join(root, 'assets/css/layout.css'), 'utf8');
+
+assert.match(php, /jofme_catalog_toolbar/);
+assert.match(php, /jofme_shop_filters_icon/);
+assert.match(php, /WP_Customize_Media_Control/);
+assert.match(php, /screen-reader-text/);
+assert.match(php, /jofme-view__btn--desktop/);
+assert.match(php, /remove_action\(\s*'woocommerce_before_shop_loop',\s*'woocommerce_result_count'/);
+assert.match(php, /remove_action\(\s*'woocommerce_before_shop_loop',\s*'woocommerce_catalog_ordering'/);
+assert.match(css, /jofme-catalog-toolbar__controls/);
+assert.match(css, /jofme-view__btn--desktop/);
+assert.match(layout, /jofme-shop-sidebar-toggle__icon/);
+assert.match(js, /mobileOnly/);
+assert.match(js, /normalizeView/);
+console.log('PASS: mobile catalog toolbar wiring present');
