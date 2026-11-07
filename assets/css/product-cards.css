@@ -61,13 +61,19 @@ body.jofme-card-bestsellers .jofme-card-description{display:none!important}
 /* Align Elementor bestsellers cards with the shared layout. */
 .jofme-bestsellers__card{min-width:0;display:flex;flex-direction:column;gap:.85rem}
 .jofme-bestsellers__media{position:relative;display:block;background:var(--jofme-color-surface);overflow:hidden;color:inherit}
-.jofme-bestsellers__media>img{display:block;width:100%;aspect-ratio:1;object-fit:contain;padding:clamp(12px,2vw,28px);background:var(--jofme-color-surface);margin:0}
+.jofme-bestsellers__media>img{display:block;width:100%;aspect-ratio:1;object-fit:contain;padding:clamp(12px,2vw,28px);background:var(--jofme-color-surface);margin:0;transition:transform .4s ease}
 .jofme-bestsellers__media .jofme-card-media{position:relative;display:block;width:100%;aspect-ratio:1;margin:0;overflow:hidden;isolation:isolate;background:var(--jofme-color-surface)}
-.jofme-bestsellers__media .jofme-card-media img{position:absolute;inset:0;z-index:0;box-sizing:border-box;display:block;width:100%;height:100%;max-width:none;aspect-ratio:auto;object-fit:contain;object-position:center;padding:clamp(12px,2vw,28px);background:transparent;margin:0}
-.jofme-bestsellers__media .jofme-card-media .jofme-hover-image{z-index:1;opacity:0;pointer-events:none;transition:opacity .3s ease}
+.jofme-bestsellers__media .jofme-card-media img{position:absolute;inset:0;z-index:0;box-sizing:border-box;display:block;width:100%;height:100%;max-width:none;aspect-ratio:auto;object-fit:contain;object-position:center;padding:clamp(12px,2vw,28px);background:transparent;margin:0;transition:opacity .3s ease,transform .4s ease}
+.jofme-bestsellers__media .jofme-card-media .jofme-hover-image{z-index:1;opacity:0;pointer-events:none}
 @media(hover:hover) and (pointer:fine){
  .jofme-bestsellers__card:hover .jofme-hover-image.is-ready,
  .jofme-bestsellers__media:focus-visible .jofme-hover-image.is-ready{opacity:1}
+ .jofme-bestsellers__card:hover .jofme-bestsellers__media>img,
+ .jofme-bestsellers__card:hover .jofme-bestsellers__media .jofme-card-media img{transform:scale(var(--jofme-card-hover-scale,1.05))}
+}
+@media(prefers-reduced-motion:reduce){
+ .jofme-bestsellers__media>img,
+ .jofme-bestsellers__media .jofme-card-media img{transition:none;transform:none!important}
 }
 .jofme-bestsellers__meta{display:flex;flex-direction:column;gap:.35rem}
 .jofme-bestsellers__category{margin:0;font-size:10px;text-transform:uppercase;letter-spacing:.08em;color:var(--jofme-color-text-muted)}
