@@ -12,6 +12,7 @@
 	--jofme-font-body: "Manrope", system-ui, sans-serif;
 	--jofme-container: 1320px;
 	--jofme-header-h: 132px;
+	--jofme-header-h-mobile: 80px;
 	--jofme-sticky-header-pad: 12px;
 	--jofme-radius: 0;
 	--jofme-transition: 0.25s ease;
@@ -636,12 +637,17 @@ body.jofme-nav-open {
 
 /* Responsive nav */
 @media (max-width: 899px) {
+	:root {
+		--jofme-header-h: var(--jofme-header-h-mobile, 80px);
+	}
+
 	.main-navigation {
 		display: none;
 	}
 
 	.site-header__inner {
 		grid-template-columns: auto 1fr auto;
+		min-height: var(--jofme-header-h);
 	}
 
 	.site-branding--center {
