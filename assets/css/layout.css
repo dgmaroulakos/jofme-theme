@@ -58,8 +58,6 @@ body.single-product.jofme-gallery-stacked.woocommerce div.product div.images{max
  body.jofme-sidebar-open .jofme-shop-sidebar-panel{
   touch-action:pan-y
  }
- /* Prefer sidebar widgets over the inline Filter collection accordion. */
- body.jofme-shop-sidebar-offcanvas .jofme-filters{display:none}
  /*
   * WooCommerce Product Filters block uses its own nested mobile overlay
   * ("Filter products" button). Inside our panel, show the widgets immediately.

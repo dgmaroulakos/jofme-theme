@@ -1,6 +1,6 @@
 # Jofme Premium
 
-WordPress/WooCommerce theme, version 1.7.7. Theme files live at the repository root.
+WordPress/WooCommerce theme, version 1.7.8. Theme files live at the repository root.
 
 ## Εγκατάσταση
 
@@ -23,7 +23,7 @@ WordPress/WooCommerce theme, version 1.7.7. Theme files live at the repository r
 
 - Εμφάνιση → Προσαρμογή → Jofme Options → Shop: Minimal, Framed ή Editorial κάρτα και αρχική προβολή 1/2/3 στηλών ή λίστας.
 - Η επιλογή προβολής του επισκέπτη αποθηκεύεται στον browser. Σε μικρές οθόνες οι 3 στήλες γίνονται 2.
-- Attributes: χρησιμοποιήστε τα καθολικά attributes του WooCommerce. Τα φίλτρα εφαρμόζονται με κανονικό GET request και ανανέωση σελίδας, μαζί με τιμή και collection από product tags.
+- Attributes: χρησιμοποιήστε τα καθολικά attributes του WooCommerce. Τα φίλτρα του καταλόγου ζουν στο Shop Sidebar (και στο off-canvas Filters)· όχι στο παλιό inline “Filter collection”.
 - **Color swatches:** Προϊόντα → Χαρακτηριστικά → επεξεργασία attribute → ενεργοποιήστε **Display as color swatches**. Στη Διαμόρφωση όρων ορίστε χρώμα με color picker ή hex. Εμφανίζονται στις κάρτες προϊόντων, ως κύκλοι στα φίλτρα καταλόγου και ως επιλογές παραλλαγής στη σελίδα προϊόντος. Χωρίς ρητή ρύθμιση, attributes με slug `color` / `colour` / `finish` / `metal` / `χρωμ` συνεχίζουν να λειτουργούν ως swatches. Άγνωστο χρώμα εμφανίζεται ως ετικέτα κειμένου.
 - Quick view με εικόνα, τιμή, σύντομη περιγραφή και διαθεσιμότητα. Η επιλογή παραλλαγής και η αγορά γίνονται στη σελίδα προϊόντος.
 - Εικονίδια κάρτας: quick view και σύνδεσμος λεπτομερειών.
@@ -76,6 +76,7 @@ WordPress/WooCommerce theme, version 1.7.7. Theme files live at the repository r
 - 1.7.5: μέσα στο panel φαίνονται αμέσως τα sidebar widgets (χωρίς δεύτερο “Filter products” από το Woo block).
 - 1.7.6: με ανοιχτό off-canvas κλειδώνει το scroll της σελίδας· επιλογή χρώματος (π.χ. Χρυσό) προεπιλέγει την παραλλαγή στις κάρτες/links.
 - 1.7.7: mobile toolbar πάνω από τα προϊόντα = Filters icon + sorting + 1/2 columns· το “Showing all” σε δική του γραμμή· Customizer upload SVG για το Filters icon.
+- 1.7.8: αφαιρέθηκε το inline “Filter collection” accordion· φίλτρα μόνο από shop sidebar / off-canvas.
 
 ## Bestsellers card layout + hover (1.7.1 / 1.7.2)
 

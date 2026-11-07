@@ -3,7 +3,7 @@ Contributors: jofme
 Requires at least: 6.4
 Tested up to: 6.8
 Requires PHP: 7.4
-Stable tag: 1.7.7
+Stable tag: 1.7.8
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -30,6 +30,9 @@ strings / wpml-config.xml.
 * WPML or Polylang
 
 == Changelog ==
+
+= 1.7.8 =
+* Remove the inline “Filter collection” accordion; catalog filters come from the shop sidebar / off-canvas only.
 
 = 1.7.7 =
 * Mobile catalog toolbar: icon-only Filters (Customizer SVG), sorting, 1–2 column controls; result count on its own row.
