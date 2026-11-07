@@ -45,7 +45,9 @@ add_action( 'customize_register', 'jofme_hover_customize', 25 );
  */
 function jofme_hover_scale_css() {
  $scale = jofme_sanitize_hover_scale( get_theme_mod( 'jofme_product_hover_scale', '1.05' ) );
- wp_add_inline_style( 'jofme-product-cards', ':root{--jofme-card-hover-scale:' . $scale . ';}' );
+ $css   = ':root{--jofme-card-hover-scale:' . $scale . ';}';
+ wp_add_inline_style( 'jofme-product-cards', $css );
+ wp_add_inline_style( 'jofme-product-hover', $css );
 }
 add_action( 'wp_enqueue_scripts', 'jofme_hover_scale_css', 35 );
 
@@ -101,24 +103,21 @@ function jofme_product_card_media_html( $product, $size = 'woocommerce_thumbnail
  if ( ! $primary ) {
   $primary = $product->get_image( $size );
  }
- $id = jofme_hover_image_id( $product );
- if ( ! $id || $id === $filtered_id ) {
-  return $primary;
- }
- $secondary = wp_get_attachment_image(
-  $id,
-  $size,
-  false,
-  array(
-   'class'       => 'jofme-hover-image',
-   'alt'         => '',
-   'aria-hidden' => 'true',
-   'loading'     => 'lazy',
-   'decoding'    => 'async',
-  )
- );
- if ( ! $secondary ) {
-  return $primary;
+ $secondary = '';
+ $id        = jofme_hover_image_id( $product );
+ if ( $id && $id !== $filtered_id ) {
+  $secondary = wp_get_attachment_image(
+   $id,
+   $size,
+   false,
+   array(
+    'class'       => 'jofme-hover-image',
+    'alt'         => '',
+    'aria-hidden' => 'true',
+    'loading'     => 'lazy',
+    'decoding'    => 'async',
+   )
+  );
  }
  return '<span class="jofme-card-media">' . $primary . $secondary . '</span>';
 }
