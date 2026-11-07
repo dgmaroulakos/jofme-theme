@@ -79,12 +79,34 @@ function jofme_customize_register( $wp_customize ) {
 		'jofme_header_min_height',
 		array(
 			'label'       => __( 'Header min height (px)', 'jofme' ),
-			'description' => __( 'Minimum height of the header bar (logo / menu row).', 'jofme' ),
+			'description' => __( 'Minimum height of the header bar (logo / menu row) on desktop/tablet.', 'jofme' ),
 			'section'     => 'jofme_header',
 			'type'        => 'number',
 			'input_attrs' => array(
 				'min'  => 60,
 				'max'  => 240,
+				'step' => 1,
+			),
+		)
+	);
+
+	$wp_customize->add_setting(
+		'jofme_header_min_height_mobile',
+		array(
+			'default'           => 80,
+			'sanitize_callback' => 'jofme_sanitize_header_min_height_mobile',
+		)
+	);
+	$wp_customize->add_control(
+		'jofme_header_min_height_mobile',
+		array(
+			'label'       => __( 'Header min height — mobile (px)', 'jofme' ),
+			'description' => __( 'Minimum height of the header bar under 900px width. Default: 80.', 'jofme' ),
+			'section'     => 'jofme_header',
+			'type'        => 'number',
+			'input_attrs' => array(
+				'min'  => 48,
+				'max'  => 200,
 				'step' => 1,
 			),
 		)
@@ -303,6 +325,16 @@ function jofme_sanitize_header_min_height( $value ) {
 }
 
 /**
+ * Sanitize mobile header min-height in px (48–200).
+ *
+ * @param mixed $value Raw value.
+ * @return int
+ */
+function jofme_sanitize_header_min_height_mobile( $value ) {
+	return max( 48, min( 200, absint( $value ) ) );
+}
+
+/**
  * Sanitize sticky header padding in px (0–64).
  *
  * @param mixed $value Raw value.
@@ -316,19 +348,22 @@ function jofme_sanitize_sticky_header_padding( $value ) {
  * Output Customizer CSS variables.
  */
 function jofme_customizer_css() {
-	$primary = get_theme_mod( 'jofme_color_primary', '#1a1512' );
-	$accent  = get_theme_mod( 'jofme_color_accent', '#b8956c' );
-	$bg      = get_theme_mod( 'jofme_color_background', '#faf8f5' );
-	$min_h   = jofme_sanitize_header_min_height( get_theme_mod( 'jofme_header_min_height', 132 ) );
-	$sticky  = jofme_sanitize_sticky_header_padding( get_theme_mod( 'jofme_sticky_header_padding', 12 ) );
+	$primary     = get_theme_mod( 'jofme_color_primary', '#1a1512' );
+	$accent      = get_theme_mod( 'jofme_color_accent', '#b8956c' );
+	$bg          = get_theme_mod( 'jofme_color_background', '#faf8f5' );
+	$min_h       = jofme_sanitize_header_min_height( get_theme_mod( 'jofme_header_min_height', 132 ) );
+	$min_h_mobile = jofme_sanitize_header_min_height_mobile( get_theme_mod( 'jofme_header_min_height_mobile', 80 ) );
+	$sticky      = jofme_sanitize_sticky_header_padding( get_theme_mod( 'jofme_sticky_header_padding', 12 ) );
 
 	$css = ":root{
 		--jofme-color-text:{$primary};
 		--jofme-color-accent:{$accent};
 		--jofme-color-bg:{$bg};
 		--jofme-header-h:{$min_h}px;
+		--jofme-header-h-mobile:{$min_h_mobile}px;
 		--jofme-sticky-header-pad:{$sticky}px;
 	}";
+	$css .= '@media(max-width:899px){:root{--jofme-header-h:var(--jofme-header-h-mobile);} }';
 
 	wp_add_inline_style( 'jofme-main', $css );
 }
