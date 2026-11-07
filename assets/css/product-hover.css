@@ -4,9 +4,7 @@
 .woocommerce ul.products li.product .jofme-card-media .jofme-hover-image{z-index:1;opacity:0;pointer-events:none;transition:opacity .3s ease}
 @media(hover:hover) and (pointer:fine){.woocommerce ul.products li.product:hover .jofme-card-media .jofme-hover-image.is-ready{opacity:1}}
 .woocommerce ul.products li.product .woocommerce-loop-product__link:focus-visible .jofme-card-media .jofme-hover-image.is-ready{opacity:1}
-/* Bestsellers cards keep contain framing while swapping images. */
-body.jofme-card-bestsellers.woocommerce ul.products li.product .jofme-card-media{margin-bottom:0;background:var(--jofme-color-surface)}
-body.jofme-card-bestsellers.woocommerce ul.products li.product .jofme-card-media img{object-fit:contain}
+/* Bestsellers framing/overlay rules live in product-cards.css to avoid display conflicts. */
 /* Preserve the dedicated image column in list view. */
 .woocommerce .jofme-shop[data-view="list"] ul.products li.product .woocommerce-loop-product__link .jofme-card-media{position:absolute;inset-inline-start:0;top:0;width:30%;height:220px;margin:0}
 .woocommerce .jofme-shop[data-view="list"] ul.products li.product .woocommerce-loop-product__link .jofme-card-media img{position:static;width:100%;height:220px;aspect-ratio:auto;object-fit:contain}

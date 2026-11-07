@@ -74,8 +74,12 @@
 	transition: opacity var(--jofme-transition);
 }
 
-.woocommerce ul.products li.product:hover img {
+.woocommerce ul.products li.product:hover img:not(.jofme-hover-image) {
 	opacity: 0.92;
+}
+
+.woocommerce ul.products li.product:hover .jofme-card-media img:not(.jofme-hover-image) {
+	opacity: 1;
 }
 
 .woocommerce ul.products li.product .woocommerce-loop-product__title {
