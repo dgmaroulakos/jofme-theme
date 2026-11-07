@@ -25,5 +25,7 @@ ob_start();require dirname(__DIR__).'/template-parts/header/editorial-header.php
 if(in_array('--preview',$argv,true)){echo $html;}else{
  foreach(array('jofme-utility-left','primary-menu','jofme-mobile-menu','jofme-mobile-drawer','jofme-header-search','jofme-mobile-close','aria-controls="jofme-mobile-drawer"') as $needle){if(strpos($html,$needle)===false)throw new RuntimeException('Missing header element: '.$needle);}
  if(substr_count($html,'id="primary-menu"')!==1)throw new RuntimeException('Duplicate menu ID');
+ $css=file_get_contents(dirname(__DIR__).'/assets/css/main.css');
+ if(!preg_match('/\.custom-logo-link img\s*\{[^}]*max-height:\s*100px/s',$css))throw new RuntimeException('Logo max-height should be 100px');
  echo "PASS: editorial header, utility navigation, unique menus, shared search and mobile controls\n";
 }

@@ -28,8 +28,8 @@ function jofme_setup() {
 		'script',
 	) );
 	add_theme_support( 'custom-logo', array(
-		'height'      => 80,
-		'width'       => 240,
+		'height'      => 100,
+		'width'       => 300,
 		'flex-height' => true,
 		'flex-width'  => true,
 	) );
