@@ -27,5 +27,6 @@ if(in_array('--preview',$argv,true)){echo $html;}else{
  if(substr_count($html,'id="primary-menu"')!==1)throw new RuntimeException('Duplicate menu ID');
  $css=file_get_contents(dirname(__DIR__).'/assets/css/main.css');
  if(!preg_match('/\.custom-logo-link img\s*\{[^}]*max-height:\s*100px/s',$css))throw new RuntimeException('Logo max-height should be 100px');
+ if(!preg_match('/\.custom-logo-link img\s*\{\s*max-width:\s*90px/s',$css))throw new RuntimeException('Mobile logo max-width should be 90px');
  echo "PASS: editorial header, utility navigation, unique menus, shared search and mobile controls\n";
 }
