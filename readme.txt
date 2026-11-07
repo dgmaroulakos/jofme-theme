@@ -3,7 +3,7 @@ Contributors: jofme
 Requires at least: 6.4
 Tested up to: 6.8
 Requires PHP: 7.4
-Stable tag: 1.7.9
+Stable tag: 1.7.10
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -30,6 +30,9 @@ strings / wpml-config.xml.
 * WPML or Polylang
 
 == Changelog ==
+
+= 1.7.10 =
+* Theme updater: “Check again” clears the GitHub cache; Jofme Updates shows installed/latest and a force-check button.
 
 = 1.7.9 =
 * List view product descriptions show up to 20 words, then a “View more” link to the product.
