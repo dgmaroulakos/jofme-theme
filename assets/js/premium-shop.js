@@ -3,8 +3,16 @@
  const catalog = document.querySelector('.jofme-shop');
  const controls = document.querySelectorAll('.jofme-view button');
  const allowed = ['1', '2', '3', '4', 'list'];
+ const mobileOnly = ['1', '2'];
+ const isMobileCatalog = () => window.matchMedia('(max-width: 767px)').matches;
+ function normalizeView(view) {
+  if (!allowed.includes(view)) return '2';
+  if (isMobileCatalog() && !mobileOnly.includes(view)) return '2';
+  return view;
+ }
  function setView(view) {
-  if (!allowed.includes(view) || !catalog || !controls.length) return;
+  view = normalizeView(view);
+  if (!catalog || !controls.length) return;
   catalog.dataset.view = view;
   controls.forEach(button => button.setAttribute('aria-pressed', String(button.dataset.view === view)));
  }
@@ -13,9 +21,14 @@
  try { savedView = localStorage.getItem('jofme-catalog-view'); } catch (_) {}
  setView(allowed.includes(savedView) ? savedView : defaultView);
  controls.forEach(button => button.addEventListener('click', () => {
-  setView(button.dataset.view);
-  try { localStorage.setItem('jofme-catalog-view', button.dataset.view); } catch (_) {}
+  const view = normalizeView(button.dataset.view);
+  setView(view);
+  try { localStorage.setItem('jofme-catalog-view', view); } catch (_) {}
  }));
+ window.addEventListener('resize', () => {
+  if (!catalog) return;
+  setView(catalog.dataset.view || defaultView);
+ });
 
  /* Shop sidebar off-canvas (mobile / tablet). */
  const panel = document.querySelector('.jofme-shop-sidebar-panel');

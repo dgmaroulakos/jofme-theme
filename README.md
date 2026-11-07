@@ -1,6 +1,6 @@
 # Jofme Premium
 
-WordPress/WooCommerce theme, version 1.7.6. Theme files live at the repository root.
+WordPress/WooCommerce theme, version 1.7.7. Theme files live at the repository root.
 
 ## Εγκατάσταση
 
@@ -75,6 +75,7 @@ WordPress/WooCommerce theme, version 1.7.6. Theme files live at the repository r
   - Slide from left / right / bottom, Fade, Scale.
 - 1.7.5: μέσα στο panel φαίνονται αμέσως τα sidebar widgets (χωρίς δεύτερο “Filter products” από το Woo block).
 - 1.7.6: με ανοιχτό off-canvas κλειδώνει το scroll της σελίδας· επιλογή χρώματος (π.χ. Χρυσό) προεπιλέγει την παραλλαγή στις κάρτες/links.
+- 1.7.7: mobile toolbar πάνω από τα προϊόντα = Filters icon + sorting + 1/2 columns· το “Showing all” σε δική του γραμμή· Customizer upload SVG για το Filters icon.
 
 ## Bestsellers card layout + hover (1.7.1 / 1.7.2)
 

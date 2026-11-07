@@ -16,7 +16,8 @@
 .woocommerce .woocommerce-result-count,
 .woocommerce .woocommerce-ordering {
 	font-size: 13px;
-	margin-bottom: 1.5rem;
+	margin-bottom: 0;
+	float: none;
 }
 
 .woocommerce .woocommerce-ordering select {
