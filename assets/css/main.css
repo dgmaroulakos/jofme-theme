@@ -85,7 +85,8 @@ p {
 }
 
 .jofme-container {
-	width: min(100% - 2.5rem, var(--jofme-container));
+	/* Follow Layout Settings width (boxed/wide/narrow/full) when present. */
+	width: min(100% - 2.5rem, var(--jofme-layout-width, var(--jofme-container)));
 	margin-inline: auto;
 }
 
