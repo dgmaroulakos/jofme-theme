@@ -9,7 +9,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-define( 'JOFME_VERSION', '1.7.17' );
+define( 'JOFME_VERSION', '1.7.18' );
 define( 'JOFME_DIR', get_template_directory() );
 define( 'JOFME_URI', get_template_directory_uri() );
 

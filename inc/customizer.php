@@ -69,6 +69,50 @@ function jofme_customize_register( $wp_customize ) {
 	);
 
 	$wp_customize->add_setting(
+		'jofme_header_min_height',
+		array(
+			'default'           => 132,
+			'sanitize_callback' => 'jofme_sanitize_header_min_height',
+		)
+	);
+	$wp_customize->add_control(
+		'jofme_header_min_height',
+		array(
+			'label'       => __( 'Header min height (px)', 'jofme' ),
+			'description' => __( 'Minimum height of the header bar (logo / menu row).', 'jofme' ),
+			'section'     => 'jofme_header',
+			'type'        => 'number',
+			'input_attrs' => array(
+				'min'  => 60,
+				'max'  => 240,
+				'step' => 1,
+			),
+		)
+	);
+
+	$wp_customize->add_setting(
+		'jofme_sticky_header_padding',
+		array(
+			'default'           => 12,
+			'sanitize_callback' => 'jofme_sanitize_sticky_header_padding',
+		)
+	);
+	$wp_customize->add_control(
+		'jofme_sticky_header_padding',
+		array(
+			'label'       => __( 'Sticky header padding (px)', 'jofme' ),
+			'description' => __( 'Top/bottom padding inside the header when it is stuck while scrolling.', 'jofme' ),
+			'section'     => 'jofme_header',
+			'type'        => 'number',
+			'input_attrs' => array(
+				'min'  => 0,
+				'max'  => 64,
+				'step' => 1,
+			),
+		)
+	);
+
+	$wp_customize->add_setting(
 		'jofme_smooth_scroll',
 		array(
 			'default'           => true,
@@ -249,17 +293,41 @@ function jofme_sanitize_select( $input, $setting ) {
 }
 
 /**
+ * Sanitize header min-height in px (60–240).
+ *
+ * @param mixed $value Raw value.
+ * @return int
+ */
+function jofme_sanitize_header_min_height( $value ) {
+	return max( 60, min( 240, absint( $value ) ) );
+}
+
+/**
+ * Sanitize sticky header padding in px (0–64).
+ *
+ * @param mixed $value Raw value.
+ * @return int
+ */
+function jofme_sanitize_sticky_header_padding( $value ) {
+	return max( 0, min( 64, absint( $value ) ) );
+}
+
+/**
  * Output Customizer CSS variables.
  */
 function jofme_customizer_css() {
 	$primary = get_theme_mod( 'jofme_color_primary', '#1a1512' );
 	$accent  = get_theme_mod( 'jofme_color_accent', '#b8956c' );
 	$bg      = get_theme_mod( 'jofme_color_background', '#faf8f5' );
+	$min_h   = jofme_sanitize_header_min_height( get_theme_mod( 'jofme_header_min_height', 132 ) );
+	$sticky  = jofme_sanitize_sticky_header_padding( get_theme_mod( 'jofme_sticky_header_padding', 12 ) );
 
 	$css = ":root{
 		--jofme-color-text:{$primary};
 		--jofme-color-accent:{$accent};
 		--jofme-color-bg:{$bg};
+		--jofme-header-h:{$min_h}px;
+		--jofme-sticky-header-pad:{$sticky}px;
 	}";
 
 	wp_add_inline_style( 'jofme-main', $css );
