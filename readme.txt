@@ -3,7 +3,7 @@ Contributors: jofme
 Requires at least: 6.4
 Tested up to: 6.8
 Requires PHP: 7.4
-Stable tag: 1.7.12
+Stable tag: 1.7.13
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -30,6 +30,9 @@ strings / wpml-config.xml.
 * WPML or Polylang
 
 == Changelog ==
+
+= 1.7.13 =
+* Header, utility bar and announcement follow the Layout Settings width (boxed / wide / narrow / full).
 
 = 1.7.12 =
 * Category cover is full-width; title and description align to the site layout width.

@@ -26,6 +26,11 @@ $mods['jofme_page_sidebar'] = 'none'; verify( ! jofme_layout_has_sidebar(), 'Exp
 $mods['jofme_page_width'] = 'invalid'; verify( 'boxed' === jofme_layout_option( 'page', 'width' ), 'Invalid width fallback' );
 $mods['jofme_page_sidebar'] = 'invalid'; verify( 'none' === jofme_layout_option( 'page', 'sidebar' ), 'Invalid sidebar fallback' );
 $context = 'product'; $mods['jofme_product_gallery_layout'] = 'right';
+$css = file_get_contents( dirname( __DIR__ ) . '/assets/css/main.css' );
+verify( (bool) preg_match( '/\.jofme-container\s*\{[^}]*--jofme-layout-width/s', $css ), 'Containers follow layout width' );
+$layout_css = file_get_contents( dirname( __DIR__ ) . '/assets/css/layout.css' );
+verify( false !== strpos( $layout_css, 'body.jofme-width-boxed' ), 'Boxed width sets layout variable' );
+verify( false !== strpos( $layout_css, '.site-header .jofme-container' ), 'Header container follows layout width' );
 verify( in_array( 'jofme-gallery-right', jofme_layout_body_classes( array() ), true ), 'Product gallery layout' );
 $mods['jofme_product_gallery_layout'] = 'invalid';
 verify( in_array( 'jofme-gallery-left', jofme_layout_body_classes( array() ), true ), 'Invalid gallery fallback' );

@@ -1,6 +1,15 @@
 /* Scope widths to content wrappers, preserving header/footer widths. */
-body.jofme-layout-settings .jofme-layout{width:min(calc(100% - 2.5rem),var(--jofme-layout-width,1320px));margin-inline:auto;grid-template-columns:minmax(0,1fr);align-items:start}
-body.jofme-width-wide{--jofme-layout-width:1600px}body.jofme-width-narrow{--jofme-layout-width:960px}body.jofme-width-full{--jofme-layout-width:100%}
+body.jofme-layout-settings .jofme-layout{width:min(calc(100% - 2.5rem),var(--jofme-layout-width,var(--jofme-container,1320px)));margin-inline:auto;grid-template-columns:minmax(0,1fr);align-items:start}
+body.jofme-width-boxed{--jofme-layout-width:var(--jofme-container,1320px)}
+body.jofme-width-wide{--jofme-layout-width:1600px}
+body.jofme-width-narrow{--jofme-layout-width:960px}
+body.jofme-width-full{--jofme-layout-width:100%}
+/* Header / utility / announcement share the same horizontal measure as content. */
+body.jofme-layout-settings .site-header .jofme-container,
+body.jofme-layout-settings .jofme-utility-bar .jofme-container,
+body.jofme-layout-settings .jofme-announcement .jofme-container{
+ width:min(100% - 2.5rem,var(--jofme-layout-width,var(--jofme-container,1320px)))
+}
 body.jofme-layout-settings .jofme-layout>.content-area,body.jofme-layout-settings .jofme-layout>.widget-area{min-width:0}
 @media(min-width:960px){body.jofme-layout-settings.jofme-sidebar-right .jofme-layout{grid-template-columns:minmax(0,1fr) 280px}body.jofme-layout-settings.jofme-sidebar-left .jofme-layout{grid-template-columns:280px minmax(0,1fr)}body.jofme-sidebar-left .jofme-layout>.content-area{grid-column:2;grid-row:1}body.jofme-sidebar-left .jofme-layout>.widget-area{grid-column:1;grid-row:1}}
 body.single-product.jofme-gallery-stacked.woocommerce div.product div.images,body.single-product.jofme-gallery-stacked.woocommerce div.product div.summary{float:none;width:100%}
