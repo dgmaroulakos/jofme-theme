@@ -220,10 +220,11 @@ p {
 }
 
 .main-navigation a {
-	font-size: 12px;
-	font-weight: 500;
-	letter-spacing: 0.14em;
-	text-transform: uppercase;
+	font-family: var(--jofme-nav-font, var(--jofme-font-body));
+	font-size: var(--jofme-nav-size, 12px);
+	font-weight: var(--jofme-nav-weight, 500);
+	letter-spacing: var(--jofme-nav-tracking, 0.14em);
+	text-transform: var(--jofme-nav-transform, uppercase);
 	padding: 0.5rem 0;
 	display: inline-block;
 }

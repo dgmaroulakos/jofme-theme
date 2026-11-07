@@ -11,10 +11,31 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 /**
  * Print site logo or title.
+ *
+ * When a transparent-header logo is set, both logos are output and CSS swaps them.
  */
 function jofme_site_branding() {
 	if ( has_custom_logo() ) {
-		the_custom_logo();
+		$html = get_custom_logo();
+		$transparent_id = absint( get_theme_mod( 'jofme_transparent_logo', 0 ) );
+		if ( $transparent_id && wp_attachment_is_image( $transparent_id ) ) {
+			$html = preg_replace( '/\bclass="custom-logo"/', 'class="custom-logo custom-logo--default"', $html, 1 );
+			$alt  = get_post_meta( $transparent_id, '_wp_attachment_image_alt', true );
+			$img  = wp_get_attachment_image(
+				$transparent_id,
+				'full',
+				false,
+				array(
+					'class'   => 'custom-logo custom-logo--transparent',
+					'alt'     => $alt ? $alt : get_bloginfo( 'name' ),
+					'loading' => 'eager',
+				)
+			);
+			if ( $img && false !== strpos( $html, '</a>' ) ) {
+				$html = str_replace( '</a>', $img . '</a>', $html );
+			}
+		}
+		echo $html; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- core + escaped attachment markup.
 		return;
 	}
 
