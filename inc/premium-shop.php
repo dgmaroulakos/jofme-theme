@@ -160,6 +160,8 @@ function jofme_card_actions() {
 }
 /**
  * Short description for list view: up to 20 words, then a link to the product.
+ *
+ * Rendered after the product link closes so “View more” is not a nested anchor.
  */
 function jofme_card_description() {
  global $product;
@@ -167,6 +169,9 @@ function jofme_card_description() {
   return;
  }
  $text = trim( wp_strip_all_tags( $product->get_short_description() ) );
+ if ( '' === $text ) {
+  $text = trim( wp_strip_all_tags( $product->get_description() ) );
+ }
  if ( '' === $text ) {
   return;
  }
@@ -180,8 +185,8 @@ function jofme_card_description() {
  }
  echo '</p>';
 }
+add_action( 'woocommerce_after_shop_loop_item', 'jofme_card_description', 7 );
 add_action( 'woocommerce_after_shop_loop_item', 'jofme_card_actions', 12 );
-add_action( 'woocommerce_after_shop_loop_item_title', 'jofme_card_description', 16 );
 
 function jofme_quick_view() {
  check_ajax_referer( 'jofme_preview', 'nonce' );
