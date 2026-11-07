@@ -4,7 +4,7 @@
  const controls = document.querySelectorAll('.jofme-view button');
  const allowed = ['1', '2', '3', '4', 'list'];
  const mobileOnly = ['1', '2'];
- const isMobileCatalog = () => window.matchMedia('(max-width: 767px)').matches;
+ const isMobileCatalog = () => typeof window !== 'undefined' && typeof window.matchMedia === 'function' && window.matchMedia('(max-width: 767px)').matches;
  function normalizeView(view) {
   if (!allowed.includes(view)) return '2';
   if (isMobileCatalog() && !mobileOnly.includes(view)) return '2';
@@ -25,10 +25,12 @@
   setView(view);
   try { localStorage.setItem('jofme-catalog-view', view); } catch (_) {}
  }));
- window.addEventListener('resize', () => {
-  if (!catalog) return;
-  setView(catalog.dataset.view || defaultView);
- });
+ if (typeof window !== 'undefined' && typeof window.addEventListener === 'function') {
+  window.addEventListener('resize', () => {
+   if (!catalog) return;
+   setView(catalog.dataset.view || defaultView);
+  });
+ }
 
  /* Shop sidebar off-canvas (mobile / tablet). */
  const panel = document.querySelector('.jofme-shop-sidebar-panel');

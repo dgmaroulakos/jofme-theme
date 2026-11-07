@@ -1,11 +1,18 @@
 const vm = require('node:vm');
 const fs = require('node:fs');
 const assert = require('node:assert/strict');
-function run(saved, storageBlocked = false, archive = true) {
+function run(saved, storageBlocked = false, archive = true, mobile = false) {
  const catalog = {dataset:{}};
  const controls = (archive ? ['1','2','3','4','list'] : []).map(view => ({dataset:{view}, attrs:{}, setAttribute(k,v){this.attrs[k]=v}, addEventListener(k,fn){this.click=fn}}));
  const storage = {value:saved,getItem(){if(storageBlocked) throw Error();return this.value},setItem(k,v){if(storageBlocked)throw Error();this.value=v}};
- const context = {document:{querySelector:()=>catalog,querySelectorAll:()=>controls,getElementById:()=>null,body:{classList:{contains:c=>c==='jofme-default-view-3'}}},localStorage:storage};
+ const context = {
+  document:{querySelector:()=>catalog,querySelectorAll:()=>controls,getElementById:()=>null,body:{classList:{contains:c=>c==='jofme-default-view-3'}}},
+  localStorage:storage,
+  window:{
+   matchMedia:(query)=>({matches: mobile && String(query).includes('767')}),
+   addEventListener(){},
+  },
+ };
  vm.runInNewContext(fs.readFileSync(require('node:path').join(__dirname, '../assets/js/premium-shop.js'),'utf8'),context);
  return {catalog,controls,storage};
 }
@@ -21,4 +28,5 @@ test=run(null,true);test.controls[0].click();assert.equal(test.catalog.dataset.v
 test=run('4');assert.equal(test.catalog.dataset.view,'4');assert.equal(test.controls[3].attrs['aria-pressed'],'true');
 test.controls[2].click();assert.equal(test.storage.value,'3');
 assert.equal(run('list',false,false).catalog.dataset.view,undefined,'Single-product related items must not inherit archive view');
+test=run('4', false, true, true);assert.equal(test.catalog.dataset.view,'2','Mobile clamps 3/4/list down to 2 columns');
 console.log('PASS: saved view, selected state, view changes, invalid preference, blocked storage');
