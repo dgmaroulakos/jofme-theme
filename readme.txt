@@ -3,7 +3,7 @@ Contributors: jofme
 Requires at least: 6.4
 Tested up to: 6.8
 Requires PHP: 7.4
-Stable tag: 1.7.4
+Stable tag: 1.7.5
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -30,6 +30,9 @@ strings / wpml-config.xml.
 * WPML or Polylang
 
 == Changelog ==
+
+= 1.7.5 =
+* Off-canvas shop sidebar shows filter widgets immediately (no nested Woo overlay click).
 
 = 1.7.4 =
 * Shop sidebar becomes off-canvas on mobile/tablet, with Customizer open effect.

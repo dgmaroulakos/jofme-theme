@@ -29,7 +29,23 @@
   document.body.appendChild(backdrop);
   let closeTimer;
   const mobile = () => window.matchMedia('(max-width: 959px)').matches;
-  const focusable = () => [...panel.querySelectorAll('button, a[href], input, select, textarea, [tabindex]:not([tabindex="-1"])')].filter((el) => el.getClientRects().length && !el.disabled);
+  const focusable = () => [...panel.querySelectorAll('button, a[href], input, select, textarea, [tabindex]:not([tabindex="-1"])')].filter((el) => {
+   if (!el.getClientRects().length || el.disabled) return false;
+   // Ignore Woo's nested overlay controls — filters are expanded inline.
+   if (el.classList.contains('wc-block-product-filters__open-overlay') || el.classList.contains('wc-block-product-filters__close-overlay')) return false;
+   return true;
+  });
+  function expandWidgetFilters() {
+   // Force Woo Product Filters widgets to render inline inside our panel
+   // instead of requiring a nested "Filter products" overlay click.
+   panel.querySelectorAll('.wc-block-product-filters').forEach((block) => {
+    block.classList.add('is-filter-drawer-disabled', 'is-overlay-opened', 'jofme-filters-inline');
+   });
+   panel.querySelectorAll('details').forEach((details) => {
+    details.open = true;
+   });
+  }
+  expandWidgetFilters();
   function detach() {
    if (panel.classList.contains('is-detached')) return;
    layout.insertBefore(placeholder, panel);
@@ -59,6 +75,7 @@
    clearTimeout(closeTimer);
    if (!mobile()) return;
    detach();
+   expandWidgetFilters();
    backdrop.hidden = false;
    requestAnimationFrame(() => document.body.classList.add('jofme-sidebar-open'));
    toggle.setAttribute('aria-expanded', 'true');
@@ -93,12 +110,17 @@
    }
   });
   window.addEventListener('resize', () => {
-   if (!mobile() && document.body.classList.contains('jofme-sidebar-open')) {
-    clearTimeout(closeTimer);
-    document.body.classList.remove('jofme-sidebar-open');
-    toggle.setAttribute('aria-expanded', 'false');
-    backdrop.hidden = true;
-    restore();
+   if (!mobile()) {
+    panel.querySelectorAll('.wc-block-product-filters').forEach((block) => {
+     block.classList.remove('is-overlay-opened', 'jofme-filters-inline');
+    });
+    if (document.body.classList.contains('jofme-sidebar-open')) {
+     clearTimeout(closeTimer);
+     document.body.classList.remove('jofme-sidebar-open');
+     toggle.setAttribute('aria-expanded', 'false');
+     backdrop.hidden = true;
+     restore();
+    }
    }
   });
  }
