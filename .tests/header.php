@@ -12,7 +12,7 @@ function apply_filters($name,$default,$args){return $default;}
 function do_action($name){}
 function has_nav_menu($name){return true;}
 function wp_nav_menu($args){
- $id=$args['menu_id'];$links='primary'===$args['theme_location']||'mobile'===$args['theme_location']?array('Home','New in','Shop','Collections','Journal'):('utility-left'===$args['theme_location']?array('Find a store','About us','Contact'):array('Order tracking'));
+ $id=$args['menu_id'];$links=array('Home','New in','Shop','Collections','Journal');
  echo '<ul class="menu" id="'.esc_attr($id).'">';foreach($links as $label){echo '<li><a href="/#'.esc_attr(str_replace(' ','-',strtolower($label))).'">'.esc_html($label).'</a></li>';}echo '</ul>';
 }
 class WooCommerce{}
@@ -23,10 +23,11 @@ function get_search_form(){get_product_search_form();}
 function get_template_part($file){require dirname(__DIR__).'/'.$file.'.php';}
 ob_start();require dirname(__DIR__).'/template-parts/header/editorial-header.php';$html=ob_get_clean();
 if(in_array('--preview',$argv,true)){echo $html;}else{
- foreach(array('jofme-utility-left','primary-menu','jofme-mobile-menu','jofme-mobile-drawer','jofme-header-search','jofme-mobile-close','aria-controls="jofme-mobile-drawer"') as $needle){if(strpos($html,$needle)===false)throw new RuntimeException('Missing header element: '.$needle);}
+ foreach(array('primary-menu','jofme-mobile-menu','jofme-mobile-drawer','jofme-header-search','jofme-mobile-close','aria-controls="jofme-mobile-drawer"') as $needle){if(strpos($html,$needle)===false)throw new RuntimeException('Missing header element: '.$needle);}
+ if(false!==strpos($html,'jofme-utility-bar'))throw new RuntimeException('Utility bar should be removed');
  if(substr_count($html,'id="primary-menu"')!==1)throw new RuntimeException('Duplicate menu ID');
  $css=file_get_contents(dirname(__DIR__).'/assets/css/main.css');
  if(!preg_match('/\.custom-logo-link img\s*\{[^}]*max-height:\s*100px/s',$css))throw new RuntimeException('Logo max-height should be 100px');
  if(!preg_match('/\.custom-logo-link img\s*\{\s*max-width:\s*90px/s',$css))throw new RuntimeException('Mobile logo max-width should be 90px');
- echo "PASS: editorial header, utility navigation, unique menus, shared search and mobile controls\n";
+ echo "PASS: editorial header, unique menus, shared search and mobile controls\n";
 }

@@ -1,6 +1,6 @@
 # Jofme Premium
 
-WordPress/WooCommerce theme, version 1.7.15. Theme files live at the repository root.
+WordPress/WooCommerce theme, version 1.7.16. Theme files live at the repository root.
 
 ## Εγκατάσταση
 
@@ -48,7 +48,7 @@ WordPress/WooCommerce theme, version 1.7.15. Theme files live at the repository 
 
 Διαθέσιμα από την έκδοση 1.3.0.
 
-- **Header:** Εμφάνιση → Προσαρμογή → Jofme Options → Header → Header layout → Editorial. Οι θέσεις μενού “Header utility left” και “Header utility right” ρυθμίζονται στο Εμφάνιση → Μενού. Υπάρχουν επιλογές utility bar και transparent header στη στατική αρχική σελίδα. Το transparent ενεργοποιείται όταν η αρχική ξεκινά με μεγάλη φωτογραφία/hero. Sticky header από την υπάρχουσα ρύθμιση. Account και cart χρησιμοποιούν WooCommerce, η αναζήτηση ανοίγει το πραγματικό search form. Οι γλώσσες εμφανίζονται όταν λειτουργεί WPML.
+- **Header:** Εμφάνιση → Προσαρμογή → Jofme Options → Header → Header layout → Editorial. Προαιρετικό transparent header στη στατική αρχική σελίδα όταν ξεκινά με μεγάλη φωτογραφία/hero. Sticky header από την υπάρχουσα ρύθμιση. Account και cart χρησιμοποιούν WooCommerce· η αναζήτηση ανοίγει το πραγματικό search form.
 - **Elementor → κατηγορία Jofme → Editorial Story (Paola Dias):** μεγάλη εικόνα, τίτλος, εισαγωγή, δεύτερη εικόνα, περιγραφή και link συλλογής. Επιλογή εικόνας αριστερά/δεξιά, χρώματα, τυπογραφία, responsive padding και μέγεθος detail image.
 - **Elementor → κατηγορία Jofme → Weekly Sales:** τίτλος section, πραγματικό προϊόν WooCommerce, κεντρική καμπάνια με εικόνα/overlay/κείμενο/link και δεξιά στήλη κειμένου/εικόνας. Product ID 0 = αυτόματη επιλογή προϊόντος σε έκπτωση. Μπορεί να οριστεί συγκεκριμένο δημοσιευμένο/ορατό product ID. Η τιμή προέρχεται από το WooCommerce· badge προσφοράς μόνο όταν υπάρχει πραγματική έκπτωση.
 - Χωρίς διαθέσιμο προϊόν, το δημόσιο section προσαρμόζεται σε δύο στήλες και ο editor εμφανίζει οδηγία. Χωρίς Elementor το theme συνεχίζει να λειτουργεί χωρίς να φορτώνει τις κλάσεις widgets. Δεν απαιτείται Elementor Pro.
