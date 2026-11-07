@@ -1,6 +1,6 @@
 # Jofme Premium
 
-WordPress/WooCommerce theme, version 1.7.21. Theme files live at the repository root.
+WordPress/WooCommerce theme, version 1.7.22. Theme files live at the repository root.
 
 ## Εγκατάσταση
 
@@ -25,7 +25,7 @@ WordPress/WooCommerce theme, version 1.7.21. Theme files live at the repository 
 - Η επιλογή προβολής του επισκέπτη αποθηκεύεται στον browser. Σε μικρές οθόνες οι 3 στήλες γίνονται 2.
 - Attributes: χρησιμοποιήστε τα καθολικά attributes του WooCommerce. Τα φίλτρα του καταλόγου ζουν στο Shop Sidebar (και στο off-canvas Filters)· όχι στο παλιό inline “Filter collection”.
 - **Color swatches:** Προϊόντα → Χαρακτηριστικά → επεξεργασία attribute → ενεργοποιήστε **Display as color swatches**. Στη Διαμόρφωση όρων ορίστε χρώμα με color picker ή hex. Εμφανίζονται στις κάρτες προϊόντων, ως κύκλοι στα φίλτρα καταλόγου και ως επιλογές παραλλαγής στη σελίδα προϊόντος. Χωρίς ρητή ρύθμιση, attributes με slug `color` / `colour` / `finish` / `metal` / `χρωμ` συνεχίζουν να λειτουργούν ως swatches. Άγνωστο χρώμα εμφανίζεται ως ετικέτα κειμένου.
-- Quick view με εικόνα, τιμή, σύντομη περιγραφή και διαθεσιμότητα. Η επιλογή παραλλαγής και η αγορά γίνονται στη σελίδα προϊόντος.
+- Quick view όπως η σελίδα προϊόντος: gallery, τιμή, σύντομη περιγραφή, swatches/παραλλαγές, ποσότητα και add to cart (AJAX). Link για πλήρεις λεπτομέρειες.
 - Εικονίδια κάρτας: quick view και σύνδεσμος λεπτομερειών.
 
 ## Έλεγχος πριν από παραγωγή

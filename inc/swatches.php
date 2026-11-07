@@ -335,7 +335,7 @@ add_action( 'admin_enqueue_scripts', 'jofme_swatch_admin_assets' );
 function jofme_swatch_assets() {
 	wp_enqueue_style( 'jofme-swatches', JOFME_URI . '/assets/css/swatches.css', array( 'jofme-premium' ), JOFME_VERSION );
 
-	if ( is_product() ) {
+	if ( is_product() || is_shop() || is_product_taxonomy() ) {
 		wp_enqueue_script(
 			'jofme-swatches',
 			JOFME_URI . '/assets/js/swatches.js',

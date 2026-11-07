@@ -5,8 +5,27 @@ if ( ! class_exists( 'WooCommerce' ) ) { return; }
 
 function jofme_catalog_assets() {
  wp_enqueue_style( 'jofme-premium', JOFME_URI . '/assets/css/premium-shop.css', array( 'jofme-woocommerce' ), JOFME_VERSION );
- wp_enqueue_script( 'jofme-premium', JOFME_URI . '/assets/js/premium-shop.js', array(), JOFME_VERSION, true );
- wp_localize_script( 'jofme-premium', 'jofmeShop', array( 'url' => admin_url( 'admin-ajax.php' ), 'nonce' => wp_create_nonce( 'jofme_preview' ), 'loading' => __( 'Loading…', 'jofme' ), 'error' => __( 'Unable to load this product. Please try again.', 'jofme' ) ) );
+ wp_enqueue_script( 'wc-add-to-cart' );
+ wp_enqueue_script( 'wc-add-to-cart-variation' );
+ wp_enqueue_script(
+  'jofme-premium',
+  JOFME_URI . '/assets/js/premium-shop.js',
+  array( 'jquery', 'wc-add-to-cart', 'wc-add-to-cart-variation' ),
+  JOFME_VERSION,
+  true
+ );
+ wp_localize_script(
+  'jofme-premium',
+  'jofmeShop',
+  array(
+   'url'     => admin_url( 'admin-ajax.php' ),
+   'nonce'   => wp_create_nonce( 'jofme_preview' ),
+   'loading' => __( 'Loading…', 'jofme' ),
+   'error'   => __( 'Unable to load this product. Please try again.', 'jofme' ),
+   'added'   => __( 'Added to cart', 'jofme' ),
+   'view'    => __( 'View cart', 'jofme' ),
+  )
+ );
 }
 add_action( 'wp_enqueue_scripts', 'jofme_catalog_assets', 25 );
 
@@ -188,13 +207,122 @@ function jofme_card_description() {
 add_action( 'woocommerce_after_shop_loop_item', 'jofme_card_description', 7 );
 add_action( 'woocommerce_after_shop_loop_item', 'jofme_card_actions', 12 );
 
+/**
+ * Main + thumbnail gallery for quick view (variation-aware).
+ *
+ * @param WC_Product $product Product.
+ */
+function jofme_preview_gallery( $product ) {
+ if ( ! $product ) {
+  return;
+ }
+ $ids = function_exists( 'jofme_stacked_gallery_ids' ) ? jofme_stacked_gallery_ids( $product ) : array();
+ if ( ! $ids ) {
+  $main = (int) $product->get_image_id();
+  if ( $main ) {
+   $ids = array( $main );
+  }
+ }
+ echo '<div class="images jofme-preview-gallery">';
+ if ( ! $ids ) {
+  echo '<figure class="jofme-preview-gallery__main">' . wp_kses_post( wc_placeholder_img( 'woocommerce_single' ) ) . '</figure>';
+  echo '</div>';
+  return;
+ }
+ $primary = (int) $ids[0];
+ echo '<figure class="jofme-preview-gallery__main">';
+ echo wp_get_attachment_image(
+  $primary,
+  'woocommerce_single',
+  false,
+  array(
+   'class'              => 'wp-post-image',
+   'loading'            => 'eager',
+   'decoding'           => 'async',
+   'data-attachment_id' => (string) $primary,
+  )
+ );
+ echo '</figure>';
+ if ( count( $ids ) > 1 ) {
+  echo '<div class="jofme-preview-gallery__thumbs" role="list">';
+  foreach ( $ids as $index => $attachment_id ) {
+   $attachment_id = (int) $attachment_id;
+   $full          = wp_get_attachment_image_src( $attachment_id, 'woocommerce_single' );
+   $srcset        = wp_get_attachment_image_srcset( $attachment_id, 'woocommerce_single' );
+   $sizes         = wp_get_attachment_image_sizes( $attachment_id, 'woocommerce_single' );
+   echo '<button type="button" class="jofme-preview-gallery__thumb' . ( 0 === $index ? ' is-active' : '' ) . '" role="listitem" data-attachment="' . absint( $attachment_id ) . '" data-src="' . esc_url( $full ? $full[0] : '' ) . '" data-srcset="' . esc_attr( $srcset ? $srcset : '' ) . '" data-sizes="' . esc_attr( $sizes ? $sizes : '' ) . '" aria-label="' . esc_attr( sprintf( /* translators: %d image number */ __( 'Show image %d', 'jofme' ), $index + 1 ) ) . '"' . ( 0 === $index ? ' aria-current="true"' : '' ) . '>';
+   echo wp_get_attachment_image( $attachment_id, 'woocommerce_gallery_thumbnail', false, array( 'alt' => '' ) );
+   echo '</button>';
+  }
+  echo '</div>';
+ }
+ echo '</div>';
+}
+
+/**
+ * AJAX quick view: product page summary (gallery, price, variations, add to cart).
+ */
 function jofme_quick_view() {
  check_ajax_referer( 'jofme_preview', 'nonce' );
  $product = wc_get_product( isset( $_POST['product'] ) ? absint( $_POST['product'] ) : 0 );
- if ( ! $product || 'publish' !== get_post_status( $product->get_id() ) || post_password_required( $product->get_id() ) || ! $product->is_visible() ) { wp_send_json_error( null, 404 ); }
+ if ( ! $product || 'publish' !== get_post_status( $product->get_id() ) || post_password_required( $product->get_id() ) || ! $product->is_visible() ) {
+  wp_send_json_error( null, 404 );
+ }
+
+ $post_object = get_post( $product->get_id() );
+ if ( ! $post_object ) {
+  wp_send_json_error( null, 404 );
+ }
+
+ $previous_post    = isset( $GLOBALS['post'] ) ? $GLOBALS['post'] : null;
+ $previous_product = isset( $GLOBALS['product'] ) ? $GLOBALS['product'] : null;
+ $GLOBALS['post']  = $post_object;
+ setup_postdata( $post_object );
+ wc_setup_product_data( $post_object );
+
+ if ( function_exists( 'jofme_quantity_minus' ) ) {
+  add_action( 'woocommerce_before_quantity_input_field', 'jofme_quantity_minus' );
+ }
+ if ( function_exists( 'jofme_quantity_plus' ) ) {
+  add_action( 'woocommerce_after_quantity_input_field', 'jofme_quantity_plus' );
+ }
+
  ob_start();
- echo '<div class="jofme-preview-grid"><div>' . wp_kses_post( $product->get_image( 'large' ) ) . '</div><div><p class="jofme-eyebrow">' . esc_html__( 'A closer look', 'jofme' ) . '</p><h2 id="jofme-preview-title">' . esc_html( $product->get_name() ) . '</h2><div class="price">' . wp_kses_post( $product->get_price_html() ) . '</div><p>' . esc_html( wp_strip_all_tags( $product->get_short_description() ) ) . '</p><p>' . wp_kses_post( wc_get_stock_html( $product ) ) . '</p><a class="button" href="' . esc_url( get_permalink( $product->get_id() ) ) . '">' . esc_html__( 'View product & choose options', 'jofme' ) . '</a></div></div>';
- wp_send_json_success( array( 'html' => ob_get_clean() ) );
+ echo '<div id="product-' . absint( $product->get_id() ) . '" class="product jofme-preview-product ' . esc_attr( implode( ' ', wc_get_product_class( '', $product ) ) ) . '">';
+ echo '<div class="jofme-preview-grid">';
+ jofme_preview_gallery( $product );
+ echo '<div class="summary entry-summary">';
+ $cats = wc_get_product_category_list( $product->get_id(), ', ' );
+ if ( $cats ) {
+  echo '<div class="jofme-product-category">' . wp_kses_post( $cats ) . '</div>';
+ }
+ echo '<h2 id="jofme-preview-title" class="product_title entry-title">' . esc_html( $product->get_name() ) . '</h2>';
+ woocommerce_template_single_rating();
+ woocommerce_template_single_price();
+ woocommerce_template_single_excerpt();
+ woocommerce_template_single_add_to_cart();
+ echo '<p class="jofme-preview-more"><a href="' . esc_url( get_permalink( $product->get_id() ) ) . '">' . esc_html__( 'View full details', 'jofme' ) . '</a></p>';
+ echo '</div></div></div>';
+ $html = ob_get_clean();
+
+ if ( function_exists( 'jofme_quantity_minus' ) ) {
+  remove_action( 'woocommerce_before_quantity_input_field', 'jofme_quantity_minus' );
+ }
+ if ( function_exists( 'jofme_quantity_plus' ) ) {
+  remove_action( 'woocommerce_after_quantity_input_field', 'jofme_quantity_plus' );
+ }
+
+ if ( $previous_post ) {
+  $GLOBALS['post'] = $previous_post;
+  setup_postdata( $previous_post );
+ } else {
+  wp_reset_postdata();
+ }
+ if ( null !== $previous_product ) {
+  $GLOBALS['product'] = $previous_product;
+ }
+
+ wp_send_json_success( array( 'html' => $html ) );
 }
 add_action( 'wp_ajax_jofme_quick_view', 'jofme_quick_view' );
 add_action( 'wp_ajax_nopriv_jofme_quick_view', 'jofme_quick_view' );
