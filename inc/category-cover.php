@@ -36,9 +36,32 @@ function jofme_category_cover_admin_assets() {
  wp_enqueue_style( 'jofme-category-cover-admin', JOFME_URI . '/assets/css/category-cover-admin.css', array(), JOFME_VERSION );
 }
 add_action( 'admin_enqueue_scripts', 'jofme_category_cover_admin_assets' );
-function jofme_category_cover_image() {
- if ( ! is_product_category() ) { return ''; }
+/**
+ * Attachment ID for the current product category cover, if set.
+ *
+ * @return int
+ */
+function jofme_category_cover_id() {
+ if ( ! is_product_category() ) {
+  return 0;
+ }
  $id = absint( get_term_meta( get_queried_object_id(), 'jofme_category_cover_id', true ) );
- if ( ! $id || ! wp_attachment_is_image( $id ) ) { return ''; }
+ return ( $id && wp_attachment_is_image( $id ) ) ? $id : 0;
+}
+
+/**
+ * Whether the current category archive has a cover image.
+ *
+ * @return bool
+ */
+function jofme_catalog_has_cover() {
+ return (bool) jofme_category_cover_id();
+}
+
+function jofme_category_cover_image() {
+ $id = jofme_category_cover_id();
+ if ( ! $id ) {
+  return '';
+ }
  return wp_get_attachment_image( $id, 'full', false, array( 'class' => 'jofme-catalog-cover', 'alt' => '', 'aria-hidden' => 'true', 'loading' => 'eager', 'fetchpriority' => 'high' ) );
 }

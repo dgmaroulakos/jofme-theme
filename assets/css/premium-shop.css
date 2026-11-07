@@ -49,9 +49,20 @@
 .jofme-layout--shop>.jofme-catalog-heading{grid-column:1/-1;grid-row:1;max-width:none;margin:0}
 @media(min-width:960px){body.jofme-sidebar-left .jofme-layout--shop:has(>.jofme-catalog-heading)>.content-area,body.jofme-sidebar-left .jofme-layout--shop:has(>.jofme-catalog-heading)>.widget-area{grid-row:2}}
 
-/* A category's optional cover belongs to the full-width catalog heading. */
-.jofme-catalog-heading--cover{position:relative;overflow:hidden;display:flex;align-items:center;min-height:clamp(240px,28vw,420px);padding:clamp(2rem,5vw,5rem);background:#2a2623;color:#fff}
+/* Category cover: edge-to-edge image; title/copy aligned to the site layout. */
+.jofme-catalog-heading--cover{
+ position:relative;overflow:hidden;display:flex;align-items:center;
+ width:100%;max-width:none;margin:0 0 1.5rem;
+ min-height:clamp(260px,32vw,460px);
+ padding-block:clamp(2.5rem,6vw,5.5rem);padding-inline:0;
+ background:#2a2623;color:#fff
+}
 .jofme-catalog-heading--cover .jofme-catalog-cover{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
 .jofme-catalog-heading--cover::after{content:'';position:absolute;inset:0;background:rgba(0,0,0,.55);pointer-events:none}
-.jofme-catalog-heading--cover .jofme-catalog-heading__content{position:relative;z-index:1;width:100%}
+.jofme-catalog-heading--cover .jofme-catalog-heading__content{
+ position:relative;z-index:1;
+ width:min(100% - 2.5rem,var(--jofme-layout-width,var(--jofme-container)));
+ max-width:none;margin-inline:auto
+}
+.jofme-catalog-heading--cover .jofme-catalog-heading__content .term-description{max-width:min(580px,100%)}
 .jofme-catalog-heading--cover h1,.jofme-catalog-heading--cover .jofme-eyebrow,.jofme-catalog-heading--cover .term-description{color:inherit}
