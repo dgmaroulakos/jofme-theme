@@ -6,5 +6,5 @@
 
 .jofme-mobile-close:focus-visible{outline:2px solid var(--jofme-color-accent);outline-offset:4px}
 
-body.header-editorial{--jofme-header-h:132px}
-@media(max-width:899px){body.header-editorial{--jofme-header-h:120px}}
+/* Header min-height comes from Customizer (--jofme-header-h). */
+@media(max-width:899px){.site-header--editorial.is-stuck .site-header__inner{padding-block:var(--jofme-sticky-header-pad,12px)}}
