@@ -46,6 +46,27 @@
    });
   }
   expandWidgetFilters();
+  let lockedScrollY = 0;
+  function lockPageScroll() {
+   lockedScrollY = window.scrollY || window.pageYOffset || 0;
+   document.documentElement.classList.add('jofme-sidebar-open');
+   document.body.classList.add('jofme-sidebar-open');
+   document.body.style.position = 'fixed';
+   document.body.style.top = `-${lockedScrollY}px`;
+   document.body.style.left = '0';
+   document.body.style.right = '0';
+   document.body.style.width = '100%';
+  }
+  function unlockPageScroll() {
+   document.documentElement.classList.remove('jofme-sidebar-open');
+   document.body.classList.remove('jofme-sidebar-open');
+   document.body.style.position = '';
+   document.body.style.top = '';
+   document.body.style.left = '';
+   document.body.style.right = '';
+   document.body.style.width = '';
+   window.scrollTo(0, lockedScrollY);
+  }
   function detach() {
    if (panel.classList.contains('is-detached')) return;
    layout.insertBefore(placeholder, panel);
@@ -60,7 +81,7 @@
   }
   function closeSidebar() {
    clearTimeout(closeTimer);
-   document.body.classList.remove('jofme-sidebar-open');
+   unlockPageScroll();
    toggle.setAttribute('aria-expanded', 'false');
    backdrop.hidden = true;
    closeTimer = setTimeout(() => {
@@ -77,7 +98,7 @@
    detach();
    expandWidgetFilters();
    backdrop.hidden = false;
-   requestAnimationFrame(() => document.body.classList.add('jofme-sidebar-open'));
+   lockPageScroll();
    toggle.setAttribute('aria-expanded', 'true');
    const first = focusable()[0] || panel.querySelector('.jofme-shop-sidebar-close');
    if (first) first.focus();
@@ -116,7 +137,7 @@
     });
     if (document.body.classList.contains('jofme-sidebar-open')) {
      clearTimeout(closeTimer);
-     document.body.classList.remove('jofme-sidebar-open');
+     unlockPageScroll();
      toggle.setAttribute('aria-expanded', 'false');
      backdrop.hidden = true;
      restore();

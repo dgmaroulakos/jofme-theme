@@ -48,6 +48,24 @@ function wc_get_attribute_taxonomies() {
 	global $jofme_attributes;
 	return $jofme_attributes;
 }
+function wc_attribute_taxonomy_name( $name ) {
+	return 'pa_' . $name;
+}
+function sanitize_text_field( $text ) { return trim( (string) $text ); }
+function wp_unslash( $value ) { return $value; }
+function jofme_filter_value( $key ) {
+	return isset( $_GET[ $key ] ) && is_scalar( $_GET[ $key ] ) ? sanitize_text_field( $_GET[ $key ] ) : '';
+}
+function add_query_arg( $key, $value = false, $url = false ) {
+	if ( is_array( $key ) ) {
+		foreach ( $key as $k => $v ) {
+			$url = add_query_arg( $k, $v, $url );
+		}
+		return $url;
+	}
+	$sep = false === strpos( $url, '?' ) ? '?' : '&';
+	return $url . $sep . rawurlencode( $key ) . '=' . rawurlencode( (string) $value );
+}
 function get_option( $key, $default = false ) {
 	global $jofme_options;
 	return array_key_exists( $key, $jofme_options ) ? $jofme_options[ $key ] : $default;
@@ -128,4 +146,18 @@ $plain = jofme_variation_swatches_html(
 );
 verify( '<select name="attribute_pa_size"><option value="m">M</option></select>', $plain, 'non-swatch dropdown unchanged' );
 
-echo "PASS: attribute flags, term colors, swatch markup, variation wrapper\n";
+$_GET = array( 'filter_color' => 'xriso' );
+$jofme_options = array();
+verify( array( 'pa_color' => 'xriso' ), jofme_active_swatch_filters(), 'active filter_color maps to pa_color' );
+$_GET = array( 'filter_color' => 'xriso,asimenio' );
+verify( array( 'pa_color' => 'xriso' ), jofme_active_swatch_filters(), 'comma-separated filter uses first slug' );
+
+$link = jofme_loop_product_link_with_filters( 'https://example.com/product/ring/', null );
+verify( 'https://example.com/product/ring/', $link, 'missing product leaves link unchanged' );
+$link = jofme_loop_product_link_with_filters( 'https://example.com/product/ring/', (object) array() );
+verify( true, false !== strpos( $link, 'attribute_pa_color=xriso' ), 'loop link gets active color attribute' );
+
+$_GET = array();
+verify( array(), jofme_active_swatch_filters(), 'no active filters when query empty' );
+
+echo "PASS: attribute flags, term colors, swatch markup, variation wrapper, active filters\n";

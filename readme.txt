@@ -3,7 +3,7 @@ Contributors: jofme
 Requires at least: 6.4
 Tested up to: 6.8
 Requires PHP: 7.4
-Stable tag: 1.7.5
+Stable tag: 1.7.6
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -30,6 +30,10 @@ strings / wpml-config.xml.
 * WPML or Polylang
 
 == Changelog ==
+
+= 1.7.6 =
+* Lock page scroll while the shop off-canvas is open.
+* Color catalog filters preselect matching variations on cards and product links.
 
 = 1.7.5 =
 * Off-canvas shop sidebar shows filter widgets immediately (no nested Woo overlay click).

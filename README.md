@@ -1,6 +1,6 @@
 # Jofme Premium
 
-WordPress/WooCommerce theme, version 1.7.5. Theme files live at the repository root.
+WordPress/WooCommerce theme, version 1.7.6. Theme files live at the repository root.
 
 ## Εγκατάσταση
 
@@ -74,6 +74,7 @@ WordPress/WooCommerce theme, version 1.7.5. Theme files live at the repository r
 - Εμφάνιση → Προσαρμογή → Jofme Options → Layout Settings → **Shop & product categories — Off-canvas open effect**:
   - Slide from left / right / bottom, Fade, Scale.
 - 1.7.5: μέσα στο panel φαίνονται αμέσως τα sidebar widgets (χωρίς δεύτερο “Filter products” από το Woo block).
+- 1.7.6: με ανοιχτό off-canvas κλειδώνει το scroll της σελίδας· επιλογή χρώματος (π.χ. Χρυσό) προεπιλέγει την παραλλαγή στις κάρτες/links.
 
 ## Bestsellers card layout + hover (1.7.1 / 1.7.2)
 
