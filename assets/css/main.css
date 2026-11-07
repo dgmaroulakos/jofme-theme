@@ -640,6 +640,11 @@ body.jofme-nav-open {
 	.site-branding--center {
 		justify-self: center;
 	}
+
+	.custom-logo-link img {
+		max-width: 90px;
+		max-height: none;
+	}
 }
 
 @media (min-width: 900px) {
