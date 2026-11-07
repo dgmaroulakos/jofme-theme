@@ -1,28 +1,9 @@
 <?php
-/** Editorial header with optional utility bar. @package Jofme */
+/** Editorial header. @package Jofme */
 defined( 'ABSPATH' ) || exit;
 $announcement = jofme_get_announcement_text();
 if ( $announcement ) : ?>
  <div class="jofme-announcement"><div class="jofme-container"><p><?php echo esc_html( $announcement ); ?></p></div></div>
-<?php endif;
-if ( get_theme_mod( 'jofme_header_utility', true ) ) : ?>
- <div class="jofme-utility-bar"><div class="jofme-container jofme-utility-bar__inner">
-  <nav aria-label="<?php esc_attr_e( 'Utility links', 'jofme' ); ?>"><?php wp_nav_menu( array( 'theme_location' => 'utility-left', 'container' => false, 'menu_id' => 'jofme-utility-left', 'depth' => 1, 'fallback_cb' => false ) ); ?></nav>
-  <div class="jofme-utility-bar__end">
-   <nav aria-label="<?php esc_attr_e( 'Additional links', 'jofme' ); ?>"><?php wp_nav_menu( array( 'theme_location' => 'utility-right', 'container' => false, 'menu_id' => 'jofme-utility-right', 'depth' => 1, 'fallback_cb' => false ) ); ?></nav>
-   <?php
-   $languages = apply_filters( 'wpml_active_languages', null, array( 'skip_missing' => 1 ) );
-   if ( is_array( $languages ) && count( $languages ) > 1 ) : ?>
-    <nav class="jofme-header-languages" aria-label="<?php esc_attr_e( 'Language', 'jofme' ); ?>">
-     <?php foreach ( $languages as $language ) : ?>
-      <a href="<?php echo esc_url( $language['url'] ); ?>" lang="<?php echo esc_attr( $language['language_code'] ); ?>"<?php if ( ! empty( $language['active'] ) ) { echo ' aria-current="true"'; } ?>><?php echo esc_html( $language['native_name'] ); ?></a>
-     <?php endforeach; ?>
-    </nav>
-   <?php endif;
-   do_action( 'jofme_header_utility_end' );
-   ?>
-  </div>
- </div></div>
 <?php endif; ?>
 <header id="masthead" class="site-header site-header--editorial">
  <div class="jofme-container site-header__inner">

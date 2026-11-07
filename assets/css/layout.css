@@ -4,9 +4,8 @@ body.jofme-width-boxed{--jofme-layout-width:var(--jofme-container,1320px)}
 body.jofme-width-wide{--jofme-layout-width:1600px}
 body.jofme-width-narrow{--jofme-layout-width:960px}
 body.jofme-width-full{--jofme-layout-width:100%}
-/* Header / utility / announcement share the same horizontal measure as content. */
+/* Header / announcement share the same horizontal measure as content. */
 body.jofme-layout-settings .site-header .jofme-container,
-body.jofme-layout-settings .jofme-utility-bar .jofme-container,
 body.jofme-layout-settings .jofme-announcement .jofme-container{
  width:min(100% - 2.5rem,var(--jofme-layout-width,var(--jofme-container,1320px)))
 }
