@@ -158,7 +158,28 @@ function jofme_card_actions() {
  global $product;
  echo '<div class="jofme-card-actions"><button type="button" class="jofme-preview" data-product="' . absint( $product->get_id() ) . '" aria-label="' . esc_attr__( 'Quick view', 'jofme' ) . '"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true"><path d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7S2 12 2 12Z"/><circle cx="12" cy="12" r="3"/></svg></button><a href="' . esc_url( get_permalink( $product->get_id() ) ) . '" aria-label="' . esc_attr__( 'Product details', 'jofme' ) . '"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true"><path d="M5 19 19 5M5 5h14v14"/></svg></a></div>';
 }
-function jofme_card_description() { global $product; echo '<p class="jofme-card-description">' . esc_html( wp_trim_words( wp_strip_all_tags( $product->get_short_description() ), 28 ) ) . '</p>'; }
+/**
+ * Short description for list view: up to 20 words, then a link to the product.
+ */
+function jofme_card_description() {
+ global $product;
+ if ( ! $product ) {
+  return;
+ }
+ $text = trim( wp_strip_all_tags( $product->get_short_description() ) );
+ if ( '' === $text ) {
+  return;
+ }
+ $words     = preg_split( '/\s+/u', $text, -1, PREG_SPLIT_NO_EMPTY );
+ $limit     = 20;
+ $truncated = is_array( $words ) && count( $words ) > $limit;
+ $excerpt   = $truncated ? implode( ' ', array_slice( $words, 0, $limit ) ) : $text;
+ echo '<p class="jofme-card-description">' . esc_html( $excerpt );
+ if ( $truncated ) {
+  echo ' <a class="jofme-card-description__more" href="' . esc_url( get_permalink( $product->get_id() ) ) . '">' . esc_html__( 'View more', 'jofme' ) . '</a>';
+ }
+ echo '</p>';
+}
 add_action( 'woocommerce_after_shop_loop_item', 'jofme_card_actions', 12 );
 add_action( 'woocommerce_after_shop_loop_item_title', 'jofme_card_description', 16 );
 

@@ -3,7 +3,7 @@ Contributors: jofme
 Requires at least: 6.4
 Tested up to: 6.8
 Requires PHP: 7.4
-Stable tag: 1.7.8
+Stable tag: 1.7.9
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -30,6 +30,9 @@ strings / wpml-config.xml.
 * WPML or Polylang
 
 == Changelog ==
+
+= 1.7.9 =
+* List view product descriptions show up to 20 words, then a “View more” link to the product.
 
 = 1.7.8 =
 * Remove the inline “Filter collection” accordion; catalog filters come from the shop sidebar / off-canvas only.
