@@ -46,6 +46,36 @@ body.single-product.jofme-gallery-stacked.woocommerce div.product div.images{max
  }
  body.jofme-sidebar-effect-scale.jofme-sidebar-open .jofme-shop-sidebar-panel{transform:translate(-50%,-50%) scale(1)}
  body.jofme-sidebar-open{overflow:hidden}
+ /* Prefer sidebar widgets over the inline Filter collection accordion. */
+ body.jofme-shop-sidebar-offcanvas .jofme-filters{display:none}
+ /*
+  * WooCommerce Product Filters block uses its own nested mobile overlay
+  * ("Filter products" button). Inside our panel, show the widgets immediately.
+  */
+ body.jofme-shop-sidebar-offcanvas .jofme-shop-sidebar-panel .wc-block-product-filters{
+  display:flex!important;width:100%;flex-direction:column
+ }
+ body.jofme-shop-sidebar-offcanvas .jofme-shop-sidebar-panel .wc-block-product-filters__open-overlay,
+ body.jofme-shop-sidebar-offcanvas .jofme-shop-sidebar-panel .wc-block-product-filters__overlay-header,
+ body.jofme-shop-sidebar-offcanvas .jofme-shop-sidebar-panel .wc-block-product-filters__close-overlay{
+  display:none!important
+ }
+ body.jofme-shop-sidebar-offcanvas .jofme-shop-sidebar-panel .wc-block-product-filters__overlay{
+  position:relative!important;inset:auto!important;top:auto!important;z-index:auto!important;pointer-events:auto!important;background:inherit!important;color:inherit!important;transition:none!important;flex-grow:1;width:100%
+ }
+ body.jofme-shop-sidebar-offcanvas .jofme-shop-sidebar-panel .wc-block-product-filters__overlay-wrapper{
+  width:auto!important;height:auto!important;background:inherit;color:inherit
+ }
+ body.jofme-shop-sidebar-offcanvas .jofme-shop-sidebar-panel .wc-block-product-filters__overlay-dialog{
+  position:relative!important;inset:auto!important;width:auto!important;max-height:none!important;transform:none!important;transition:none!important;background:inherit!important;color:inherit!important;box-shadow:none!important
+ }
+ body.jofme-shop-sidebar-offcanvas .jofme-shop-sidebar-panel .wc-block-product-filters__overlay-content{
+  padding:0!important;overflow:visible!important;flex-grow:1;background:inherit;color:inherit
+ }
+ body.jofme-shop-sidebar-offcanvas .jofme-shop-sidebar-panel .wc-block-product-filters__overlay-footer{
+  display:block!important;box-shadow:none;padding:1rem 0 0;background:inherit
+ }
+ body.jofme-shop-sidebar-offcanvas .jofme-shop-sidebar-panel .wc-block-product-filters__overlay-content .wp-block-group{display:block}
 }
 
 @media(min-width:960px){
