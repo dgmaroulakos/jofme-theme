@@ -11,12 +11,20 @@ defined( 'ABSPATH' ) || exit;
 get_header( 'shop' );
 
 do_action( 'jofme_shop_layout_open' );
+
+// Full-bleed category cover sits outside the layout container.
+$has_cover = function_exists( 'jofme_catalog_has_cover' ) && jofme_catalog_has_cover();
+if ( $has_cover ) {
+	jofme_catalog_header();
+}
 ?>
 
 <div class="jofme-container jofme-layout jofme-layout--shop">
 	<?php
-	// The catalog title spans the product results and sidebar.
-	jofme_catalog_header();
+	// Title without cover stays inside the layout with products/sidebar.
+	if ( ! $has_cover ) {
+		jofme_catalog_header();
+	}
 	do_action( 'woocommerce_before_main_content' );
 
 	if ( woocommerce_product_loop() ) {

@@ -37,6 +37,8 @@ jobs:
           node scripts/verify-gallery.cjs
           node scripts/verify-bestsellers.cjs
           node scripts/verify-scroll.cjs
+          node .tests/category-cover.cjs
+          node .tests/catalog-toolbar.cjs
       - name: Match release tag to theme versions
         if: startsWith(github.ref, 'refs/tags/')
         env:
