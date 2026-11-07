@@ -47,8 +47,9 @@ function jofme_scripts() {
 			'ajaxUrl' => admin_url( 'admin-ajax.php' ),
 			'nonce'   => wp_create_nonce( 'jofme_nonce' ),
 			'scroll'  => array(
-				'enabled' => (bool) get_theme_mod( 'jofme_smooth_scroll', true ),
-				'speed'   => $scroll_speed,
+				'enabled'       => (bool) get_theme_mod( 'jofme_smooth_scroll', true ),
+				'speed'         => $scroll_speed,
+				'archiveProducts' => (bool) get_theme_mod( 'jofme_archive_scroll_products', true ),
 			),
 			'i18n'    => array(
 				'menuOpen'  => __( 'Open menu', 'jofme' ),
