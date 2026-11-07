@@ -1,6 +1,6 @@
 # Jofme Premium
 
-WordPress/WooCommerce theme, version 1.7.9. Theme files live at the repository root.
+WordPress/WooCommerce theme, version 1.7.10. Theme files live at the repository root.
 
 ## Εγκατάσταση
 
@@ -11,7 +11,7 @@ WordPress/WooCommerce theme, version 1.7.9. Theme files live at the repository r
 1. Το repository πρέπει να είναι **δημόσιο** για τον ενσωματωμένο updater.
 2. Εμφάνιση → Jofme Updates: αποθηκεύστε `owner/repository`.
 3. Στις επόμενες εκδόσεις: Πίνακας ελέγχου → Ενημερώσεις → Έλεγχος ξανά → Ενημέρωση θέματος.
-4. Ο έλεγχος GitHub αποθηκεύεται για μία ώρα. Η επαναποθήκευση της ρύθμισης καθαρίζει την cache.
+4. Ο έλεγχος GitHub αποθηκεύεται για μία ώρα. Από 1.7.10 το **Check again** στο Dashboard → Updates καθαρίζει και αυτή την cache· εναλλακτικά Appearance → Jofme Updates → **Check for updates now** ή αποθήκευση της ρύθμισης.
 
 Το αρχικό theme 1.0.0 δεν έχει updater: εγκαταστήστε μία φορά το νέο ZIP. Για ιδιωτικό repository χρειάζεται διαφορετικός μηχανισμός πιστοποιημένης διανομής. Μην προσθέτετε tokens στον κώδικα. Οι αλλαγές στον κώδικα του γονικού theme αντικαθίστανται στις ενημερώσεις· χρησιμοποιήστε child theme για τοπικές προσαρμογές.
 
@@ -78,6 +78,7 @@ WordPress/WooCommerce theme, version 1.7.9. Theme files live at the repository r
 - 1.7.7: mobile toolbar πάνω από τα προϊόντα = Filters icon + sorting + 1/2 columns· το “Showing all” σε δική του γραμμή· Customizer upload SVG για το Filters icon.
 - 1.7.8: αφαιρέθηκε το inline “Filter collection” accordion· φίλτρα μόνο από shop sidebar / off-canvas.
 - 1.7.9: στο list view η περιγραφή κόβεται στις 20 λέξεις με σύνδεσμο “View more” στο προϊόν.
+- 1.7.10: updater — το Check again καθαρίζει το GitHub cache· στη σελίδα Jofme Updates φαίνονται installed/latest και κουμπί force-check.
 
 ## Bestsellers card layout + hover (1.7.1 / 1.7.2)
 
