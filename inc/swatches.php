@@ -348,6 +348,107 @@ function jofme_swatch_assets() {
 add_action( 'wp_enqueue_scripts', 'jofme_swatch_assets', 30 );
 
 /**
+ * Active color/swatch filters from the catalog query (filter_color=xriso, etc.).
+ *
+ * @return array<string,string> Taxonomy => term slug.
+ */
+function jofme_active_swatch_filters() {
+	$active = array();
+	if ( ! function_exists( 'wc_get_attribute_taxonomies' ) ) {
+		return $active;
+	}
+
+	foreach ( wc_get_attribute_taxonomies() as $attribute ) {
+		$taxonomy = wc_attribute_taxonomy_name( $attribute->attribute_name );
+		if ( ! jofme_is_swatch_attribute( $taxonomy ) ) {
+			continue;
+		}
+
+		$candidates = array(
+			'filter_' . $attribute->attribute_name,
+			'filter_' . $taxonomy,
+			'attribute_' . $taxonomy,
+		);
+		$value      = '';
+		foreach ( $candidates as $key ) {
+			$value = function_exists( 'jofme_filter_value' ) ? jofme_filter_value( $key ) : ( isset( $_GET[ $key ] ) && is_scalar( $_GET[ $key ] ) ? sanitize_text_field( wp_unslash( $_GET[ $key ] ) ) : '' ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+			if ( '' !== $value ) {
+				break;
+			}
+		}
+		if ( '' === $value ) {
+			continue;
+		}
+		// Woo may pass multiple values comma-separated; use the first.
+		$parts = array_filter( array_map( 'sanitize_title', explode( ',', $value ) ) );
+		if ( $parts ) {
+			$active[ $taxonomy ] = reset( $parts );
+		}
+	}
+
+	return $active;
+}
+
+/**
+ * Find a visible variation matching the active swatch filters.
+ *
+ * @param WC_Product $product Product.
+ * @return array|null Variation data from get_available_variations().
+ */
+function jofme_matching_variation_for_filters( $product ) {
+	$active = jofme_active_swatch_filters();
+	if ( ! $product || ! $active || ! $product->is_type( 'variable' ) ) {
+		return null;
+	}
+
+	$best = null;
+	foreach ( $product->get_available_variations() as $variation ) {
+		if ( isset( $variation['variation_is_visible'] ) && ! $variation['variation_is_visible'] ) {
+			continue;
+		}
+		$attrs = isset( $variation['attributes'] ) && is_array( $variation['attributes'] ) ? $variation['attributes'] : array();
+		$match = true;
+		foreach ( $active as $taxonomy => $slug ) {
+			$key   = 'attribute_' . $taxonomy;
+			$value = isset( $attrs[ $key ] ) ? (string) $attrs[ $key ] : '';
+			// Empty attribute on a variation means "any".
+			if ( '' !== $value && $value !== $slug ) {
+				$match = false;
+				break;
+			}
+		}
+		if ( ! $match ) {
+			continue;
+		}
+		$best = $variation;
+		if ( ! empty( $variation['image_id'] ) || ( ! empty( $variation['image']['src'] ) ) ) {
+			return $variation;
+		}
+	}
+
+	return $best;
+}
+
+/**
+ * Append active swatch attributes to loop product URLs so the PDP opens preselected.
+ *
+ * @param string     $link    Product URL.
+ * @param WC_Product $product Product.
+ * @return string
+ */
+function jofme_loop_product_link_with_filters( $link, $product ) {
+	$active = jofme_active_swatch_filters();
+	if ( ! $active || ! $product ) {
+		return $link;
+	}
+	foreach ( $active as $taxonomy => $slug ) {
+		$link = add_query_arg( 'attribute_' . $taxonomy, $slug, $link );
+	}
+	return $link;
+}
+add_filter( 'woocommerce_loop_product_link', 'jofme_loop_product_link_with_filters', 20, 2 );
+
+/**
  * Color swatches on catalog product cards.
  */
 function jofme_card_swatches() {
@@ -355,6 +456,8 @@ function jofme_card_swatches() {
 	if ( ! $product ) {
 		return;
 	}
+
+	$active = jofme_active_swatch_filters();
 
 	foreach ( $product->get_attributes() as $attribute ) {
 		if ( ! $attribute->is_taxonomy() || ! jofme_is_swatch_attribute( $attribute->get_name() ) ) {
@@ -366,16 +469,19 @@ function jofme_card_swatches() {
 			continue;
 		}
 
-		echo '<div class="jofme-swatches" aria-label="' . esc_attr( wc_attribute_label( $attribute->get_name() ) ) . '">';
+		$taxonomy = $attribute->get_name();
+		echo '<div class="jofme-swatches" aria-label="' . esc_attr( wc_attribute_label( $taxonomy ) ) . '">';
 		foreach ( $terms as $term ) {
-			$url = add_query_arg( 'attribute_' . $attribute->get_name(), $term->slug, get_permalink( $product->get_id() ) );
+			$url      = add_query_arg( 'attribute_' . $taxonomy, $term->slug, get_permalink( $product->get_id() ) );
+			$selected = isset( $active[ $taxonomy ] ) && $active[ $taxonomy ] === $term->slug;
 			echo jofme_swatch_html( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 				array(
-					'tag'   => 'a',
-					'name'  => $term->name,
-					'color' => jofme_term_swatch_color( $term ),
-					'url'   => $url,
-					'value' => $term->slug,
+					'tag'      => 'a',
+					'name'     => $term->name,
+					'color'    => jofme_term_swatch_color( $term ),
+					'url'      => $url,
+					'value'    => $term->slug,
+					'selected' => $selected,
 				)
 			);
 		}

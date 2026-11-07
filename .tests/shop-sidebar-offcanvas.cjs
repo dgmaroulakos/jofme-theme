@@ -20,5 +20,8 @@ assert.match(js, /jofme-sidebar-open/);
 assert.match(js, /detach/);
 assert.match(js, /expandWidgetFilters/);
 assert.match(js, /is-filter-drawer-disabled/);
+assert.match(js, /lockPageScroll/);
+assert.match(js, /unlockPageScroll/);
+assert.match(css, /touch-action:\s*none/);
 assert.match(layout, /jofme_catalog_sidebar_effect/);
 console.log('PASS: shop sidebar off-canvas effect wiring present in CSS/JS/PHP');

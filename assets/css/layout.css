@@ -45,7 +45,18 @@ body.single-product.jofme-gallery-stacked.woocommerce div.product div.images{max
   visibility:visible;pointer-events:auto;opacity:1;transform:none
  }
  body.jofme-sidebar-effect-scale.jofme-sidebar-open .jofme-shop-sidebar-panel{transform:translate(-50%,-50%) scale(1)}
- body.jofme-sidebar-open{overflow:hidden}
+ /* Page scroll lock while the panel is open (JS also freezes body position). */
+ html.jofme-sidebar-open,
+ body.jofme-sidebar-open{
+  overflow:hidden!important;
+  overscroll-behavior:none;
+ }
+ body.jofme-sidebar-open{
+  touch-action:none
+ }
+ body.jofme-sidebar-open .jofme-shop-sidebar-panel{
+  touch-action:pan-y
+ }
  /* Prefer sidebar widgets over the inline Filter collection accordion. */
  body.jofme-shop-sidebar-offcanvas .jofme-filters{display:none}
  /*
