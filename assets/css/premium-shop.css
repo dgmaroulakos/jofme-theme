@@ -64,5 +64,5 @@
  width:min(100% - 2.5rem,var(--jofme-layout-width,var(--jofme-container)));
  max-width:none;margin-inline:auto
 }
-.jofme-catalog-heading--cover .jofme-catalog-heading__content .term-description{max-width:min(580px,100%)}
+.jofme-catalog-heading--cover .jofme-catalog-heading__content .term-description{max-width:100%}
 .jofme-catalog-heading--cover h1,.jofme-catalog-heading--cover .jofme-eyebrow,.jofme-catalog-heading--cover .term-description{color:inherit}

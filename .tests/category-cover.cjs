@@ -13,5 +13,6 @@ assert.match(archive, /jofme_catalog_has_cover/);
 assert.match(archive, /\$has_cover/);
 assert.match(css, /\.jofme-catalog-heading--cover/);
 assert.match(css, /var\(--jofme-layout-width,\s*var\(--jofme-container\)\)/);
+assert.match(css, /\.jofme-catalog-heading--cover \.jofme-catalog-heading__content \.term-description\{max-width:100%\}/);
 assert.doesNotMatch(css, /\.jofme-catalog-heading--cover[^{]*\{[^}]*padding:\s*clamp/s);
 console.log('PASS: full-bleed category cover with layout-aligned copy');

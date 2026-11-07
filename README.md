@@ -1,6 +1,6 @@
 # Jofme Premium
 
-WordPress/WooCommerce theme, version 1.7.20. Theme files live at the repository root.
+WordPress/WooCommerce theme, version 1.7.21. Theme files live at the repository root.
 
 ## Εγκατάσταση
 
