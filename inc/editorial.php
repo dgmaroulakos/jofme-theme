@@ -14,14 +14,57 @@ function jofme_editorial_customize( $manager ) {
  if ( $control ) { $control->choices['editorial'] = __( 'Editorial', 'jofme' ); }
  $manager->remove_control( 'jofme_header_utility' );
  $manager->add_setting( 'jofme_header_transparent', array( 'default' => false, 'sanitize_callback' => 'wp_validate_boolean' ) );
- $manager->add_control( 'jofme_header_transparent', array( 'label' => __( 'Editorial header: transparent on the static homepage', 'jofme' ), 'section' => 'jofme_header', 'type' => 'checkbox', 'description' => __( 'Enable when the homepage starts with a full-width photo or hero. Navigation becomes white over the hero.', 'jofme' ) ) );
+ $manager->add_control( 'jofme_header_transparent', array( 'label' => __( 'Editorial header: transparent on the static homepage', 'jofme' ), 'section' => 'jofme_header', 'type' => 'checkbox', 'description' => __( 'Enable when the homepage starts with a full-width photo or hero.', 'jofme' ) ) );
+ $manager->add_setting( 'jofme_transparent_logo', array( 'default' => 0, 'sanitize_callback' => 'absint' ) );
+ $manager->add_control(
+  new WP_Customize_Media_Control(
+   $manager,
+   'jofme_transparent_logo',
+   array(
+    'label'       => __( 'Transparent header logo', 'jofme' ),
+    'description' => __( 'Optional logo used while the header is transparent over the hero. Leave empty to keep the site logo (with color invert).', 'jofme' ),
+    'section'     => 'jofme_header',
+    'mime_type'   => 'image',
+   )
+  )
+ );
+ $manager->add_setting( 'jofme_transparent_header_color', array( 'default' => '#ffffff', 'sanitize_callback' => 'sanitize_hex_color' ) );
+ $manager->add_control(
+  new WP_Customize_Color_Control(
+   $manager,
+   'jofme_transparent_header_color',
+   array(
+    'label'       => __( 'Transparent header text color', 'jofme' ),
+    'description' => __( 'Menu, icons and title color while the header is transparent.', 'jofme' ),
+    'section'     => 'jofme_header',
+   )
+  )
+ );
 }
 add_action( 'customize_register', 'jofme_editorial_customize', 20 );
 function jofme_editorial_body_class( $classes ) {
- if ( 'editorial' === get_theme_mod( 'jofme_header_layout', 'classic' ) && get_theme_mod( 'jofme_header_transparent', false ) && is_front_page() && is_page() ) { $classes[] = 'jofme-transparent-header'; }
+ if ( 'editorial' === get_theme_mod( 'jofme_header_layout', 'classic' ) && get_theme_mod( 'jofme_header_transparent', false ) && is_front_page() && is_page() ) {
+  $classes[] = 'jofme-transparent-header';
+  if ( absint( get_theme_mod( 'jofme_transparent_logo', 0 ) ) ) {
+   $classes[] = 'jofme-has-transparent-logo';
+  }
+ }
  return $classes;
 }
 add_filter( 'body_class', 'jofme_editorial_body_class' );
+
+/**
+ * Inline CSS for transparent header color.
+ */
+function jofme_editorial_header_css() {
+ $color = sanitize_hex_color( get_theme_mod( 'jofme_transparent_header_color', '#ffffff' ) );
+ if ( ! $color ) {
+  $color = '#ffffff';
+ }
+ $css = ':root{--jofme-transparent-header-color:' . $color . ';}';
+ wp_add_inline_style( 'jofme-editorial-header', $css );
+}
+add_action( 'wp_enqueue_scripts', 'jofme_editorial_header_css', 23 );
 function jofme_widget_category( $manager ) { $manager->add_category( 'jofme', array( 'title' => __( 'Jofme', 'jofme' ), 'icon' => 'eicon-diamond' ) ); }
 add_action( 'elementor/elements/categories_registered', 'jofme_widget_category' );
 function jofme_register_editorial_widgets( $manager ) {
