@@ -163,6 +163,7 @@
 
  /* Category/term description: expand beyond 20 words on mobile. */
  document.querySelectorAll('.jofme-term-description').forEach((block) => {
+  if (!block || typeof block.querySelector !== 'function') return;
   const button = block.querySelector('.jofme-term-description__more');
   const label = button && button.querySelector('.jofme-term-description__more-label');
   if (!button || !label) return;
