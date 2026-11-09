@@ -6,7 +6,12 @@ function run(saved, storageBlocked = false, archive = true, mobile = false) {
  const controls = (archive ? ['1','2','3','4','list'] : []).map(view => ({dataset:{view}, attrs:{}, setAttribute(k,v){this.attrs[k]=v}, addEventListener(k,fn){this.click=fn}}));
  const storage = {value:saved,getItem(){if(storageBlocked) throw Error();return this.value},setItem(k,v){if(storageBlocked)throw Error();this.value=v}};
  const context = {
-  document:{querySelector:()=>catalog,querySelectorAll:()=>controls,getElementById:()=>null,body:{classList:{contains:c=>c==='jofme-default-view-3'}}},
+  document:{
+   querySelector:(sel)=> (sel === '.jofme-shop' ? catalog : (sel === '.jofme-shop-sidebar-panel' || sel === '.jofme-shop-sidebar-toggle' ? null : catalog)),
+   querySelectorAll:(sel)=> (String(sel).includes('jofme-view') || sel === '.jofme-view button' ? controls : (String(sel).includes('jofme-term-description') ? [] : [])),
+   getElementById:()=>null,
+   body:{classList:{contains:c=>c==='jofme-default-view-3'}},
+  },
   localStorage:storage,
   window:{
    matchMedia:(query)=>({matches: mobile && String(query).includes('767')}),
