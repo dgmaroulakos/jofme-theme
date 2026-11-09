@@ -3,7 +3,7 @@ Contributors: jofme
 Requires at least: 6.4
 Tested up to: 6.8
 Requires PHP: 7.4
-Stable tag: 1.7.25
+Stable tag: 1.7.26
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -30,6 +30,10 @@ strings / wpml-config.xml.
 * WPML or Polylang
 
 == Changelog ==
+
+= 1.7.26 =
+* Product tabs wrapper padding 0 15% (tighter on mobile).
+* Default theme background color set to #e8caaf.
 
 = 1.7.25 =
 * Mobile category term description truncates to 20 words with a More arrow toggle.

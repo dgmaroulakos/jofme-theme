@@ -251,7 +251,7 @@ function jofme_customize_register( $wp_customize ) {
 	$color_settings = array(
 		'jofme_color_primary'   => array( '#1a1512', __( 'Primary text', 'jofme' ) ),
 		'jofme_color_accent'    => array( '#b8956c', __( 'Accent (gold)', 'jofme' ) ),
-		'jofme_color_background'=> array( '#faf8f5', __( 'Background', 'jofme' ) ),
+		'jofme_color_background'=> array( '#e8caaf', __( 'Background', 'jofme' ) ),
 	);
 
 	foreach ( $color_settings as $id => $data ) {
@@ -350,7 +350,7 @@ function jofme_sanitize_sticky_header_padding( $value ) {
 function jofme_customizer_css() {
 	$primary     = get_theme_mod( 'jofme_color_primary', '#1a1512' );
 	$accent      = get_theme_mod( 'jofme_color_accent', '#b8956c' );
-	$bg          = get_theme_mod( 'jofme_color_background', '#faf8f5' );
+	$bg          = get_theme_mod( 'jofme_color_background', '#e8caaf' );
 	$min_h       = jofme_sanitize_header_min_height( get_theme_mod( 'jofme_header_min_height', 132 ) );
 	$min_h_mobile = jofme_sanitize_header_min_height_mobile( get_theme_mod( 'jofme_header_min_height_mobile', 80 ) );
 	$sticky      = jofme_sanitize_sticky_header_padding( get_theme_mod( 'jofme_sticky_header_padding', 12 ) );

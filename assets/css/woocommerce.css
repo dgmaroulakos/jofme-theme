@@ -188,6 +188,16 @@
 	clear: both;
 }
 
+.woocommerce div.product .woocommerce-tabs.wc-tabs-wrapper {
+	padding: 0% 15%;
+}
+
+@media (max-width: 767px) {
+	.woocommerce div.product .woocommerce-tabs.wc-tabs-wrapper {
+		padding: 0 1.25rem;
+	}
+}
+
 .woocommerce div.product .woocommerce-tabs ul.tabs {
 	padding: 0;
 	margin: 0 0 1.5rem;
