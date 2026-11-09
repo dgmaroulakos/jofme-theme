@@ -161,6 +161,19 @@
   });
  }
 
+ /* Category/term description: expand beyond 20 words on mobile. */
+ document.querySelectorAll('.jofme-term-description').forEach((block) => {
+  const button = block.querySelector('.jofme-term-description__more');
+  const label = button && button.querySelector('.jofme-term-description__more-label');
+  if (!button || !label) return;
+  button.addEventListener('click', () => {
+   const open = !block.classList.contains('is-expanded');
+   block.classList.toggle('is-expanded', open);
+   button.setAttribute('aria-expanded', String(open));
+   label.textContent = open ? (jofmeShop.less || 'Less') : (jofmeShop.more || 'More');
+  });
+ });
+
  const dialog = document.getElementById('jofme-preview-dialog');
  if (!dialog) return;
  const content = dialog.querySelector('.jofme-preview-content');

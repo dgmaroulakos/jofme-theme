@@ -101,3 +101,15 @@
 }
 .jofme-catalog-heading--cover .jofme-catalog-heading__content .term-description{max-width:100%}
 .jofme-catalog-heading--cover h1,.jofme-catalog-heading--cover .jofme-eyebrow,.jofme-catalog-heading--cover .term-description{color:inherit}
+/* Term description: full on desktop; 20-word preview + More on mobile. */
+.jofme-term-description__preview{display:none}
+.jofme-term-description__more{display:none;appearance:none;border:0;background:none;padding:0;margin:.65rem 0 0;font:inherit;font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:inherit;cursor:pointer;align-items:center;gap:.35rem}
+.jofme-term-description__arrow{display:block;flex-shrink:0;transition:transform .2s ease}
+.jofme-term-description.is-expanded .jofme-term-description__arrow{transform:rotate(180deg)}
+@media(max-width:767px){
+ .jofme-term-description:not(.is-expanded) .jofme-term-description__full{display:none}
+ .jofme-term-description:not(.is-expanded) .jofme-term-description__preview{display:block}
+ .jofme-term-description.is-expanded .jofme-term-description__preview{display:none}
+ .jofme-term-description__more{display:inline-flex}
+}
+@media(prefers-reduced-motion:reduce){.jofme-term-description__arrow{transition:none}}

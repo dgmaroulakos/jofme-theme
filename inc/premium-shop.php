@@ -24,10 +24,59 @@ function jofme_catalog_assets() {
    'error'   => __( 'Unable to load this product. Please try again.', 'jofme' ),
    'added'   => __( 'Added to cart', 'jofme' ),
    'view'    => __( 'View cart', 'jofme' ),
+   'more'    => __( 'More', 'jofme' ),
+   'less'    => __( 'Less', 'jofme' ),
   )
  );
 }
 add_action( 'wp_enqueue_scripts', 'jofme_catalog_assets', 25 );
+
+/**
+ * Collapsible taxonomy description: full on desktop, 20 words + More on mobile.
+ *
+ * @param string $html Formatted description HTML.
+ */
+function jofme_render_term_description( $html ) {
+ $html = trim( (string) $html );
+ if ( '' === $html ) {
+  return;
+ }
+ $text  = trim( wp_strip_all_tags( $html ) );
+ $words = preg_split( '/\s+/u', $text, -1, PREG_SPLIT_NO_EMPTY );
+ $limit = 20;
+ $long  = is_array( $words ) && count( $words ) > $limit;
+
+ if ( ! $long ) {
+  echo '<div class="term-description">' . $html . '</div>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- WC-formatted content.
+  return;
+ }
+
+ $preview = esc_html( implode( ' ', array_slice( $words, 0, $limit ) ) ) . '&hellip;';
+ echo '<div class="term-description jofme-term-description">';
+ echo '<div class="jofme-term-description__preview">' . $preview . '</div>';
+ echo '<div class="jofme-term-description__full">' . $html . '</div>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+ echo '<button type="button" class="jofme-term-description__more" aria-expanded="false">';
+ echo '<span class="jofme-term-description__more-label">' . esc_html__( 'More', 'jofme' ) . '</span>';
+ echo '<svg class="jofme-term-description__arrow" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>';
+ echo '</button>';
+ echo '</div>';
+}
+
+/**
+ * Replace WooCommerce taxonomy archive description with collapsible markup.
+ */
+function jofme_taxonomy_archive_description() {
+ if ( ! is_product_taxonomy() || 0 !== absint( get_query_var( 'paged' ) ) ) {
+  return;
+ }
+ $term = get_queried_object();
+ if ( ! $term || empty( $term->description ) ) {
+  return;
+ }
+ jofme_render_term_description( wc_format_content( wp_kses_post( $term->description ) ) );
+}
+remove_action( 'woocommerce_archive_description', 'woocommerce_taxonomy_archive_description', 10 );
+add_action( 'woocommerce_archive_description', 'jofme_taxonomy_archive_description', 10 );
 
 function jofme_catalog_header() {
  if ( ! is_shop() && ! is_product_taxonomy() ) { return; }
