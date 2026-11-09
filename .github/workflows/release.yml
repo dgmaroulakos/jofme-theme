@@ -44,6 +44,7 @@ jobs:
           node .tests/quick-view.cjs
           node .tests/product-page-gallery.cjs
           node .tests/term-description-more.cjs
+          node .tests/tabs-bg.cjs
       - name: Match release tag to theme versions
         if: startsWith(github.ref, 'refs/tags/')
         env:
