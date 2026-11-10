@@ -154,8 +154,9 @@ p {
 }
 
 .site-header.is-stuck .site-header__inner {
+	/* Keep reserved height — collapsing min-height makes sticky scroll jump/oscillate. */
 	padding-block: var(--jofme-sticky-header-pad, 12px);
-	min-height: 0;
+	min-height: var(--jofme-header-h);
 }
 
 .site-header__inner {

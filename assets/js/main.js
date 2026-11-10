@@ -341,13 +341,15 @@
 		});
 	}
 
-	/* Sticky header shadow */
+	/* Sticky header shadow (hysteresis avoids stick/unstick flicker near the threshold). */
 	const header = qs('.site-header');
 	if (header && body.classList.contains('has-sticky-header')) {
 		const onScroll = function () {
-			if (window.scrollY > 8) {
+			const y = window.scrollY || window.pageYOffset || 0;
+			const stuck = header.classList.contains('is-stuck');
+			if (!stuck && y > 24) {
 				header.classList.add('is-stuck');
-			} else {
+			} else if (stuck && y < 8) {
 				header.classList.remove('is-stuck');
 			}
 		};
