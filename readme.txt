@@ -3,7 +3,7 @@ Contributors: jofme
 Requires at least: 6.4
 Tested up to: 6.8
 Requires PHP: 7.4
-Stable tag: 1.7.27
+Stable tag: 1.7.28
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -30,6 +30,9 @@ strings / wpml-config.xml.
 * WPML or Polylang
 
 == Changelog ==
+
+= 1.7.28 =
+* Customizer: stuck header height (desktop + mobile), applied via fixed bar + spacer.
 
 = 1.7.27 =
 * Sticky header no longer collapses height on stick (fixes scroll jump/flicker).

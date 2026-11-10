@@ -341,16 +341,53 @@
 		});
 	}
 
-	/* Sticky header shadow (hysteresis avoids stick/unstick flicker near the threshold). */
+	/* Sticky → fixed stuck bar with spacer (hysteresis; height change must not jump layout). */
 	const header = qs('.site-header');
 	if (header && body.classList.contains('has-sticky-header')) {
+		const transparent = body.classList.contains('jofme-transparent-header');
+		let spacer = null;
+
+		function ensureSpacer() {
+			if (spacer) {
+				return spacer;
+			}
+			spacer = doc.createElement('div');
+			spacer.className = 'site-header-spacer';
+			spacer.setAttribute('aria-hidden', 'true');
+			spacer.hidden = true;
+			if (header.parentNode) {
+				header.parentNode.insertBefore(spacer, header);
+			}
+			return spacer;
+		}
+
+		function setStuck(next) {
+			const stuck = header.classList.contains('is-stuck');
+			if (next === stuck) {
+				return;
+			}
+			if (next) {
+				const space = ensureSpacer();
+				const height = transparent ? 0 : header.offsetHeight;
+				space.style.height = height ? height + 'px' : '';
+				space.hidden = false;
+				header.classList.add('is-stuck');
+			} else {
+				header.classList.remove('is-stuck');
+				if (spacer) {
+					spacer.hidden = true;
+					spacer.style.height = '';
+				}
+			}
+		}
+
 		const onScroll = function () {
 			const y = window.scrollY || window.pageYOffset || 0;
 			const stuck = header.classList.contains('is-stuck');
 			if (!stuck && y > 24) {
-				header.classList.add('is-stuck');
+				setStuck(true);
 			} else if (stuck && y < 8) {
-				header.classList.remove('is-stuck');
+				setStuck(false);
 			}
 		};
 		onScroll();

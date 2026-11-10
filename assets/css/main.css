@@ -13,6 +13,8 @@
 	--jofme-container: 1320px;
 	--jofme-header-h: 132px;
 	--jofme-header-h-mobile: 80px;
+	--jofme-header-stuck-h: 100px;
+	--jofme-header-stuck-h-mobile: 64px;
 	--jofme-sticky-header-pad: 12px;
 	--jofme-radius: 0;
 	--jofme-transition: 0.25s ease;
@@ -52,6 +54,17 @@ body {
 
 body.admin-bar.has-sticky-header .site-header.is-stuck {
 	top: 32px;
+}
+
+.site-header-spacer {
+	display: block;
+	width: 100%;
+	flex-shrink: 0;
+	pointer-events: none;
+}
+
+.site-header-spacer[hidden] {
+	display: none !important;
 }
 
 img {
@@ -147,16 +160,21 @@ p {
 }
 
 .site-header.is-stuck {
+	position: fixed;
+	top: 0;
+	left: 0;
+	right: 0;
+	width: 100%;
 	background: var(--jofme-color-bg);
 	background: color-mix(in srgb, var(--jofme-color-bg) 94%, transparent);
 	backdrop-filter: blur(10px);
 	border-bottom-color: var(--jofme-color-border);
+	margin-bottom: 0;
 }
 
 .site-header.is-stuck .site-header__inner {
-	/* Keep reserved height — collapsing min-height makes sticky scroll jump/oscillate. */
 	padding-block: var(--jofme-sticky-header-pad, 12px);
-	min-height: var(--jofme-header-h);
+	min-height: var(--jofme-header-stuck-h, var(--jofme-header-h));
 }
 
 .site-header__inner {
@@ -640,6 +658,7 @@ body.jofme-nav-open {
 @media (max-width: 899px) {
 	:root {
 		--jofme-header-h: var(--jofme-header-h-mobile, 80px);
+		--jofme-header-stuck-h: var(--jofme-header-stuck-h-mobile, 64px);
 	}
 
 	.main-navigation {
