@@ -9,12 +9,14 @@ const customizer = fs.readFileSync(path.join(root, 'inc/customizer.php'), 'utf8'
 const mainCss = fs.readFileSync(path.join(root, 'assets/css/main.css'), 'utf8');
 
 assert.match(galleryCss, /max-width:\s*730px/);
-assert.match(galleryCss, /--jofme-gallery-image-bg/);
+assert.match(galleryCss, /--jofme-gallery-image-bg,\s*transparent/);
 assert.match(galleryCss, /\.jofme-stacked-gallery__item img\{[^}]*height:\s*auto/s);
 assert.match(galleryCss, /\.jofme-carousel-gallery__slide img\{[^}]*height:\s*auto/s);
 assert.doesNotMatch(galleryCss, /\.jofme-carousel-gallery__viewport\{[^}]*aspect-ratio:\s*1/s);
 assert.match(galleryPhp, /jofme_gallery_image_bg/);
+assert.match(galleryPhp, /jofme_sanitize_gallery_image_bg/);
 assert.match(galleryPhp, /--jofme-gallery-image-bg/);
+assert.match(galleryPhp, /transparent/);
 assert.match(galleryPhp, /'full'/);
 assert.match(galleryPhp, /jofme_stacked_product_gallery[\s\S]*'full'/);
 assert.match(customizer, /jofme_logo_max_height/);
