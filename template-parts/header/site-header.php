@@ -11,6 +11,10 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 $announcement = jofme_get_announcement_text();
 $layout       = get_theme_mod( 'jofme_header_layout', 'classic' );
+$allowed      = array( 'classic', 'centered', 'editorial', 'stacked' );
+if ( ! in_array( $layout, $allowed, true ) ) {
+	$layout = 'classic';
+}
 if ( 'editorial' === $layout ) {
 	get_template_part( 'template-parts/header/editorial-header' );
 	return;
@@ -56,7 +60,7 @@ if ( 'editorial' === $layout ) {
 			<div class="site-branding site-branding--center">
 				<?php jofme_site_branding(); ?>
 			</div>
-		<?php else : ?>
+		<?php elseif ( 'stacked' !== $layout ) : ?>
 			<nav id="site-navigation" class="main-navigation" aria-label="<?php esc_attr_e( 'Primary', 'jofme' ); ?>">
 				<?php
 				wp_nav_menu(
@@ -84,6 +88,21 @@ if ( 'editorial' === $layout ) {
 				<?php echo jofme_cart_link(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
 			<?php endif; ?>
 		</div>
+
+		<?php if ( 'stacked' === $layout ) : ?>
+			<nav id="site-navigation" class="main-navigation main-navigation--stacked" aria-label="<?php esc_attr_e( 'Primary', 'jofme' ); ?>">
+				<?php
+				wp_nav_menu(
+					array(
+						'theme_location' => 'primary',
+						'menu_id'        => 'primary-menu',
+						'container'      => false,
+						'fallback_cb'    => false,
+					)
+				);
+				?>
+			</nav>
+		<?php endif; ?>
 	</div>
 
 	<?php get_template_part( 'template-parts/header/panels' ); ?>
