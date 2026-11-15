@@ -4,10 +4,15 @@ body.jofme-width-boxed{--jofme-layout-width:var(--jofme-container,1320px)}
 body.jofme-width-wide{--jofme-layout-width:1600px}
 body.jofme-width-narrow{--jofme-layout-width:960px}
 body.jofme-width-full{--jofme-layout-width:100%}
-/* Header / announcement share the same horizontal measure as content. */
-body.jofme-layout-settings .site-header .jofme-container,
-body.jofme-layout-settings .jofme-announcement .jofme-container{
- width:min(100% - 2.5rem,var(--jofme-layout-width,var(--jofme-container,1320px)))
+/* Header width (Customizer): content | boxed | wide | narrow | full. */
+body.jofme-header-width-content{--jofme-header-width:var(--jofme-layout-width,var(--jofme-container,1320px))}
+body.jofme-header-width-boxed{--jofme-header-width:var(--jofme-container,1320px)}
+body.jofme-header-width-wide{--jofme-header-width:1600px}
+body.jofme-header-width-narrow{--jofme-header-width:960px}
+body.jofme-header-width-full{--jofme-header-width:100%}
+.site-header .jofme-container,
+.jofme-announcement .jofme-container{
+ width:min(100% - 2.5rem,var(--jofme-header-width,var(--jofme-layout-width,var(--jofme-container,1320px))))
 }
 body.jofme-layout-settings .jofme-layout>.content-area,body.jofme-layout-settings .jofme-layout>.widget-area{min-width:0}
 @media(min-width:960px){body.jofme-layout-settings.jofme-sidebar-right .jofme-layout{grid-template-columns:minmax(0,1fr) 280px}body.jofme-layout-settings.jofme-sidebar-left .jofme-layout{grid-template-columns:280px minmax(0,1fr)}body.jofme-sidebar-left .jofme-layout>.content-area{grid-column:2;grid-row:1}body.jofme-sidebar-left .jofme-layout>.widget-area{grid-column:1;grid-row:1}}
