@@ -21,18 +21,38 @@ function jofme_gallery_design_customize( $manager ) {
    ),
   )
  );
- $manager->add_setting( 'jofme_gallery_image_bg', array( 'default' => '#ffffff', 'sanitize_callback' => 'sanitize_hex_color' ) );
+ $manager->add_setting(
+  'jofme_gallery_image_bg',
+  array(
+   'default'           => '',
+   'sanitize_callback' => 'jofme_sanitize_gallery_image_bg',
+  )
+ );
  $manager->add_control(
   new WP_Customize_Color_Control(
    $manager,
    'jofme_gallery_image_bg',
    array(
     'label'       => __( 'Gallery design — Image background', 'jofme' ),
-    'description' => __( 'Background behind product photos on Gallery product pages.', 'jofme' ),
+    'description' => __( 'Optional. Leave empty for no background behind product photos.', 'jofme' ),
     'section'     => 'jofme_layout',
    )
   )
  );
+}
+
+/**
+ * Sanitize optional gallery image background (empty = none).
+ *
+ * @param mixed $value Raw value.
+ * @return string
+ */
+function jofme_sanitize_gallery_image_bg( $value ) {
+ if ( '' === $value || null === $value ) {
+  return '';
+ }
+ $color = sanitize_hex_color( $value );
+ return $color ? $color : '';
 }
 add_action( 'customize_register', 'jofme_gallery_design_customize', 30 );
 function jofme_is_gallery_product() { return is_product() && 'gallery' === get_theme_mod( 'jofme_product_page_layout', 'classic' ); }
@@ -57,11 +77,8 @@ function jofme_gallery_product_body( $classes ) {
 add_filter( 'body_class', 'jofme_gallery_product_body', 35 );
 function jofme_gallery_design_assets() {
  wp_enqueue_style( 'jofme-gallery-design', JOFME_URI . '/assets/css/gallery-design.css', array( 'jofme-layout', 'jofme-premium' ), JOFME_VERSION );
- $bg = sanitize_hex_color( get_theme_mod( 'jofme_gallery_image_bg', '#ffffff' ) );
- if ( ! $bg ) {
-  $bg = '#ffffff';
- }
- wp_add_inline_style( 'jofme-gallery-design', ':root{--jofme-gallery-image-bg:' . $bg . ';}' );
+ $bg = jofme_sanitize_gallery_image_bg( get_theme_mod( 'jofme_gallery_image_bg', '' ) );
+ wp_add_inline_style( 'jofme-gallery-design', ':root{--jofme-gallery-image-bg:' . ( $bg ? $bg : 'transparent' ) . ';}' );
  if ( jofme_is_gallery_product() ) {
   wp_enqueue_script( 'jofme-gallery-design', JOFME_URI . '/assets/js/gallery-design.js', array( 'jquery', 'wc-add-to-cart-variation' ), JOFME_VERSION, true );
   wp_localize_script(
