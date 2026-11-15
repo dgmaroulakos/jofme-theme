@@ -10,8 +10,6 @@ function jofme_editorial_assets() {
 }
 add_action( 'wp_enqueue_scripts', 'jofme_editorial_assets', 22 );
 function jofme_editorial_customize( $manager ) {
- $control = $manager->get_control( 'jofme_header_layout' );
- if ( $control ) { $control->choices['editorial'] = __( 'Editorial', 'jofme' ); }
  $manager->remove_control( 'jofme_header_utility' );
  $manager->add_setting( 'jofme_header_transparent', array( 'default' => false, 'sanitize_callback' => 'wp_validate_boolean' ) );
  $manager->add_control( 'jofme_header_transparent', array( 'label' => __( 'Editorial header: transparent on the static homepage', 'jofme' ), 'section' => 'jofme_header', 'type' => 'checkbox', 'description' => __( 'Enable when the homepage starts with a full-width photo or hero.', 'jofme' ) ) );

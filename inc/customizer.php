@@ -42,12 +42,15 @@ function jofme_customize_register( $wp_customize ) {
 	$wp_customize->add_control(
 		'jofme_header_layout',
 		array(
-			'label'   => __( 'Header layout', 'jofme' ),
-			'section' => 'jofme_header',
-			'type'    => 'select',
-			'choices' => array(
-				'classic' => __( 'Classic (logo left)', 'jofme' ),
-				'centered' => __( 'Centered logo', 'jofme' ),
+			'label'       => __( 'Header layout', 'jofme' ),
+			'description' => __( 'Choose how logo, menu and icons are arranged in the header.', 'jofme' ),
+			'section'     => 'jofme_header',
+			'type'        => 'select',
+			'choices'     => array(
+				'classic'   => __( 'Classic (logo left)', 'jofme' ),
+				'centered'  => __( 'Centered logo', 'jofme' ),
+				'editorial' => __( 'Editorial', 'jofme' ),
+				'stacked'   => __( 'Stacked (logo above menu)', 'jofme' ),
 			),
 		)
 	);
