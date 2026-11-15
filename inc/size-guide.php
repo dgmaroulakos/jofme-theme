@@ -470,9 +470,16 @@ function jofme_size_guide_assets() {
 		JOFME_VERSION
 	);
 	wp_enqueue_script(
+		'pdfjs',
+		JOFME_URI . '/assets/vendor/pdfjs/pdf.min.js',
+		array(),
+		'3.11.174',
+		true
+	);
+	wp_enqueue_script(
 		'jofme-size-guide',
 		JOFME_URI . '/assets/js/size-guide.js',
-		array(),
+		array( 'pdfjs' ),
 		JOFME_VERSION,
 		true
 	);
@@ -480,8 +487,9 @@ function jofme_size_guide_assets() {
 		'jofme-size-guide',
 		'jofmeSizeGuide',
 		array(
-			'close'    => __( 'Close', 'jofme' ),
-			'download' => __( 'Download PDF', 'jofme' ),
+			'close'   => __( 'Close', 'jofme' ),
+			'openPdf' => __( 'Open PDF', 'jofme' ),
+			'worker'  => 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js',
 		)
 	);
 }
@@ -517,18 +525,10 @@ function jofme_size_guide_render() {
 		echo esc_html( $label );
 		echo '</button>';
 
-		echo '<dialog class="jofme-size-guide-dialog" id="' . esc_attr( $uid ) . '">';
+		echo '<dialog class="jofme-size-guide-dialog" id="' . esc_attr( $uid ) . '" aria-label="' . esc_attr( $label ) . '">';
 		echo '<div class="jofme-size-guide-dialog__inner">';
-		echo '<header class="jofme-size-guide-dialog__header">';
-		echo '<h2 class="jofme-size-guide-dialog__title">' . esc_html( $guide->post_title ? $guide->post_title : $label ) . '</h2>';
 		echo '<button type="button" class="jofme-size-guide-dialog__close" data-close aria-label="' . esc_attr__( 'Close', 'jofme' ) . '">×</button>';
-		echo '</header>';
-		echo '<div class="jofme-size-guide-dialog__body">';
-		echo '<iframe class="jofme-size-guide-dialog__frame" src="' . esc_url( $pdf_url ) . '#view=FitH" title="' . esc_attr( $label ) . '" loading="lazy"></iframe>';
-		echo '</div>';
-		echo '<footer class="jofme-size-guide-dialog__footer">';
-		echo '<a class="jofme-size-guide-dialog__download" href="' . esc_url( $pdf_url ) . '" target="_blank" rel="noopener noreferrer" download>' . esc_html__( 'Download PDF', 'jofme' ) . '</a>';
-		echo '</footer>';
+		echo '<div class="jofme-size-guide-dialog__pages" data-pdf-url="' . esc_url( $pdf_url ) . '"></div>';
 		echo '</div></dialog>';
 	}
 	echo '</div>';
