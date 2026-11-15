@@ -71,7 +71,7 @@
 	aspect-ratio: 4 / 5;
 	object-fit: cover;
 	margin-bottom: 1rem;
-	background: #f0ebe4;
+	background: transparent;
 	transition: opacity var(--jofme-transition);
 }
 
