@@ -68,6 +68,14 @@ function jofme_size_guide_meta_boxes() {
 		'side',
 		'default'
 	);
+	add_meta_box(
+		'jofme_size_guide_products',
+		__( 'Individual products', 'jofme' ),
+		'jofme_size_guide_products_box',
+		'jofme_size_guide',
+		'side',
+		'default'
+	);
 }
 add_action( 'add_meta_boxes', 'jofme_size_guide_meta_boxes' );
 
@@ -99,7 +107,7 @@ function jofme_size_guide_pdf_box( $post ) {
 	echo '<button type="button" class="button jofme-size-guide-pdf-select">' . esc_html__( 'Upload / import PDF', 'jofme' ) . '</button> ';
 	echo '<button type="button" class="button jofme-size-guide-pdf-remove">' . esc_html__( 'Remove PDF', 'jofme' ) . '</button>';
 	echo '</p>';
-	echo '<p class="description">' . esc_html__( 'Import a PDF size chart. You can create more than one guide and assign each to different categories.', 'jofme' ) . '</p>';
+	echo '<p class="description">' . esc_html__( 'Import a PDF size chart. Assign to categories and/or individual products. Multiple guides are supported.', 'jofme' ) . '</p>';
 	echo '</div>';
 }
 
@@ -134,6 +142,30 @@ function jofme_size_guide_cats_box( $post ) {
 		echo '<li><label><input type="checkbox" name="jofme_size_guide_cats[]" value="' . absint( $term->term_id ) . '"' . checked( $checked, true, false ) . '> ' . esc_html( $term->name ) . '</label></li>';
 	}
 	echo '</ul>';
+}
+
+/**
+ * Individual products meta box (searchable multi-select).
+ *
+ * @param WP_Post $post Post.
+ */
+function jofme_size_guide_products_box( $post ) {
+	$selected = get_post_meta( $post->ID, '_jofme_size_guide_products', true );
+	if ( ! is_array( $selected ) ) {
+		$selected = array();
+	}
+	$selected = array_values( array_filter( array_map( 'absint', $selected ) ) );
+
+	echo '<p class="description">' . esc_html__( 'Also show this guide on specific products, even if their category is not selected.', 'jofme' ) . '</p>';
+	echo '<select class="wc-product-search" multiple="multiple" style="width:100%;" id="jofme_size_guide_products" name="jofme_size_guide_products[]" data-placeholder="' . esc_attr__( 'Search for a product…', 'jofme' ) . '" data-action="woocommerce_json_search_products">';
+	foreach ( $selected as $product_id ) {
+		$product = wc_get_product( $product_id );
+		if ( ! $product ) {
+			continue;
+		}
+		echo '<option value="' . absint( $product_id ) . '" selected="selected">' . esc_html( wp_strip_all_tags( $product->get_formatted_name() ) ) . '</option>';
+	}
+	echo '</select>';
 }
 
 /**
@@ -181,6 +213,23 @@ function jofme_size_guide_save( $post_id ) {
 	}
 	$cats = array_values( array_unique( $cats ) );
 	update_post_meta( $post_id, '_jofme_size_guide_cats', $cats );
+
+	$products = array();
+	if ( isset( $_POST['jofme_size_guide_products'] ) && is_array( $_POST['jofme_size_guide_products'] ) ) {
+		foreach ( $_POST['jofme_size_guide_products'] as $product_id ) {
+			$product_id = absint( $product_id );
+			if ( ! $product_id ) {
+				continue;
+			}
+			$product = wc_get_product( $product_id );
+			if ( $product ) {
+				// Store parent for variations so the guide applies on the product page.
+				$products[] = $product->get_parent_id() ? $product->get_parent_id() : $product_id;
+			}
+		}
+	}
+	$products = array_values( array_unique( $products ) );
+	update_post_meta( $post_id, '_jofme_size_guide_products', $products );
 }
 add_action( 'save_post_jofme_size_guide', 'jofme_size_guide_save' );
 
@@ -228,6 +277,8 @@ function jofme_size_guide_admin_assets( $hook ) {
 			'button' => __( 'Use this PDF', 'jofme' ),
 		)
 	);
+	wp_enqueue_style( 'woocommerce_admin_styles' );
+	wp_enqueue_script( 'wc-enhanced-select' );
 }
 add_action( 'admin_enqueue_scripts', 'jofme_size_guide_admin_assets' );
 
@@ -242,8 +293,9 @@ function jofme_size_guide_columns( $columns ) {
 	foreach ( $columns as $key => $label ) {
 		$new[ $key ] = $label;
 		if ( 'title' === $key ) {
-			$new['jofme_pdf']  = __( 'PDF', 'jofme' );
-			$new['jofme_cats'] = __( 'Categories', 'jofme' );
+			$new['jofme_pdf']      = __( 'PDF', 'jofme' );
+			$new['jofme_cats']     = __( 'Categories', 'jofme' );
+			$new['jofme_products'] = __( 'Products', 'jofme' );
 		}
 	}
 	return $new;
@@ -278,6 +330,22 @@ function jofme_size_guide_column_content( $column, $post_id ) {
 			$term = get_term( absint( $term_id ), 'product_cat' );
 			if ( $term && ! is_wp_error( $term ) ) {
 				$names[] = $term->name;
+			}
+		}
+		echo $names ? esc_html( implode( ', ', $names ) ) : '—';
+		return;
+	}
+	if ( 'jofme_products' === $column ) {
+		$ids = get_post_meta( $post_id, '_jofme_size_guide_products', true );
+		if ( ! is_array( $ids ) || ! $ids ) {
+			echo '—';
+			return;
+		}
+		$names = array();
+		foreach ( $ids as $product_id ) {
+			$product = wc_get_product( absint( $product_id ) );
+			if ( $product ) {
+				$names[] = $product->get_name();
 			}
 		}
 		echo $names ? esc_html( implode( ', ', $names ) ) : '—';
@@ -335,18 +403,35 @@ function jofme_get_size_guides_for_product( $product = null ) {
 		)
 	);
 
-	$matched = array();
+	$product_id = (int) $product->get_id();
+	$matched    = array();
 	foreach ( $guides as $guide ) {
 		$pdf_id = absint( get_post_meta( $guide->ID, '_jofme_size_guide_pdf_id', true ) );
 		if ( ! $pdf_id || ! jofme_is_pdf_attachment( $pdf_id ) ) {
 			continue;
 		}
-		$cats = get_post_meta( $guide->ID, '_jofme_size_guide_cats', true );
-		if ( ! is_array( $cats ) || ! $cats ) {
-			continue;
+
+		$hit = false;
+
+		$products = get_post_meta( $guide->ID, '_jofme_size_guide_products', true );
+		if ( is_array( $products ) && $products ) {
+			$products = array_map( 'absint', $products );
+			if ( in_array( $product_id, $products, true ) ) {
+				$hit = true;
+			}
 		}
-		$cats = array_map( 'absint', $cats );
-		if ( array_intersect( $branch, $cats ) ) {
+
+		if ( ! $hit ) {
+			$cats = get_post_meta( $guide->ID, '_jofme_size_guide_cats', true );
+			if ( is_array( $cats ) && $cats ) {
+				$cats = array_map( 'absint', $cats );
+				if ( array_intersect( $branch, $cats ) ) {
+					$hit = true;
+				}
+			}
+		}
+
+		if ( $hit ) {
 			$matched[] = $guide;
 		}
 	}
