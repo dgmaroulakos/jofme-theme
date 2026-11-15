@@ -9,24 +9,38 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
+$layout      = function_exists( 'jofme_footer_layout' ) ? jofme_footer_layout() : 'widgets';
 $has_widgets = is_active_sidebar( 'footer-1' )
 	|| is_active_sidebar( 'footer-2' )
 	|| is_active_sidebar( 'footer-3' )
 	|| is_active_sidebar( 'footer-4' );
+$prebuilt    = 'brand_right' === $layout;
+$show_main   = $prebuilt || $has_widgets;
 ?>
 
-<footer id="colophon" class="site-footer">
-	<?php if ( $has_widgets ) : ?>
+<footer id="colophon" class="site-footer site-footer--<?php echo esc_attr( $layout ); ?>">
+	<?php if ( $show_main ) : ?>
 		<div class="site-footer__widgets">
-			<div class="jofme-container site-footer__grid">
-				<?php for ( $i = 1; $i <= 4; $i++ ) : ?>
-					<?php if ( is_active_sidebar( 'footer-' . $i ) ) : ?>
-						<div class="site-footer__col">
-							<?php dynamic_sidebar( 'footer-' . $i ); ?>
-						</div>
-					<?php endif; ?>
-				<?php endfor; ?>
-			</div>
+			<?php if ( $prebuilt ) : ?>
+				<div class="jofme-container site-footer__grid site-footer__grid--brand-right">
+					<?php
+					jofme_footer_prebuilt_col( 1 );
+					jofme_footer_prebuilt_col( 2 );
+					jofme_footer_prebuilt_col( 3 );
+					jofme_footer_brand_column();
+					?>
+				</div>
+			<?php else : ?>
+				<div class="jofme-container site-footer__grid">
+					<?php for ( $i = 1; $i <= 4; $i++ ) : ?>
+						<?php if ( is_active_sidebar( 'footer-' . $i ) ) : ?>
+							<div class="site-footer__col">
+								<?php dynamic_sidebar( 'footer-' . $i ); ?>
+							</div>
+						<?php endif; ?>
+					<?php endfor; ?>
+				</div>
+			<?php endif; ?>
 		</div>
 	<?php endif; ?>
 
