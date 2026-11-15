@@ -1,8 +1,8 @@
 /* Minimal gallery cards: photographs, compact labels and quiet controls. */
-body.jofme-card-gallery.woocommerce ul.products li.product{background:var(--jofme-color-surface);border:0;border-radius:12px;overflow:hidden;text-align:start;padding:0 24px 24px!important}
+body.jofme-card-gallery.woocommerce ul.products li.product{background:transparent;border:0;border-radius:12px;overflow:hidden;text-align:start;padding:0 24px 24px!important}
 body.jofme-card-gallery.woocommerce ul.products li.product .woocommerce-loop-product__link{color:var(--jofme-color-text)}
-body.jofme-card-gallery.woocommerce ul.products li.product .woocommerce-loop-product__link>img,body.jofme-card-gallery.woocommerce ul.products li.product .jofme-card-media{margin:0 -24px 20px;width:calc(100% + 48px);background:var(--jofme-color-surface)}
-body.jofme-card-gallery.woocommerce ul.products li.product .woocommerce-loop-product__link>img,body.jofme-card-gallery.woocommerce ul.products li.product .jofme-card-media img{aspect-ratio:1;object-fit:contain;padding:clamp(24px,3vw,56px);background:var(--jofme-color-surface)}
+body.jofme-card-gallery.woocommerce ul.products li.product .woocommerce-loop-product__link>img,body.jofme-card-gallery.woocommerce ul.products li.product .jofme-card-media{margin:0 -24px 20px;width:calc(100% + 48px);background:transparent}
+body.jofme-card-gallery.woocommerce ul.products li.product .woocommerce-loop-product__link>img,body.jofme-card-gallery.woocommerce ul.products li.product .jofme-card-media img{aspect-ratio:1;object-fit:contain;padding:clamp(24px,3vw,56px);background:transparent}
 body.jofme-card-gallery.woocommerce ul.products li.product .woocommerce-loop-product__title{font-family:var(--jofme-font-body);font-size:13px;line-height:1.5;font-weight:400;text-transform:uppercase;letter-spacing:.015em;margin:8px 0}
 body.jofme-card-gallery.woocommerce ul.products li.product .price{font-size:11px;letter-spacing:.04em;color:inherit;margin:0}
 .jofme-card-category{display:block;font-size:10px;line-height:1.5;text-transform:uppercase;text-decoration:underline;text-underline-offset:3px;letter-spacing:.02em}

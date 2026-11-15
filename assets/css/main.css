@@ -490,7 +490,7 @@ body.jofme-nav-open {
 }
 
 .jofme-card {
-	background: var(--jofme-color-surface);
+	background: transparent;
 	border: 1px solid var(--jofme-color-border);
 }
 
