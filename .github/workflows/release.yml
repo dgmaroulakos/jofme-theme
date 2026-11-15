@@ -32,6 +32,8 @@ jobs:
           node --check assets/js/swatches.js
           node --check assets/js/swatches-admin.js
           node --check assets/js/bestsellers-tabs.js
+          node --check assets/js/size-guide.js
+          node --check assets/js/size-guide-admin.js
           node scripts/verify-catalog.cjs
           node scripts/verify-hover.cjs
           node scripts/verify-gallery.cjs
@@ -50,6 +52,7 @@ jobs:
           node .tests/gallery-carousel.cjs
           node .tests/gallery-summary-logo.cjs
           node .tests/gallery-uncropped.cjs
+          node .tests/size-guide.cjs
       - name: Match release tag to theme versions
         if: startsWith(github.ref, 'refs/tags/')
         env:
