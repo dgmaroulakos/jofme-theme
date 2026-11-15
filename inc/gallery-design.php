@@ -7,11 +7,39 @@ function jofme_gallery_design_customize( $manager ) {
  if ( $position_control ) { $position_control->description = __( 'Applies to Classic design. Gallery design uses its own image and purchase-panel layout.', 'jofme' ); }
  $manager->add_setting( 'jofme_product_page_layout', array( 'default' => 'classic', 'sanitize_callback' => 'jofme_sanitize_select' ) );
  $manager->add_control( 'jofme_product_page_layout', array( 'label' => __( 'Product pages — Design', 'jofme' ), 'section' => 'jofme_layout', 'type' => 'select', 'choices' => array( 'classic' => __( 'Classic', 'jofme' ), 'gallery' => __( 'Gallery (large image & minimal purchase panel)', 'jofme' ) ) ) );
+ $manager->add_setting( 'jofme_gallery_display', array( 'default' => 'stacked', 'sanitize_callback' => 'jofme_sanitize_select' ) );
+ $manager->add_control(
+  'jofme_gallery_display',
+  array(
+   'label'       => __( 'Gallery design — Image display', 'jofme' ),
+   'description' => __( 'Only applies when Product pages — Design is set to Gallery.', 'jofme' ),
+   'section'     => 'jofme_layout',
+   'type'        => 'select',
+   'choices'     => array(
+    'stacked'  => __( 'Stacked (scroll)', 'jofme' ),
+    'carousel' => __( 'Carousel', 'jofme' ),
+   ),
+  )
+ );
 }
 add_action( 'customize_register', 'jofme_gallery_design_customize', 30 );
 function jofme_is_gallery_product() { return is_product() && 'gallery' === get_theme_mod( 'jofme_product_page_layout', 'classic' ); }
+
+/**
+ * Gallery image display mode for the Gallery product design.
+ *
+ * @return string stacked|carousel
+ */
+function jofme_gallery_display_mode() {
+ $mode = get_theme_mod( 'jofme_gallery_display', 'stacked' );
+ return 'carousel' === $mode ? 'carousel' : 'stacked';
+}
+
 function jofme_gallery_product_body( $classes ) {
- if ( jofme_is_gallery_product() ) { $classes[] = 'jofme-product-gallery'; }
+ if ( jofme_is_gallery_product() ) {
+  $classes[] = 'jofme-product-gallery';
+  $classes[] = 'jofme-gallery-' . jofme_gallery_display_mode();
+ }
  return $classes;
 }
 add_filter( 'body_class', 'jofme_gallery_product_body', 35 );
@@ -63,6 +91,17 @@ function jofme_stacked_gallery_ids( $product = null ) {
 }
 
 /**
+ * Render the gallery product images (stacked or carousel).
+ */
+function jofme_product_gallery() {
+ if ( 'carousel' === jofme_gallery_display_mode() ) {
+  jofme_carousel_product_gallery();
+  return;
+ }
+ jofme_stacked_product_gallery();
+}
+
+/**
  * Vertical stacked gallery that scrolls beside a sticky purchase panel.
  */
 function jofme_stacked_product_gallery() {
@@ -96,7 +135,7 @@ function jofme_stacked_product_gallery() {
   $item_id = 'jofme-gallery-image-' . ( $index + 1 );
   echo '<figure class="jofme-stacked-gallery__item" id="' . esc_attr( $item_id ) . '" data-index="' . absint( $index ) . '"' . ( 0 === $index ? ' data-primary="1"' : '' ) . '>';
   if ( $href ) {
-   echo '<a class="jofme-stacked-gallery__link" href="' . esc_url( $href ) . '" data-lightbox-index="' . absint( $index ) . '">';
+   echo '<a class="jofme-gallery-zoom-link" href="' . esc_url( $href ) . '" data-lightbox-index="' . absint( $index ) . '">';
   }
   echo wp_get_attachment_image(
    $attachment_id,
@@ -115,6 +154,72 @@ function jofme_stacked_product_gallery() {
   echo '</figure>';
  }
  echo '</div></div>';
+}
+
+/**
+ * Single-slide carousel gallery with arrows and thumbnails.
+ */
+function jofme_carousel_product_gallery() {
+ global $product;
+ if ( ! $product ) {
+  return;
+ }
+
+ $ids = jofme_stacked_gallery_ids( $product );
+ echo '<div class="images jofme-carousel-gallery" data-index="0">';
+
+ if ( ! $ids ) {
+  echo '<div class="jofme-carousel-gallery__viewport"><figure class="jofme-carousel-gallery__slide is-active" data-primary="1">' . wp_kses_post( wc_placeholder_img( 'woocommerce_single' ) ) . '</figure></div>';
+  echo '</div>';
+  return;
+ }
+
+ $multi = count( $ids ) > 1;
+ echo '<div class="jofme-carousel-gallery__viewport">';
+ if ( $multi ) {
+  echo '<button type="button" class="jofme-carousel-gallery__nav jofme-carousel-gallery__nav--prev" data-dir="-1" aria-label="' . esc_attr__( 'Previous image', 'jofme' ) . '">‹</button>';
+ }
+ echo '<div class="jofme-carousel-gallery__track">';
+ foreach ( $ids as $index => $attachment_id ) {
+  $full = wp_get_attachment_image_src( $attachment_id, 'full' );
+  $href = $full ? $full[0] : wp_get_attachment_url( $attachment_id );
+  echo '<figure class="jofme-carousel-gallery__slide' . ( 0 === $index ? ' is-active' : '' ) . '" data-index="' . absint( $index ) . '"' . ( 0 === $index ? ' data-primary="1"' : '' ) . ( 0 === $index ? '' : ' hidden' ) . '>';
+  if ( $href ) {
+   echo '<a class="jofme-gallery-zoom-link" href="' . esc_url( $href ) . '" data-lightbox-index="' . absint( $index ) . '">';
+  }
+  echo wp_get_attachment_image(
+   $attachment_id,
+   'woocommerce_single',
+   false,
+   array(
+    'class'              => 0 === $index ? 'wp-post-image' : '',
+    'loading'            => 0 === $index ? 'eager' : 'lazy',
+    'decoding'           => 'async',
+    'data-attachment_id' => (string) $attachment_id,
+   )
+  );
+  if ( $href ) {
+   echo '</a>';
+  }
+  echo '</figure>';
+ }
+ echo '</div>';
+ if ( $multi ) {
+  echo '<button type="button" class="jofme-carousel-gallery__nav jofme-carousel-gallery__nav--next" data-dir="1" aria-label="' . esc_attr__( 'Next image', 'jofme' ) . '">›</button>';
+ }
+ echo '</div>';
+
+ if ( $multi ) {
+  echo '<div class="jofme-carousel-gallery__thumbs" role="list">';
+  foreach ( $ids as $index => $attachment_id ) {
+   echo '<button type="button" class="jofme-carousel-gallery__thumb' . ( 0 === $index ? ' is-active' : '' ) . '" role="listitem" data-index="' . absint( $index ) . '" aria-label="' . esc_attr( sprintf( /* translators: %d image number */ __( 'Show image %d', 'jofme' ), $index + 1 ) ) . '"' . ( 0 === $index ? ' aria-current="true"' : '' ) . '>';
+   echo wp_get_attachment_image( $attachment_id, 'woocommerce_gallery_thumbnail', false, array( 'alt' => '' ) );
+   echo '</button>';
+  }
+  echo '</div>';
+ }
+
+ echo '</div>';
 }
 function jofme_gallery_card_category() {
  $layout = get_theme_mod( 'jofme_card_layout', 'bestsellers' );
@@ -163,7 +268,7 @@ function jofme_gallery_single_hooks() {
  add_action( 'woocommerce_after_single_product_summary', 'jofme_gallery_intro_close', 0 );
  remove_action( 'woocommerce_before_single_product_summary', 'woocommerce_show_product_images', 20 );
  add_action( 'woocommerce_before_single_product_summary', 'jofme_gallery_mobile_title', 15 );
- add_action( 'woocommerce_before_single_product_summary', 'jofme_stacked_product_gallery', 20 );
+ add_action( 'woocommerce_before_single_product_summary', 'jofme_product_gallery', 20 );
  remove_action( 'woocommerce_single_product_summary', 'woocommerce_template_single_excerpt', 20 );
  remove_action( 'woocommerce_single_product_summary', 'woocommerce_template_single_meta', 40 );
  add_action( 'woocommerce_single_product_summary', 'jofme_gallery_summary_category', 4 );
