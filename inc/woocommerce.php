@@ -37,6 +37,23 @@ function jofme_woocommerce_setup() {
 add_action( 'after_setup_theme', 'jofme_woocommerce_setup' );
 
 /**
+ * Keep WooCommerce single product images uncropped (original aspect).
+ *
+ * Existing thumbnails stay cropped until regenerated; Gallery design
+ * serves the original file directly to avoid intermediate crops.
+ *
+ * @param array $size Image size args.
+ * @return array
+ */
+function jofme_woocommerce_uncropped_single( $size ) {
+	if ( is_array( $size ) ) {
+		$size['crop'] = 0;
+	}
+	return $size;
+}
+add_filter( 'woocommerce_get_image_size_single', 'jofme_woocommerce_uncropped_single' );
+
+/**
  * Enqueue WooCommerce-specific styles.
  */
 function jofme_woocommerce_scripts() {

@@ -229,19 +229,21 @@
   if (!form || !primary) return;
 
   function applyVariationImage(variation) {
-   if (!variation || !variation.image || !variation.image.src) return;
-   primary.setAttribute('src', variation.image.src);
-   if (variation.image.srcset) {
-    primary.setAttribute('srcset', variation.image.srcset);
-   } else {
-    primary.removeAttribute('srcset');
+   if (!variation || !variation.image) return;
+   const full = variation.image.full_src || variation.image.src;
+   if (!full) return;
+   primary.setAttribute('src', full);
+   primary.removeAttribute('srcset');
+   primary.removeAttribute('sizes');
+   if (variation.image.full_src_w) {
+    primary.setAttribute('width', String(variation.image.full_src_w));
    }
-   if (variation.image.sizes) {
-    primary.setAttribute('sizes', variation.image.sizes);
+   if (variation.image.full_src_h) {
+    primary.setAttribute('height', String(variation.image.full_src_h));
    }
    const link = primary.closest('a');
-   if (link && variation.image.full_src) {
-    link.setAttribute('href', variation.image.full_src);
+   if (link) {
+    link.setAttribute('href', variation.image.full_src || full);
    }
    scrollToElement(items[0]);
    setCurrentDot(gallery, items[0].id);
@@ -250,16 +252,8 @@
   function resetPrimaryImage() {
    if (!primary.dataset.originalSrc) return;
    primary.setAttribute('src', primary.dataset.originalSrc);
-   if (primary.dataset.originalSrcset) {
-    primary.setAttribute('srcset', primary.dataset.originalSrcset);
-   } else {
-    primary.removeAttribute('srcset');
-   }
-   if (primary.dataset.originalSizes) {
-    primary.setAttribute('sizes', primary.dataset.originalSizes);
-   } else {
-    primary.removeAttribute('sizes');
-   }
+   primary.removeAttribute('srcset');
+   primary.removeAttribute('sizes');
    const link = primary.closest('a');
    if (link && primary.dataset.originalHref) {
     link.setAttribute('href', primary.dataset.originalHref);
@@ -358,19 +352,21 @@
   if (!form || !primary) return;
 
   function applyVariationImage(variation) {
-   if (!variation || !variation.image || !variation.image.src) return;
-   primary.setAttribute('src', variation.image.src);
-   if (variation.image.srcset) {
-    primary.setAttribute('srcset', variation.image.srcset);
-   } else {
-    primary.removeAttribute('srcset');
+   if (!variation || !variation.image) return;
+   const full = variation.image.full_src || variation.image.src;
+   if (!full) return;
+   primary.setAttribute('src', full);
+   primary.removeAttribute('srcset');
+   primary.removeAttribute('sizes');
+   if (variation.image.full_src_w) {
+    primary.setAttribute('width', String(variation.image.full_src_w));
    }
-   if (variation.image.sizes) {
-    primary.setAttribute('sizes', variation.image.sizes);
+   if (variation.image.full_src_h) {
+    primary.setAttribute('height', String(variation.image.full_src_h));
    }
    const link = primary.closest('a');
-   if (link && variation.image.full_src) {
-    link.setAttribute('href', variation.image.full_src);
+   if (link) {
+    link.setAttribute('href', variation.image.full_src || full);
    }
    show(0);
   }
@@ -378,16 +374,8 @@
   function resetPrimaryImage() {
    if (!primary.dataset.originalSrc) return;
    primary.setAttribute('src', primary.dataset.originalSrc);
-   if (primary.dataset.originalSrcset) {
-    primary.setAttribute('srcset', primary.dataset.originalSrcset);
-   } else {
-    primary.removeAttribute('srcset');
-   }
-   if (primary.dataset.originalSizes) {
-    primary.setAttribute('sizes', primary.dataset.originalSizes);
-   } else {
-    primary.removeAttribute('sizes');
-   }
+   primary.removeAttribute('srcset');
+   primary.removeAttribute('sizes');
    const link = primary.closest('a');
    if (link && primary.dataset.originalHref) {
     link.setAttribute('href', primary.dataset.originalHref);

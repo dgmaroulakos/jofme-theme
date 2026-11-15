@@ -85,11 +85,12 @@ assert.equal(dots[1].attrs['aria-current'], 'true');
 assert.equal(dots[0].attrs['aria-current'], undefined);
 
 handlers.found_variation(null, { image: { src: '/b.jpg', srcset: 'b 1x', sizes: '50vw', full_src: '/b-full.jpg' } });
-assert.equal(primary.attrs.src, '/b.jpg');
+assert.equal(primary.attrs.src, '/b-full.jpg');
 assert.equal(link.attrs.href, '/b-full.jpg');
+assert.equal(primary.attrs.srcset, undefined);
 
 handlers.reset_data();
 assert.equal(primary.attrs.src, '/a.jpg');
 assert.equal(link.attrs.href, '/a-full.jpg');
 
-console.log('PASS: stacked gallery dots, variation image swap and reset');
+console.log('PASS: stacked gallery dots, uncropped variation image swap and reset');

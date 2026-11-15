@@ -3,7 +3,7 @@ Contributors: jofme
 Requires at least: 6.4
 Tested up to: 6.8
 Requires PHP: 7.4
-Stable tag: 1.7.31
+Stable tag: 1.7.32
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -30,6 +30,9 @@ strings / wpml-config.xml.
 * WPML or Polylang
 
 == Changelog ==
+
+= 1.7.32 =
+* Gallery product photos: force original full file (no cropped srcset); variations use full_src.
 
 = 1.7.31 =
 * Gallery product photos: no image background by default (optional color still in Customizer).

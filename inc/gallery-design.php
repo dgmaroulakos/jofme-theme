@@ -136,6 +136,50 @@ function jofme_product_gallery() {
 }
 
 /**
+ * Output an uncropped full-size product image (no srcset of cropped sizes).
+ *
+ * @param int   $attachment_id Attachment ID.
+ * @param array $attr          Extra img attributes.
+ */
+function jofme_gallery_uncropped_image( $attachment_id, $attr = array() ) {
+ $attachment_id = absint( $attachment_id );
+ if ( ! $attachment_id ) {
+  return;
+ }
+ $src = wp_get_attachment_image_src( $attachment_id, 'full' );
+ if ( ! $src || empty( $src[0] ) ) {
+  return;
+ }
+ $alt = get_post_meta( $attachment_id, '_wp_attachment_image_alt', true );
+ if ( ! is_string( $alt ) ) {
+  $alt = '';
+ }
+ $attr = wp_parse_args(
+  $attr,
+  array(
+   'src'                => $src[0],
+   'width'              => (string) (int) $src[1],
+   'height'             => (string) (int) $src[2],
+   'alt'                => $alt,
+   'decoding'           => 'async',
+   'data-attachment_id' => (string) $attachment_id,
+  )
+ );
+ // Force original file only — never emit cropped intermediate srcset.
+ unset( $attr['srcset'], $attr['sizes'] );
+
+ $html = '<img';
+ foreach ( $attr as $name => $value ) {
+  if ( '' === $value && 'alt' !== $name ) {
+   continue;
+  }
+  $html .= ' ' . esc_attr( $name ) . '="' . esc_attr( $value ) . '"';
+ }
+ $html .= ' />';
+ echo $html; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- attributes escaped above.
+}
+
+/**
  * Vertical stacked gallery that scrolls beside a sticky purchase panel.
  */
 function jofme_stacked_product_gallery() {
@@ -171,15 +215,11 @@ function jofme_stacked_product_gallery() {
   if ( $href ) {
    echo '<a class="jofme-gallery-zoom-link" href="' . esc_url( $href ) . '" data-lightbox-index="' . absint( $index ) . '">';
   }
-  echo wp_get_attachment_image(
+  jofme_gallery_uncropped_image(
    $attachment_id,
-   'full',
-   false,
    array(
-    'class'              => 0 === $index ? 'wp-post-image' : '',
-    'loading'            => 0 === $index ? 'eager' : 'lazy',
-    'decoding'           => 'async',
-    'data-attachment_id' => (string) $attachment_id,
+    'class'   => 0 === $index ? 'wp-post-image' : '',
+    'loading' => 0 === $index ? 'eager' : 'lazy',
    )
   );
   if ( $href ) {
@@ -221,15 +261,11 @@ function jofme_carousel_product_gallery() {
   if ( $href ) {
    echo '<a class="jofme-gallery-zoom-link" href="' . esc_url( $href ) . '" data-lightbox-index="' . absint( $index ) . '">';
   }
-  echo wp_get_attachment_image(
+  jofme_gallery_uncropped_image(
    $attachment_id,
-   'full',
-   false,
    array(
-    'class'              => 0 === $index ? 'wp-post-image' : '',
-    'loading'            => 0 === $index ? 'eager' : 'lazy',
-    'decoding'           => 'async',
-    'data-attachment_id' => (string) $attachment_id,
+    'class'   => 0 === $index ? 'wp-post-image' : '',
+    'loading' => 0 === $index ? 'eager' : 'lazy',
    )
   );
   if ( $href ) {
