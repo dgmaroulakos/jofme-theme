@@ -56,6 +56,30 @@ function jofme_customize_register( $wp_customize ) {
 	);
 
 	$wp_customize->add_setting(
+		'jofme_header_width',
+		array(
+			'default'           => 'content',
+			'sanitize_callback' => 'jofme_sanitize_select',
+		)
+	);
+	$wp_customize->add_control(
+		'jofme_header_width',
+		array(
+			'label'       => __( 'Header width', 'jofme' ),
+			'description' => __( 'Horizontal width of the header bar (logo / menu row).', 'jofme' ),
+			'section'     => 'jofme_header',
+			'type'        => 'select',
+			'choices'     => array(
+				'content' => __( 'Same as page content', 'jofme' ),
+				'boxed'   => __( 'Boxed (1320px)', 'jofme' ),
+				'wide'    => __( 'Wide (1600px)', 'jofme' ),
+				'narrow'  => __( 'Narrow (960px)', 'jofme' ),
+				'full'    => __( 'Full width', 'jofme' ),
+			),
+		)
+	);
+
+	$wp_customize->add_setting(
 		'jofme_sticky_header',
 		array(
 			'default'           => true,

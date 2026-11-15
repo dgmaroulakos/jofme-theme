@@ -116,6 +116,13 @@ function jofme_body_classes( $classes ) {
 	$header_layout = get_theme_mod( 'jofme_header_layout', 'classic' );
 	$classes[]     = 'header-' . sanitize_html_class( $header_layout );
 
+	$header_width = get_theme_mod( 'jofme_header_width', 'content' );
+	$widths       = array( 'content', 'boxed', 'wide', 'narrow', 'full' );
+	if ( ! in_array( $header_width, $widths, true ) ) {
+		$header_width = 'content';
+	}
+	$classes[] = 'jofme-header-width-' . $header_width;
+
 	if ( get_theme_mod( 'jofme_sticky_header', true ) ) {
 		$classes[] = 'has-sticky-header';
 	}
