@@ -69,6 +69,50 @@ function jofme_customize_register( $wp_customize ) {
 	);
 
 	$wp_customize->add_setting(
+		'jofme_logo_max_height',
+		array(
+			'default'           => 100,
+			'sanitize_callback' => 'jofme_sanitize_logo_max_height',
+		)
+	);
+	$wp_customize->add_control(
+		'jofme_logo_max_height',
+		array(
+			'label'       => __( 'Logo max height — desktop (px)', 'jofme' ),
+			'description' => __( 'Maximum logo height on desktop/tablet. Default: 100.', 'jofme' ),
+			'section'     => 'jofme_header',
+			'type'        => 'number',
+			'input_attrs' => array(
+				'min'  => 24,
+				'max'  => 240,
+				'step' => 1,
+			),
+		)
+	);
+
+	$wp_customize->add_setting(
+		'jofme_logo_max_width_mobile',
+		array(
+			'default'           => 90,
+			'sanitize_callback' => 'jofme_sanitize_logo_max_width_mobile',
+		)
+	);
+	$wp_customize->add_control(
+		'jofme_logo_max_width_mobile',
+		array(
+			'label'       => __( 'Logo max width — mobile (px)', 'jofme' ),
+			'description' => __( 'Maximum logo width under 900px. Default: 90.', 'jofme' ),
+			'section'     => 'jofme_header',
+			'type'        => 'number',
+			'input_attrs' => array(
+				'min'  => 40,
+				'max'  => 200,
+				'step' => 1,
+			),
+		)
+	);
+
+	$wp_customize->add_setting(
 		'jofme_header_min_height',
 		array(
 			'default'           => 132,
@@ -409,6 +453,26 @@ function jofme_sanitize_sticky_header_height_mobile( $value ) {
 }
 
 /**
+ * Sanitize logo max height in px (24–240).
+ *
+ * @param mixed $value Raw value.
+ * @return int
+ */
+function jofme_sanitize_logo_max_height( $value ) {
+	return max( 24, min( 240, absint( $value ) ) );
+}
+
+/**
+ * Sanitize mobile logo max width in px (40–200).
+ *
+ * @param mixed $value Raw value.
+ * @return int
+ */
+function jofme_sanitize_logo_max_width_mobile( $value ) {
+	return max( 40, min( 200, absint( $value ) ) );
+}
+
+/**
  * Output Customizer CSS variables.
  */
 function jofme_customizer_css() {
@@ -420,6 +484,8 @@ function jofme_customizer_css() {
 	$stuck_h      = jofme_sanitize_sticky_header_height( get_theme_mod( 'jofme_sticky_header_height', 100 ) );
 	$stuck_h_m    = jofme_sanitize_sticky_header_height_mobile( get_theme_mod( 'jofme_sticky_header_height_mobile', 64 ) );
 	$sticky       = jofme_sanitize_sticky_header_padding( get_theme_mod( 'jofme_sticky_header_padding', 12 ) );
+	$logo_h       = jofme_sanitize_logo_max_height( get_theme_mod( 'jofme_logo_max_height', 100 ) );
+	$logo_w_m     = jofme_sanitize_logo_max_width_mobile( get_theme_mod( 'jofme_logo_max_width_mobile', 90 ) );
 
 	$css = ":root{
 		--jofme-color-text:{$primary};
@@ -430,6 +496,8 @@ function jofme_customizer_css() {
 		--jofme-header-stuck-h:{$stuck_h}px;
 		--jofme-header-stuck-h-mobile:{$stuck_h_m}px;
 		--jofme-sticky-header-pad:{$sticky}px;
+		--jofme-logo-max-h:{$logo_h}px;
+		--jofme-logo-max-w-mobile:{$logo_w_m}px;
 	}";
 	$css .= '@media(max-width:899px){:root{--jofme-header-h:var(--jofme-header-h-mobile);--jofme-header-stuck-h:var(--jofme-header-stuck-h-mobile);} }';
 
