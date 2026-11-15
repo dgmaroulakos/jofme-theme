@@ -3,7 +3,7 @@ Contributors: jofme
 Requires at least: 6.4
 Tested up to: 6.8
 Requires PHP: 7.4
-Stable tag: 1.7.29
+Stable tag: 1.7.30
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -30,6 +30,10 @@ strings / wpml-config.xml.
 * WPML or Polylang
 
 == Changelog ==
+
+= 1.7.30 =
+* Gallery summary max-width 730px; image background color control; original aspect (no crop).
+* Header: Customizer logo max height (desktop) and max width (mobile).
 
 = 1.7.29 =
 * Gallery product design: Customizer choice between stacked scroll and carousel images.

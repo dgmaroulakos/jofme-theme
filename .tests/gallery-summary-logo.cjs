@@ -1,0 +1,27 @@
+/** node .tests/gallery-summary-logo.cjs */
+const assert = require('node:assert/strict');
+const fs = require('node:fs');
+const path = require('node:path');
+const root = path.resolve(__dirname, '..');
+const galleryPhp = fs.readFileSync(path.join(root, 'inc/gallery-design.php'), 'utf8');
+const galleryCss = fs.readFileSync(path.join(root, 'assets/css/gallery-design.css'), 'utf8');
+const customizer = fs.readFileSync(path.join(root, 'inc/customizer.php'), 'utf8');
+const mainCss = fs.readFileSync(path.join(root, 'assets/css/main.css'), 'utf8');
+
+assert.match(galleryCss, /max-width:\s*730px/);
+assert.match(galleryCss, /--jofme-gallery-image-bg/);
+assert.match(galleryCss, /\.jofme-stacked-gallery__item img\{[^}]*height:\s*auto/s);
+assert.match(galleryCss, /\.jofme-carousel-gallery__slide img\{[^}]*height:\s*auto/s);
+assert.doesNotMatch(galleryCss, /\.jofme-carousel-gallery__viewport\{[^}]*aspect-ratio:\s*1/s);
+assert.match(galleryPhp, /jofme_gallery_image_bg/);
+assert.match(galleryPhp, /--jofme-gallery-image-bg/);
+assert.match(galleryPhp, /'full'/);
+assert.match(galleryPhp, /jofme_stacked_product_gallery[\s\S]*'full'/);
+assert.match(customizer, /jofme_logo_max_height/);
+assert.match(customizer, /jofme_logo_max_width_mobile/);
+assert.match(customizer, /--jofme-logo-max-h/);
+assert.match(customizer, /--jofme-logo-max-w-mobile/);
+assert.match(mainCss, /--jofme-logo-max-h:\s*100px/);
+assert.match(mainCss, /--jofme-logo-max-w-mobile:\s*90px/);
+assert.match(mainCss, /max-height:\s*var\(--jofme-logo-max-h/);
+console.log('PASS: gallery summary width, image bg, original aspect, logo sizes');

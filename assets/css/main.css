@@ -15,6 +15,8 @@
 	--jofme-header-h-mobile: 80px;
 	--jofme-header-stuck-h: 100px;
 	--jofme-header-stuck-h-mobile: 64px;
+	--jofme-logo-max-h: 100px;
+	--jofme-logo-max-w-mobile: 90px;
 	--jofme-sticky-header-pad: 12px;
 	--jofme-radius: 0;
 	--jofme-transition: 0.25s ease;
@@ -229,7 +231,7 @@ p {
 
 .custom-logo-link img {
 	display: block;
-	max-height: 100px;
+	max-height: var(--jofme-logo-max-h, 100px);
 	width: auto;
 	height: auto;
 }
@@ -675,7 +677,7 @@ body.jofme-nav-open {
 	}
 
 	.custom-logo-link img {
-		max-width: 90px;
+		max-width: var(--jofme-logo-max-w-mobile, 90px);
 		max-height: none;
 	}
 }
