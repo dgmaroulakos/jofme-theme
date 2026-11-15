@@ -1,6 +1,6 @@
 <?php
 /**
- * Prebuilt footer layout (3 columns + brand/contact on the right).
+ * Prebuilt footer layout (logo/contact on the left + 3 columns).
  *
  * @package Jofme
  */
@@ -38,12 +38,12 @@ function jofme_footer_customize( $manager ) {
 		'jofme_footer_layout',
 		array(
 			'label'       => __( 'Footer layout', 'jofme' ),
-			'description' => __( 'Prebuilt brand layout places the logo and contact on the right, with three columns beside it.', 'jofme' ),
+			'description' => __( 'Prebuilt brand layout places the logo and contact on the left, with three columns beside it.', 'jofme' ),
 			'section'     => 'jofme_footer',
 			'type'        => 'select',
 			'choices'     => array(
-				'widgets'     => __( 'Widget columns (classic)', 'jofme' ),
-				'brand_right' => __( 'Prebuilt: 3 columns + logo/contact right', 'jofme' ),
+				'widgets'    => __( 'Widget columns (classic)', 'jofme' ),
+				'brand_left' => __( 'Prebuilt: logo/contact left + 3 columns', 'jofme' ),
 			),
 			'priority'    => 5,
 		)
@@ -65,7 +65,7 @@ function jofme_footer_customize( $manager ) {
 				'label'           => sprintf( __( 'Column %d title', 'jofme' ), $i ),
 				'section'         => 'jofme_footer',
 				'type'            => 'text',
-				'active_callback' => 'jofme_footer_is_brand_right',
+				'active_callback' => 'jofme_footer_is_prebuilt',
 			)
 		);
 	}
@@ -91,7 +91,7 @@ function jofme_footer_customize( $manager ) {
 				'label'           => $data[0],
 				'section'         => 'jofme_footer',
 				'type'            => $data[1],
-				'active_callback' => 'jofme_footer_is_brand_right',
+				'active_callback' => 'jofme_footer_is_prebuilt',
 			)
 		);
 	}
@@ -99,22 +99,26 @@ function jofme_footer_customize( $manager ) {
 add_action( 'customize_register', 'jofme_footer_customize', 25 );
 
 /**
- * Whether prebuilt brand-right footer is selected.
+ * Whether the prebuilt logo/contact footer is selected.
  *
  * @return bool
  */
-function jofme_footer_is_brand_right() {
-	return 'brand_right' === get_theme_mod( 'jofme_footer_layout', 'widgets' );
+function jofme_footer_is_prebuilt() {
+	return 'brand_left' === jofme_footer_layout();
 }
 
 /**
  * Footer layout slug.
  *
- * @return string widgets|brand_right
+ * @return string widgets|brand_left
  */
 function jofme_footer_layout() {
 	$layout = get_theme_mod( 'jofme_footer_layout', 'widgets' );
-	return 'brand_right' === $layout ? 'brand_right' : 'widgets';
+	// Migrate previous inverted option.
+	if ( 'brand_right' === $layout ) {
+		$layout = 'brand_left';
+	}
+	return 'brand_left' === $layout ? 'brand_left' : 'widgets';
 }
 
 /**

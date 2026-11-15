@@ -3,7 +3,7 @@ Contributors: jofme
 Requires at least: 6.4
 Tested up to: 6.8
 Requires PHP: 7.4
-Stable tag: 1.7.39
+Stable tag: 1.7.40
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -30,6 +30,9 @@ strings / wpml-config.xml.
 * WPML or Polylang
 
 == Changelog ==
+
+= 1.7.40 =
+* Prebuilt footer: logo/contact on the left, three columns on the right.
 
 = 1.7.39 =
 * Prebuilt footer: 3 columns + logo/contact on the right (Customizer).

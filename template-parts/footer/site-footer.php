@@ -14,7 +14,7 @@ $has_widgets = is_active_sidebar( 'footer-1' )
 	|| is_active_sidebar( 'footer-2' )
 	|| is_active_sidebar( 'footer-3' )
 	|| is_active_sidebar( 'footer-4' );
-$prebuilt    = 'brand_right' === $layout;
+$prebuilt    = 'brand_left' === $layout;
 $show_main   = $prebuilt || $has_widgets;
 ?>
 
@@ -22,12 +22,12 @@ $show_main   = $prebuilt || $has_widgets;
 	<?php if ( $show_main ) : ?>
 		<div class="site-footer__widgets">
 			<?php if ( $prebuilt ) : ?>
-				<div class="jofme-container site-footer__grid site-footer__grid--brand-right">
+				<div class="jofme-container site-footer__grid site-footer__grid--brand-left">
 					<?php
+					jofme_footer_brand_column();
 					jofme_footer_prebuilt_col( 1 );
 					jofme_footer_prebuilt_col( 2 );
 					jofme_footer_prebuilt_col( 3 );
-					jofme_footer_brand_column();
 					?>
 				</div>
 			<?php else : ?>
