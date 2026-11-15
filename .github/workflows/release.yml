@@ -49,6 +49,7 @@ jobs:
           node .tests/sticky-header-height.cjs
           node .tests/gallery-carousel.cjs
           node .tests/gallery-summary-logo.cjs
+          node .tests/gallery-uncropped.cjs
       - name: Match release tag to theme versions
         if: startsWith(github.ref, 'refs/tags/')
         env:
