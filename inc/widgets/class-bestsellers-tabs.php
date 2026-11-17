@@ -51,7 +51,7 @@ class Jofme_Bestsellers_Tabs_Widget extends \Elementor\Widget_Base {
 	 * @return array
 	 */
 	public function get_style_depends() {
-		return array( 'jofme-bestsellers-tabs' );
+		return array( 'jofme-bestsellers-tabs', 'jofme-swatches' );
 	}
 
 	/**
@@ -209,6 +209,19 @@ class Jofme_Bestsellers_Tabs_Widget extends \Elementor\Widget_Base {
 		);
 
 		$this->add_control(
+			'show_attributes',
+			array(
+				'label'        => __( 'Show attributes (like archive)', 'jofme' ),
+				'description'  => __( 'Display color/attribute swatches under each product, same as the shop archive cards.', 'jofme' ),
+				'type'         => \Elementor\Controls_Manager::SWITCHER,
+				'label_on'     => __( 'Yes', 'jofme' ),
+				'label_off'    => __( 'No', 'jofme' ),
+				'return_value' => 'yes',
+				'default'      => 'yes',
+			)
+		);
+
+		$this->add_control(
 			'button_text',
 			array(
 				'label'   => __( 'Footer link text', 'jofme' ),
@@ -331,9 +344,10 @@ class Jofme_Bestsellers_Tabs_Widget extends \Elementor\Widget_Base {
 	/**
 	 * Render one product card.
 	 *
-	 * @param WC_Product $product Product.
+	 * @param WC_Product $product  Product.
+	 * @param array      $settings Widget settings.
 	 */
-	protected function render_product( $product ) {
+	protected function render_product( $product, $settings = array() ) {
 		$url      = $product->get_permalink();
 		$terms    = get_the_terms( $product->get_id(), 'product_cat' );
 		$category = ( ! is_wp_error( $terms ) && ! empty( $terms[0] ) ) ? $terms[0]->name : '';
@@ -342,6 +356,10 @@ class Jofme_Bestsellers_Tabs_Widget extends \Elementor\Widget_Base {
 			: $product->get_image( 'woocommerce_thumbnail' );
 		$badge    = function_exists( 'jofme_product_sale_badge_html' )
 			? jofme_product_sale_badge_html( $product, 'jofme-bestsellers__badge' )
+			: '';
+		$show_attributes = 'yes' === ( $settings['show_attributes'] ?? 'yes' );
+		$swatches        = ( $show_attributes && function_exists( 'jofme_product_card_swatches_html' ) )
+			? jofme_product_card_swatches_html( $product )
 			: '';
 
 		echo '<article class="jofme-bestsellers__card">';
@@ -354,6 +372,9 @@ class Jofme_Bestsellers_Tabs_Widget extends \Elementor\Widget_Base {
 		}
 		echo '<h3 class="jofme-bestsellers__name"><a href="' . esc_url( $url ) . '">' . esc_html( $product->get_name() ) . '</a></h3>';
 		echo '<div class="jofme-bestsellers__price">' . wp_kses_post( $product->get_price_html() ) . '</div>';
+		if ( $swatches ) {
+			echo $swatches; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- escaped in helper.
+		}
 		echo '</div></article>';
 	}
 
@@ -436,7 +457,7 @@ class Jofme_Bestsellers_Tabs_Widget extends \Elementor\Widget_Base {
 				$any_products = true;
 				echo '<div class="jofme-bestsellers__grid jofme-bestsellers__grid--' . esc_attr( $columns ) . '">';
 				foreach ( $products as $product ) {
-					$this->render_product( $product );
+					$this->render_product( $product, $settings );
 				}
 				echo '</div>';
 			} elseif ( \Elementor\Plugin::$instance->editor->is_edit_mode() ) {

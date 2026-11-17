@@ -87,6 +87,12 @@ function get_term_by( $field, $value, $taxonomy ) {
 		'name'    => ucfirst( $value ),
 	);
 }
+function is_wp_error( $thing ) {
+	return false;
+}
+function get_permalink( $post = 0 ) {
+	return 'https://example.com/product/ring/';
+}
 function verify( $expected, $actual, $label ) {
 	if ( $expected !== $actual ) {
 		throw new RuntimeException( $label . ' — expected ' . var_export( $expected, true ) . ' got ' . var_export( $actual, true ) );
@@ -160,4 +166,37 @@ verify( true, false !== strpos( $link, 'attribute_pa_color=xriso' ), 'loop link 
 $_GET = array();
 verify( array(), jofme_active_swatch_filters(), 'no active filters when query empty' );
 
-echo "PASS: attribute flags, term colors, swatch markup, variation wrapper, active filters\n";
+class WC_Product {}
+class FixtureSwatchProduct extends WC_Product {
+	public function get_id() { return 11; }
+	public function get_permalink() { return 'https://example.com/product/ring/'; }
+	public function get_attributes() {
+		return array(
+			new class {
+				public function is_taxonomy() { return true; }
+				public function get_name() { return 'pa_color'; }
+			},
+			new class {
+				public function is_taxonomy() { return true; }
+				public function get_name() { return 'pa_size'; }
+			},
+		);
+	}
+}
+function wc_get_product_terms( $product_id, $taxonomy ) {
+	if ( 'pa_color' === $taxonomy ) {
+		return array(
+			(object) array( 'term_id' => 21, 'slug' => 'gold', 'name' => 'Gold' ),
+			(object) array( 'term_id' => 22, 'slug' => 'silver', 'name' => 'Silver' ),
+		);
+	}
+	return array();
+}
+$jofme_options = array();
+$card = jofme_product_card_swatches_html( new FixtureSwatchProduct() );
+verify( true, false !== strpos( $card, 'jofme-swatches' ), 'card helper wraps swatches' );
+verify( true, false !== strpos( $card, 'attribute_pa_color=gold' ), 'card helper links color term' );
+verify( false, false !== strpos( $card, 'pa_size' ), 'card helper skips non-swatch attributes' );
+verify( '', jofme_product_card_swatches_html( null ), 'card helper empty without product' );
+
+echo "PASS: attribute flags, term colors, swatch markup, variation wrapper, active filters, card helper\n";

@@ -59,6 +59,9 @@ namespace {
  function jofme_product_card_media_html($product,$size='woocommerce_thumbnail'){
   return '<span class="jofme-card-media">'.$product->get_image($size).'<img class="jofme-hover-image" src="/hover.jpg" alt=""></span>';
  }
+ function jofme_product_card_swatches_html($product){
+  return '<div class="jofme-swatches" aria-label="Color"><a class="jofme-swatch is-color" href="/product/earrings?attribute_pa_color=gold">Gold</a></div>';
+ }
  function verify($truth,$label){if(!$truth){throw new \RuntimeException($label);}}
  $product_status='publish';$password=false;$products=array(8=>new FixtureProduct());
  require JOFME_DIR.'/inc/editorial.php';
@@ -84,7 +87,11 @@ namespace {
  verify(strpos($html,'Sculpted gold earrings')!==false,'Bestsellers product card');
  verify(strpos($html,'jofme-bestsellers__badge')!==false,'Discount badge');
  verify(strpos($html,'jofme-card-media')!==false && strpos($html,'jofme-hover-image')!==false,'Hover image media');
+ verify(strpos($html,'jofme-swatches')!==false,'Archive-style attributes by default');
  verify(substr_count($html,'role="tabpanel"')>=2,'Tab panels rendered');
+ $best->settings['show_attributes']='';
+ verify(strpos($best->output(),'jofme-swatches')===false,'Attributes hidden when switcher off');
+ $best->settings['show_attributes']='yes';
  $best->settings['title']='<img src=x onerror=alert(1)>';
  verify(strpos($best->output(),'<img src=x')===false,'Escaped bestsellers title');
  if(in_array('--preview',$argv,true)) {
