@@ -55,6 +55,7 @@ body.jofme-card-bestsellers .jofme-sale-badge,
 body.jofme-card-bestsellers.woocommerce ul.products li.product>.button,
 body.jofme-card-bestsellers.woocommerce ul.products li.product>.added_to_cart{display:none!important}
 body.jofme-card-bestsellers .jofme-card-actions{inset-block-start:12px;inset-inline-end:12px}
+.jofme-bestsellers .jofme-swatches,
 body.jofme-card-bestsellers .jofme-swatches{justify-content:flex-start;margin:.25rem 0 0}
 body.jofme-card-bestsellers .jofme-card-description{display:none!important}
 

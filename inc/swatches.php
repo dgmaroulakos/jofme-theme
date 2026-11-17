@@ -333,7 +333,8 @@ add_action( 'admin_enqueue_scripts', 'jofme_swatch_admin_assets' );
  * Frontend swatch assets.
  */
 function jofme_swatch_assets() {
-	wp_enqueue_style( 'jofme-swatches', JOFME_URI . '/assets/css/swatches.css', array( 'jofme-premium' ), JOFME_VERSION );
+	wp_register_style( 'jofme-swatches', JOFME_URI . '/assets/css/swatches.css', array( 'jofme-premium' ), JOFME_VERSION );
+	wp_enqueue_style( 'jofme-swatches' );
 
 	if ( is_product() || is_shop() || is_product_taxonomy() ) {
 		wp_enqueue_script(
@@ -449,15 +450,21 @@ function jofme_loop_product_link_with_filters( $link, $product ) {
 add_filter( 'woocommerce_loop_product_link', 'jofme_loop_product_link_with_filters', 20, 2 );
 
 /**
- * Color swatches on catalog product cards.
+ * Color swatch markup for a product card (same as archive).
+ *
+ * @param WC_Product|null $product Product.
+ * @return string
  */
-function jofme_card_swatches() {
-	global $product;
-	if ( ! $product ) {
-		return;
+function jofme_product_card_swatches_html( $product = null ) {
+	if ( ! $product && isset( $GLOBALS['product'] ) ) {
+		$product = $GLOBALS['product'];
+	}
+	if ( ! $product || ! is_a( $product, 'WC_Product' ) ) {
+		return '';
 	}
 
-	$active = jofme_active_swatch_filters();
+	$active = function_exists( 'jofme_active_swatch_filters' ) ? jofme_active_swatch_filters() : array();
+	$html   = '';
 
 	foreach ( $product->get_attributes() as $attribute ) {
 		if ( ! $attribute->is_taxonomy() || ! jofme_is_swatch_attribute( $attribute->get_name() ) ) {
@@ -470,11 +477,11 @@ function jofme_card_swatches() {
 		}
 
 		$taxonomy = $attribute->get_name();
-		echo '<div class="jofme-swatches" aria-label="' . esc_attr( wc_attribute_label( $taxonomy ) ) . '">';
+		$html    .= '<div class="jofme-swatches" aria-label="' . esc_attr( wc_attribute_label( $taxonomy ) ) . '">';
 		foreach ( $terms as $term ) {
 			$url      = add_query_arg( 'attribute_' . $taxonomy, $term->slug, get_permalink( $product->get_id() ) );
 			$selected = isset( $active[ $taxonomy ] ) && $active[ $taxonomy ] === $term->slug;
-			echo jofme_swatch_html( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+			$html    .= jofme_swatch_html(
 				array(
 					'tag'      => 'a',
 					'name'     => $term->name,
@@ -485,8 +492,18 @@ function jofme_card_swatches() {
 				)
 			);
 		}
-		echo '</div>';
+		$html .= '</div>';
 	}
+
+	return $html;
+}
+
+/**
+ * Color swatches on catalog product cards.
+ */
+function jofme_card_swatches() {
+	global $product;
+	echo jofme_product_card_swatches_html( $product ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- built with escaped helpers.
 }
 // Swatch links must follow the main product link, never be nested inside it.
 add_action( 'woocommerce_after_shop_loop_item', 'jofme_card_swatches', 7 );
