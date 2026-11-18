@@ -38,6 +38,7 @@ jobs:
           node scripts/verify-hover.cjs
           node scripts/verify-gallery.cjs
           node scripts/verify-bestsellers.cjs
+          node .tests/bestsellers-attribute-query.cjs
           node scripts/verify-scroll.cjs
           node .tests/category-cover.cjs
           node .tests/catalog-toolbar.cjs
