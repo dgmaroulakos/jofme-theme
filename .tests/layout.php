@@ -11,6 +11,8 @@ function is_category() { global $context; return 'category' === $context; }
 function is_page() { global $context; return 'page' === $context; }
 function get_theme_mod( $key, $default ) { global $mods; return isset( $mods[$key] ) ? $mods[$key] : $default; }
 function is_active_sidebar( $id ) { global $widgets; return in_array( $id, $widgets, true ); }
+$attr_filters = false;
+function jofme_catalog_attribute_filters_available() { global $attr_filters; return (bool) $attr_filters; }
 function verify( $condition, $message ) { if ( ! $condition ) { throw new RuntimeException( $message ); } }
 require dirname( __DIR__ ) . '/inc/layout.php';
 foreach ( array( 'page' => 'page', 'category' => 'category', 'catalog' => 'catalog', 'shop' => 'catalog', 'product' => 'product', '' => '' ) as $input => $expected ) {
@@ -36,7 +38,11 @@ verify( false !== strpos( $layout_css, '--jofme-header-width' ), 'Header width C
 verify( in_array( 'jofme-gallery-right', jofme_layout_body_classes( array() ), true ), 'Product gallery layout' );
 $mods['jofme_product_gallery_layout'] = 'invalid';
 verify( in_array( 'jofme-gallery-left', jofme_layout_body_classes( array() ), true ), 'Invalid gallery fallback' );
-$context = 'catalog'; $widgets = array( 'shop-sidebar' ); $mods['jofme_catalog_sidebar'] = 'left';
+$context = 'catalog'; $widgets = array(); $attr_filters = true; $mods['jofme_catalog_sidebar'] = 'left';
+verify( jofme_layout_has_sidebar(), 'Catalog sidebar from auto attribute filters alone' );
+$attr_filters = false;
+verify( ! jofme_layout_has_sidebar(), 'Catalog sidebar collapses without widgets or attributes' );
+$widgets = array( 'shop-sidebar' ); $mods['jofme_catalog_sidebar'] = 'left';
 $mods['jofme_catalog_sidebar_effect'] = 'slide-bottom';
 $classes = jofme_layout_body_classes( array() );
 verify( in_array( 'jofme-shop-sidebar-offcanvas', $classes, true ), 'Catalog off-canvas class' );
@@ -44,5 +50,7 @@ verify( in_array( 'jofme-sidebar-effect-slide-bottom', $classes, true ), 'Catalo
 verify( 'slide-bottom' === jofme_catalog_sidebar_effect(), 'Catalog effect helper' );
 $mods['jofme_catalog_sidebar_effect'] = 'nope';
 verify( 'slide-left' === jofme_catalog_sidebar_effect(), 'Invalid effect fallback' );
+$layout_php = file_get_contents( dirname( __DIR__ ) . '/inc/layout.php' );
+verify( false !== strpos( $layout_php, 'jofme_shop_sidebar_filters' ), 'Sidebar fires auto filter action' );
 $context = ''; verify( array( 'original' ) === jofme_layout_body_classes( array( 'original' ) ), 'Unrelated contexts unchanged' );
 echo "PASS: layout contexts, empty sidebars, positions, invalid settings, product gallery, off-canvas effect\n";

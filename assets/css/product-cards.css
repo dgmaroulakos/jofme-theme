@@ -40,7 +40,7 @@ body.jofme-card-bestsellers .jofme-card-category{
  display:block;margin:0;font-size:10px;line-height:1.5;text-transform:uppercase;letter-spacing:.08em;color:var(--jofme-color-text-muted);text-decoration:none
 }
 body.jofme-card-bestsellers.woocommerce ul.products li.product .woocommerce-loop-product__title{
- font-family:var(--jofme-font-body);font-size:14px;font-weight:500;line-height:1.4;letter-spacing:0;text-transform:none;margin:0 0 .35rem;color:inherit
+ font-family:var(--jofme-font-body);font-size:30px;font-weight:500;line-height:1.4;letter-spacing:0;text-transform:none;margin:0 0 .35rem;color:inherit
 }
 body.jofme-card-bestsellers.woocommerce ul.products li.product .price{
  font-size:14px;letter-spacing:0;color:inherit;margin:0
