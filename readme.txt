@@ -3,7 +3,7 @@ Contributors: jofme
 Requires at least: 6.4
 Tested up to: 6.8
 Requires PHP: 7.4
-Stable tag: 1.7.43
+Stable tag: 1.7.44
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -30,6 +30,9 @@ strings / wpml-config.xml.
 * WPML or Polylang
 
 == Changelog ==
+
+= 1.7.44 =
+* Bestsellers cards: remove clamp padding on product images (padding: 0).
 
 = 1.7.43 =
 * Bestsellers Tabs: base query by category and/or attribute for all tabs.
