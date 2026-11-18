@@ -23,7 +23,7 @@ WordPress/WooCommerce theme, version 1.7.40. Theme files live at the repository 
 
 - Εμφάνιση → Προσαρμογή → Jofme Options → Shop: Minimal, Framed ή Editorial κάρτα και αρχική προβολή 1/2/3 στηλών ή λίστας.
 - Η επιλογή προβολής του επισκέπτη αποθηκεύεται στον browser. Σε μικρές οθόνες οι 3 στήλες γίνονται 2.
-- Attributes: χρησιμοποιήστε τα καθολικά attributes του WooCommerce. Τα φίλτρα του καταλόγου ζουν στο Shop Sidebar (και στο off-canvas Filters)· όχι στο παλιό inline “Filter collection”.
+- Attributes: χρησιμοποιήστε τα καθολικά attributes του WooCommerce. Το off-canvas Filters panel τα εμφανίζει αυτόματα (τα νέα attributes μπαίνουν χωρίς επιπλέον widget). Προαιρετικά widgets στο Shop Sidebar εμφανίζονται από κάτω.
 - **Color swatches:** Προϊόντα → Χαρακτηριστικά → επεξεργασία attribute → ενεργοποιήστε **Display as color swatches**. Στη Διαμόρφωση όρων ορίστε χρώμα με color picker ή hex. Εμφανίζονται στις κάρτες προϊόντων, ως κύκλοι στα φίλτρα καταλόγου και ως επιλογές παραλλαγής στη σελίδα προϊόντος. Χωρίς ρητή ρύθμιση, attributes με slug `color` / `colour` / `finish` / `metal` / `χρωμ` συνεχίζουν να λειτουργούν ως swatches. Άγνωστο χρώμα εμφανίζεται ως ετικέτα κειμένου.
 - Quick view όπως η σελίδα προϊόντος: gallery, τιμή, σύντομη περιγραφή, swatches/παραλλαγές, ποσότητα και add to cart (AJAX). Link για πλήρεις λεπτομέρειες.
 - Εικονίδια κάρτας: quick view και σύνδεσμος λεπτομερειών.
@@ -77,7 +77,8 @@ WordPress/WooCommerce theme, version 1.7.40. Theme files live at the repository 
 - 1.7.5: μέσα στο panel φαίνονται αμέσως τα sidebar widgets (χωρίς δεύτερο “Filter products” από το Woo block).
 - 1.7.6: με ανοιχτό off-canvas κλειδώνει το scroll της σελίδας· επιλογή χρώματος (π.χ. Χρυσό) προεπιλέγει την παραλλαγή στις κάρτες/links.
 - 1.7.7: mobile toolbar πάνω από τα προϊόντα = Filters icon + sorting + 1/2 columns· το “Showing all” σε δική του γραμμή· Customizer upload SVG για το Filters icon.
-- 1.7.8: αφαιρέθηκε το inline “Filter collection” accordion· φίλτρα μόνο από shop sidebar / off-canvas.
+- 1.7.42: το Filters panel τραβάει αυτόματα όλα τα global attributes (χωρίς widget ανά attribute).
+- 1.7.8: αφαιρέθηκε το inline “Filter collection” accordion· φίλτρα στο shop sidebar / off-canvas.
 - 1.7.9: στο list view η περιγραφή κόβεται στις 20 λέξεις με σύνδεσμο “View more” στο προϊόν.
 - 1.7.10: updater — το Check again καθαρίζει το GitHub cache· στη σελίδα Jofme Updates φαίνονται installed/latest και κουμπί force-check.
 

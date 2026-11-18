@@ -24,7 +24,16 @@ function jofme_layout_sidebar_id() {
 function jofme_layout_has_sidebar() {
  $context = jofme_layout_context();
  $id = jofme_layout_sidebar_id();
- return $context && 'none' !== jofme_layout_option( $context, 'sidebar' ) && $id && is_active_sidebar( $id );
+ if ( ! $context || 'none' === jofme_layout_option( $context, 'sidebar' ) || ! $id ) {
+  return false;
+ }
+ if ( is_active_sidebar( $id ) ) {
+  return true;
+ }
+ // Shop Filters panel can render auto attribute controls without widgets.
+ return 'catalog' === $context
+  && function_exists( 'jofme_catalog_attribute_filters_available' )
+  && jofme_catalog_attribute_filters_available();
 }
 /** Allowed off-canvas open effects for the shop sidebar on mobile/tablet. */
 function jofme_catalog_sidebar_effects() {
@@ -54,6 +63,13 @@ function jofme_layout_sidebar() {
  echo '<aside id="secondary" class="' . esc_attr( $classes ) . '" aria-label="' . esc_attr__( 'Sidebar', 'jofme' ) . '"' . ( $offcanvas ? ' data-effect="' . esc_attr( jofme_catalog_sidebar_effect() ) . '"' : '' ) . '>';
  if ( $offcanvas ) {
   echo '<div class="jofme-shop-sidebar-panel__header"><p class="jofme-shop-sidebar-panel__title">' . esc_html__( 'Filters', 'jofme' ) . '</p><button type="button" class="jofme-shop-sidebar-close" aria-label="' . esc_attr__( 'Close filters', 'jofme' ) . '"><span aria-hidden="true">×</span></button></div>';
+ }
+ if ( 'catalog' === jofme_layout_context() ) {
+  /**
+   * Auto attribute / price filters inside the shop Filters panel.
+   * New global WooCommerce attributes appear here without a per-attribute widget.
+   */
+  do_action( 'jofme_shop_sidebar_filters' );
  }
  dynamic_sidebar( jofme_layout_sidebar_id() );
  echo '</aside>';
@@ -87,7 +103,7 @@ function jofme_layout_customize( $manager ) {
    $desc = '';
    if ( 'sidebar' === $option ) {
     $desc = 'catalog' === $context
-     ? __( 'The shop sidebar appears when its widget area contains widgets. On mobile and tablet it opens as an off-canvas panel.', 'jofme' )
+     ? __( 'The shop Filters panel lists every global product attribute automatically (new attributes appear without extra widgets). Optional Shop Sidebar widgets still render below. On mobile and tablet it opens as an off-canvas panel.', 'jofme' )
      : __( 'The sidebar appears when its widget area contains widgets. On mobile it follows the content.', 'jofme' );
    }
    $manager->add_control( $id, array( 'label' => $label . ' — ' . $option_label, 'section' => 'jofme_layout', 'type' => 'select', 'choices' => $choices, 'description' => $desc ) );

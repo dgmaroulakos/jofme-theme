@@ -101,6 +101,116 @@ add_action( 'woocommerce_before_main_content', 'jofme_catalog_tools', 25 );
 function jofme_filter_value( $key ) {
  return isset( $_GET[ $key ] ) && is_scalar( $_GET[ $key ] ) ? sanitize_text_field( wp_unslash( $_GET[ $key ] ) ) : ''; // Public read-only catalog parameters.
 }
+
+/**
+ * Whether the catalog has any attribute/tag terms to show as filters.
+ *
+ * Used so the Filters panel can open even when the shop sidebar has no widgets.
+ *
+ * @return bool
+ */
+function jofme_catalog_attribute_filters_available() {
+ if ( ! function_exists( 'wc_get_attribute_taxonomies' ) || ! function_exists( 'wc_attribute_taxonomy_name' ) ) {
+  return false;
+ }
+ foreach ( wc_get_attribute_taxonomies() as $attribute ) {
+  $taxonomy = wc_attribute_taxonomy_name( $attribute->attribute_name );
+  if ( ! taxonomy_exists( $taxonomy ) ) {
+   continue;
+  }
+  $terms = get_terms(
+   array(
+    'taxonomy'   => $taxonomy,
+    'hide_empty' => true,
+    'number'     => 1,
+    'fields'     => 'ids',
+   )
+  );
+  if ( ! is_wp_error( $terms ) && $terms ) {
+   return true;
+  }
+ }
+ if ( taxonomy_exists( 'product_tag' ) ) {
+  $tags = get_terms(
+   array(
+    'taxonomy'   => 'product_tag',
+    'hide_empty' => true,
+    'number'     => 1,
+    'fields'     => 'ids',
+   )
+  );
+  if ( ! is_wp_error( $tags ) && $tags ) {
+   return true;
+  }
+ }
+ return false;
+}
+
+/**
+ * Auto attribute / collection / price filters for the shop sidebar (off-canvas).
+ *
+ * Loops every global WooCommerce attribute so newly created attributes appear
+ * without adding a separate widget per attribute.
+ */
+function jofme_catalog_filters() {
+ if ( ! is_shop() && ! is_product_taxonomy() ) {
+  return;
+ }
+ if ( ! function_exists( 'wc_get_attribute_taxonomies' ) ) {
+  return;
+ }
+ $action = is_product_taxonomy() ? get_term_link( get_queried_object() ) : wc_get_page_permalink( 'shop' );
+ if ( is_wp_error( $action ) || ! $action ) {
+  return;
+ }
+
+ echo '<div class="jofme-filters jofme-filters--sidebar">';
+ echo '<form method="get" action="' . esc_url( $action ) . '" class="jofme-filters__form">';
+ echo '<div class="jofme-filter-fields">';
+
+ foreach ( array( 's', 'post_type', 'orderby', 'lang' ) as $key ) {
+  if ( jofme_filter_value( $key ) !== '' ) {
+   echo '<input type="hidden" name="' . esc_attr( $key ) . '" value="' . esc_attr( jofme_filter_value( $key ) ) . '">';
+  }
+ }
+ // Preserve taxonomy routing for sites using plain permalinks.
+ if ( is_product_taxonomy() && ! get_option( 'permalink_structure' ) ) {
+  $term = get_queried_object();
+  if ( $term && ! empty( $term->taxonomy ) && ! empty( $term->slug ) ) {
+   echo '<input type="hidden" name="' . esc_attr( $term->taxonomy ) . '" value="' . esc_attr( $term->slug ) . '">';
+  }
+ }
+
+ foreach ( wc_get_attribute_taxonomies() as $attribute ) {
+  $taxonomy = wc_attribute_taxonomy_name( $attribute->attribute_name );
+  if ( function_exists( 'jofme_filter_attribute_control' ) ) {
+   jofme_filter_attribute_control( $taxonomy, 'filter_' . $attribute->attribute_name, $attribute->attribute_label );
+  } else {
+   jofme_filter_select( $taxonomy, 'filter_' . $attribute->attribute_name, $attribute->attribute_label );
+  }
+ }
+
+ jofme_filter_select( 'product_tag', 'jofme_collection', __( 'Collection', 'jofme' ) );
+
+ echo '<fieldset><legend>' . esc_html__( 'Price range', 'jofme' ) . ' (' . esc_html( get_woocommerce_currency_symbol() ) . ')</legend>';
+ foreach ( array( 'min_price' => __( 'Minimum price', 'jofme' ), 'max_price' => __( 'Maximum price', 'jofme' ) ) as $key => $label ) {
+  echo '<label>' . esc_html( $label ) . '<input type="number" min="0" step="0.01" name="' . esc_attr( $key ) . '" value="' . esc_attr( jofme_filter_value( $key ) ) . '"></label>';
+ }
+ echo '</fieldset>';
+ echo '</div>';
+ echo '<div class="jofme-filter-actions"><button type="submit">' . esc_html__( 'Apply filters', 'jofme' ) . '</button><a href="' . esc_url( $action ) . '">' . esc_html__( 'Clear filters', 'jofme' ) . '</a></div>';
+ echo '</form>';
+
+ echo '<div class="jofme-active-filters">';
+ foreach ( $_GET as $key => $value ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- public catalog query args.
+  if ( is_scalar( $value ) && '' !== $value && ( 0 === strpos( $key, 'filter_' ) || in_array( $key, array( 'min_price', 'max_price', 'jofme_collection' ), true ) ) ) {
+   echo '<a href="' . esc_url( remove_query_arg( array( $key, 'paged', 'product-page' ) ) ) . '">' . esc_html( sanitize_text_field( wp_unslash( $value ) ) ) . ' × <span class="screen-reader-text">' . esc_html__( 'Remove filter', 'jofme' ) . '</span></a>';
+  }
+ }
+ echo '</div></div>';
+}
+add_action( 'jofme_shop_sidebar_filters', 'jofme_catalog_filters' );
+
 function jofme_filter_select( $taxonomy, $key, $label ) {
  $terms = get_terms( array( 'taxonomy' => $taxonomy, 'hide_empty' => true ) );
  if ( is_wp_error( $terms ) || ! $terms ) { return; }
@@ -108,6 +218,32 @@ function jofme_filter_select( $taxonomy, $key, $label ) {
  foreach ( $terms as $term ) { echo '<option value="' . esc_attr( $term->slug ) . '" ' . selected( jofme_filter_value( $key ), $term->slug, false ) . '>' . esc_html( $term->name ) . '</option>'; }
  echo '</select></label>';
 }
+
+/**
+ * Apply the Collection (product_tag) filter from the catalog form.
+ *
+ * @param WC_Query $query Product query.
+ */
+function jofme_collection_query( $query ) {
+ $slug = jofme_filter_value( 'jofme_collection' );
+ if ( ! $slug ) {
+  return;
+ }
+ $tax = $query->get( 'tax_query' );
+ $query->set(
+  'tax_query',
+  array(
+   'relation' => 'AND',
+   is_array( $tax ) ? $tax : array(),
+   array(
+    'taxonomy' => 'product_tag',
+    'field'    => 'slug',
+    'terms'    => $slug,
+   ),
+  )
+ );
+}
+add_action( 'woocommerce_product_query', 'jofme_collection_query' );
 
 /** One default view for server markup, the Customizer and visitor controls. */
 function jofme_catalog_default_view() {
