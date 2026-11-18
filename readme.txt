@@ -33,6 +33,7 @@ strings / wpml-config.xml.
 
 = 1.7.43 =
 * Bestsellers Tabs: base query by category and/or attribute for all tabs.
+* Theme updater: fall back to github.com releases.atom when api.github.com fails, and show the real error.
 
 = 1.7.42 =
 * Bestsellers Tabs: per-tab product query by global attribute term.
