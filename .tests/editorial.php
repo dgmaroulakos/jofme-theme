@@ -40,10 +40,17 @@ namespace {
  function taxonomy_exists($taxonomy){return 'product_cat'===$taxonomy;}
  function is_wp_error($thing){return $thing instanceof \WP_Error;}
  function get_terms($args){return array((object)array('term_id'=>3,'name'=>'Rings','slug'=>'rings'));}
- function get_term($id,$taxonomy){return (object)array('term_id'=>3,'name'=>'Rings','slug'=>'rings');}
  function get_the_terms($id,$taxonomy){return array((object)array('term_id'=>3,'name'=>'Earrings','slug'=>'earrings'));}
+ function get_term($id,$taxonomy=null){
+  if(15===(int)$id){return (object)array('term_id'=>15,'name'=>'Gold','slug'=>'gold','taxonomy'=>'pa_color');}
+  return (object)array('term_id'=>3,'name'=>'Rings','slug'=>'rings','taxonomy'=>'product_cat');
+ }
  function wc_get_product($id){return isset($GLOBALS['products'][$id])?$GLOBALS['products'][$id]:false;}
- function wc_get_product_ids_on_sale(){return array_keys($GLOBALS['products']);} function wc_get_products($args){return array_values($GLOBALS['products']);}
+ function wc_get_product_ids_on_sale(){return array_keys($GLOBALS['products']);}
+ function wc_get_products($args){
+  $GLOBALS['last_product_query']=$args;
+  return array_values($GLOBALS['products']);
+ }
  class FixtureProduct {
   public $visible=true,$sale=true,$variation=false;
   public function get_id(){return 8;} public function is_type($type){return $this->variation;}
@@ -92,11 +99,18 @@ namespace {
  $best->settings['show_attributes']='';
  verify(strpos($best->output(),'jofme-swatches')===false,'Attributes hidden when switcher off');
  $best->settings['show_attributes']='yes';
+ $best->settings['tabs']=array(array('tab_label'=>'Gold','category_id'=>'','attribute_term_id'=>'15'));
+ $best->settings['show_all_tab']='';
+ $last_product_query=null;$best->output();
+ verify(isset($last_product_query['tax_query'][0]['taxonomy']) && 'pa_color'===$last_product_query['tax_query'][0]['taxonomy'],'Bestsellers queries by attribute taxonomy');
+ verify(isset($last_product_query['tax_query'][0]['terms'][0]) && 15===(int)$last_product_query['tax_query'][0]['terms'][0],'Bestsellers queries by attribute term');
+ $best->settings['show_all_tab']='yes';
+ $best->settings['tabs']=array(array('tab_label'=>'Rings','category_id'=>'3'),array('tab_label'=>'Earrings','category_id'=>'3'));
  $best->settings['title']='<img src=x onerror=alert(1)>';
  verify(strpos($best->output(),'<img src=x')===false,'Escaped bestsellers title');
  if(in_array('--preview',$argv,true)) {
   $products=array(8=>new FixtureProduct());$editor_mode=false;$story->settings['title']='Paola Dias';$story->settings['image_side']='left';
   $sales->settings['campaign_image']=array('url'=>'/campaign.jpg');$sales->settings['detail_image']=array('url'=>'/detail.jpg');$sales->settings['button_link']=array('url'=>'/shop');
   echo $sales->output().$story->output().$best->output();
- }else{echo "PASS: widget rendering, links, escaped titles, product pricing and sale badge, private product exclusion, empty state, bestsellers tabs\n";}
+ }else{echo "PASS: widget rendering, links, escaped titles, product pricing and sale badge, private product exclusion, empty state, bestsellers tabs, attribute query\n";}
 }
