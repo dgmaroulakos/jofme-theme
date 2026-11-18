@@ -169,6 +169,37 @@ class Jofme_Bestsellers_Tabs_Widget extends \Elementor\Widget_Base {
 			)
 		);
 
+		$this->add_control(
+			'query_heading',
+			array(
+				'label'     => __( 'Base query', 'jofme' ),
+				'type'      => \Elementor\Controls_Manager::HEADING,
+				'separator' => 'before',
+			)
+		);
+
+		$this->add_control(
+			'query_category_id',
+			array(
+				'label'       => __( 'Base category', 'jofme' ),
+				'description' => __( 'Optional starting category for every tab (including “All”). A tab’s own category overrides this.', 'jofme' ),
+				'type'        => \Elementor\Controls_Manager::SELECT,
+				'options'     => $this->get_category_options(),
+				'default'     => '',
+			)
+		);
+
+		$this->add_control(
+			'query_attribute_term_id',
+			array(
+				'label'       => __( 'Base attribute', 'jofme' ),
+				'description' => __( 'Optional starting attribute filter for every tab (including “All”), in addition to category. Tab attributes are combined with this.', 'jofme' ),
+				'type'        => \Elementor\Controls_Manager::SELECT,
+				'options'     => $this->get_attribute_term_options(),
+				'default'     => '',
+			)
+		);
+
 		$repeater = new \Elementor\Repeater();
 		$repeater->add_control(
 			'tab_label',
@@ -347,15 +378,52 @@ class Jofme_Bestsellers_Tabs_Widget extends \Elementor\Widget_Base {
 	}
 
 	/**
+	 * Build tax_query clauses for global attribute term IDs.
+	 *
+	 * @param int[] $attribute_term_ids Term IDs.
+	 * @return array<int,array<string,mixed>>
+	 */
+	protected function attribute_tax_query( $attribute_term_ids ) {
+		$clauses = array();
+		$seen    = array();
+
+		foreach ( (array) $attribute_term_ids as $term_id ) {
+			$term_id = absint( $term_id );
+			if ( ! $term_id || isset( $seen[ $term_id ] ) ) {
+				continue;
+			}
+			$seen[ $term_id ] = true;
+
+			$attr_term = get_term( $term_id );
+			if (
+				! $attr_term
+				|| is_wp_error( $attr_term )
+				|| empty( $attr_term->taxonomy )
+				|| 0 !== strpos( (string) $attr_term->taxonomy, 'pa_' )
+			) {
+				continue;
+			}
+
+			$clauses[] = array(
+				'taxonomy' => $attr_term->taxonomy,
+				'field'    => 'term_id',
+				'terms'    => array( (int) $attr_term->term_id ),
+			);
+		}
+
+		return $clauses;
+	}
+
+	/**
 	 * Query visible products for a tab.
 	 *
-	 * @param int    $category_id       Category term ID, or 0 for all.
-	 * @param int    $limit             Product limit.
-	 * @param string $orderby           Orderby key.
-	 * @param int    $attribute_term_id Global attribute term ID, or 0 for any.
+	 * @param int             $category_id        Category term ID, or 0 for all.
+	 * @param int             $limit              Product limit.
+	 * @param string          $orderby            Orderby key.
+	 * @param int|int[]       $attribute_term_ids Global attribute term ID(s).
 	 * @return WC_Product[]
 	 */
-	protected function query_products( $category_id, $limit, $orderby, $attribute_term_id = 0 ) {
+	protected function query_products( $category_id, $limit, $orderby, $attribute_term_ids = array() ) {
 		if ( ! function_exists( 'wc_get_products' ) ) {
 			return array();
 		}
@@ -375,23 +443,12 @@ class Jofme_Bestsellers_Tabs_Widget extends \Elementor\Widget_Base {
 			}
 		}
 
-		$attribute_term_id = absint( $attribute_term_id );
-		if ( $attribute_term_id ) {
-			$attr_term = get_term( $attribute_term_id );
-			if (
-				$attr_term
-				&& ! is_wp_error( $attr_term )
-				&& ! empty( $attr_term->taxonomy )
-				&& 0 === strpos( (string) $attr_term->taxonomy, 'pa_' )
-			) {
-				$args['tax_query'] = array(
-					array(
-						'taxonomy' => $attr_term->taxonomy,
-						'field'    => 'term_id',
-						'terms'    => array( (int) $attr_term->term_id ),
-					),
-				);
+		$tax_query = $this->attribute_tax_query( $attribute_term_ids );
+		if ( $tax_query ) {
+			if ( count( $tax_query ) > 1 ) {
+				$tax_query['relation'] = 'AND';
 			}
+			$args['tax_query'] = $tax_query;
 		}
 
 		$products = wc_get_products( $args );
@@ -498,6 +555,8 @@ class Jofme_Bestsellers_Tabs_Widget extends \Elementor\Widget_Base {
 		$columns  = in_array( (string) $settings['columns'], array( '2', '3', '4' ), true ) ? (string) $settings['columns'] : '4';
 		$limit    = isset( $settings['limit'] ) ? absint( $settings['limit'] ) : 8;
 		$orderby  = isset( $settings['orderby'] ) ? (string) $settings['orderby'] : 'popularity';
+		$base_category  = isset( $settings['query_category_id'] ) ? absint( $settings['query_category_id'] ) : 0;
+		$base_attribute = isset( $settings['query_attribute_term_id'] ) ? absint( $settings['query_attribute_term_id'] ) : 0;
 
 		if ( ! $tabs ) {
 			if ( \Elementor\Plugin::$instance->editor->is_edit_mode() ) {
@@ -521,7 +580,14 @@ class Jofme_Bestsellers_Tabs_Widget extends \Elementor\Widget_Base {
 
 		$any_products = false;
 		foreach ( $tabs as $index => $tab ) {
-			$products = $this->query_products( $tab['category'], $limit, $orderby, $tab['attribute'] ?? 0 );
+			$category_id = ! empty( $tab['category'] ) ? (int) $tab['category'] : $base_category;
+			$attributes  = array_filter(
+				array(
+					$base_attribute,
+					isset( $tab['attribute'] ) ? (int) $tab['attribute'] : 0,
+				)
+			);
+			$products = $this->query_products( $category_id, $limit, $orderby, $attributes );
 			$hidden   = 0 === $index ? '' : ' hidden';
 			echo '<div class="jofme-bestsellers__panel" role="tabpanel" id="' . esc_attr( $uid . '-panel-' . $tab['id'] ) . '" aria-labelledby="' . esc_attr( $uid . '-' . $tab['id'] ) . '"' . $hidden . '>';
 			if ( $products ) {

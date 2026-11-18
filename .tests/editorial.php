@@ -2,7 +2,7 @@
 /** Render and safety contracts without requiring a live WP database. */
 namespace Elementor {
  class Controls_Manager {
-  const TEXT='text', TEXTAREA='textarea', MEDIA='media', WYSIWYG='wysiwyg', URL='url', SELECT='select', TAB_STYLE='style', COLOR='color', DIMENSIONS='dimensions', SLIDER='slider', NUMBER='number', REPEATER='repeater', SWITCHER='switcher';
+  const TEXT='text', TEXTAREA='textarea', MEDIA='media', WYSIWYG='wysiwyg', URL='url', SELECT='select', TAB_STYLE='style', COLOR='color', DIMENSIONS='dimensions', SLIDER='slider', NUMBER='number', REPEATER='repeater', SWITCHER='switcher', HEADING='heading';
  }
  class Group_Control_Typography { public static function get_type() { return 'typography'; } }
  class Utils { public static function get_placeholder_image_src() { return '/placeholder.svg'; } }
@@ -105,6 +105,14 @@ namespace {
  verify(isset($last_product_query['tax_query'][0]['taxonomy']) && 'pa_color'===$last_product_query['tax_query'][0]['taxonomy'],'Bestsellers queries by attribute taxonomy');
  verify(isset($last_product_query['tax_query'][0]['terms'][0]) && 15===(int)$last_product_query['tax_query'][0]['terms'][0],'Bestsellers queries by attribute term');
  $best->settings['show_all_tab']='yes';
+ $best->settings['query_attribute_term_id']='15';
+ $best->settings['query_category_id']='3';
+ $best->settings['tabs']=array(array('tab_label'=>'Rings','category_id'=>'','attribute_term_id'=>''));
+ $last_product_query=null;$best->output();
+ verify(isset($last_product_query['category'][0]) && 'rings'===$last_product_query['category'][0],'Base category applies to All/tab query');
+ verify(isset($last_product_query['tax_query'][0]['terms'][0]) && 15===(int)$last_product_query['tax_query'][0]['terms'][0],'Base attribute applies to All/tab query');
+ $best->settings['query_attribute_term_id']='';
+ $best->settings['query_category_id']='';
  $best->settings['tabs']=array(array('tab_label'=>'Rings','category_id'=>'3'),array('tab_label'=>'Earrings','category_id'=>'3'));
  $best->settings['title']='<img src=x onerror=alert(1)>';
  verify(strpos($best->output(),'<img src=x')===false,'Escaped bestsellers title');
