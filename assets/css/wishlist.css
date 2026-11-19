@@ -26,3 +26,88 @@
 @media(max-width:767px){
  .jofme-wishlist{width:34px;height:34px}
 }
+
+/* Header wishlist link. */
+.jofme-wishlist-link{
+ appearance:none;
+ background:none;
+ border:0;
+ padding:.35rem;
+ cursor:pointer;
+ color:inherit;
+ display:inline-flex;
+ align-items:center;
+ justify-content:center;
+ align-self:center;
+ position:relative;
+ line-height:0;
+ text-decoration:none;
+}
+.jofme-wishlist-link svg{display:block;flex-shrink:0}
+.jofme-wishlist-count{
+ position:absolute;
+ top:-2px;
+ right:-4px;
+ min-width:16px;
+ height:16px;
+ padding:0 4px;
+ border-radius:999px;
+ background:var(--jofme-color-accent);
+ color:#fff;
+ font-size:10px;
+ font-weight:600;
+ line-height:16px;
+ text-align:center;
+}
+.jofme-wishlist-count.is-empty{display:none}
+
+/* Wishlist page. */
+body.jofme-wishlist-page-view .entry-header{display:none}
+body.jofme-wishlist-page-view .jofme-layout--page{padding-block:0}
+.jofme-wishlist-page{
+ width:min(100%,1320px);
+ margin:0 auto;
+ padding:clamp(2rem,5vw,3.5rem) clamp(1.25rem,4vw,2rem) clamp(3rem,8vw,5rem);
+}
+.jofme-wishlist-page__header{
+ text-align:center;
+ margin:0 0 2rem;
+}
+.jofme-wishlist-page__title{
+ margin:.35rem 0 0;
+ font-size:clamp(1.75rem,4vw,2.75rem);
+ font-weight:500;
+ letter-spacing:.02em;
+}
+.jofme-wishlist-page__count{
+ margin:.75rem 0 0;
+ color:var(--jofme-color-text-muted);
+ font-size:13px;
+ letter-spacing:.04em;
+}
+.jofme-wishlist-page__status,
+.jofme-wishlist-page__empty{
+ text-align:center;
+ padding:2.5rem 1rem;
+ color:var(--jofme-color-text-muted);
+}
+.jofme-wishlist-page__empty .button{
+ margin-top:1rem;
+}
+.jofme-wishlist-page__grid ul.products{
+ display:grid;
+ grid-template-columns:repeat(4,minmax(0,1fr));
+ gap:clamp(1.25rem,3vw,2rem) clamp(1rem,2vw,1.5rem);
+ list-style:none;
+ margin:0;
+ padding:0;
+}
+@media(max-width:1100px){
+ .jofme-wishlist-page__grid ul.products{grid-template-columns:repeat(3,minmax(0,1fr))}
+}
+@media(max-width:767px){
+ .jofme-wishlist-page__grid ul.products{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+@media(max-width:480px){
+ .jofme-wishlist-page__grid ul.products{grid-template-columns:1fr}
+}

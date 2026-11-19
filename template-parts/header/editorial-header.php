@@ -15,6 +15,11 @@ if ( $announcement ) : ?>
   <div class="site-header__end">
    <?php if ( class_exists( 'WooCommerce' ) ) : ?>
     <a class="jofme-account-link" href="<?php echo esc_url( wc_get_page_permalink( 'myaccount' ) ); ?>" aria-label="<?php esc_attr_e( 'My account', 'jofme' ); ?>"><svg width="23" height="23" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.3" aria-hidden="true"><circle cx="12" cy="7" r="4"/><path d="M3 22a9 9 0 0 1 18 0"/></svg></a>
+    <?php
+    if ( function_exists( 'jofme_wishlist_link' ) ) {
+     echo jofme_wishlist_link(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- escaped in helper.
+    }
+    ?>
    <?php endif; ?>
    <button type="button" class="jofme-search-toggle" aria-label="<?php esc_attr_e( 'Search', 'jofme' ); ?>" aria-expanded="false" aria-controls="jofme-header-search"><svg width="23" height="23" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.3" aria-hidden="true"><circle cx="10" cy="10" r="7"/><path d="m15 15 7 7"/></svg></button>
    <?php if ( class_exists( 'WooCommerce' ) ) { echo jofme_cart_link(); } ?>

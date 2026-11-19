@@ -33,6 +33,7 @@ strings / wpml-config.xml.
 
 = 1.7.47 =
 * Product tabs: active tab buttons use white text on black background (pill default).
+* Wishlist page: auto-created page with [jofme_wishlist], header heart link + count, AJAX product grid from localStorage (YITH/TI still take over when installed).
 
 = 1.7.46 =
 * Product gallery carousel: more reliable nav/swipe; variation images jump to matching slides.

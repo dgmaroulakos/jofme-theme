@@ -19,4 +19,5 @@ assert.match(widget, /jofme_wishlist_button_html/);
 assert.match(css, /\.jofme-wishlist/);
 assert.match(js, /jofme_wishlist_ids/);
 assert.match(js, /localStorage/);
+assert.match(php, /function jofme_wishlist_page_url/);
 console.log('PASS: product card wishlist heart + YITH/TI bridge');
