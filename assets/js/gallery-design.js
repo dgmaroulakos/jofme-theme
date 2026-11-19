@@ -264,13 +264,35 @@
   $(form).on('reset_data hide_variation', resetPrimaryImage);
  }
 
+ function normalizeImageUrl(url) {
+  if (!url) return '';
+  try {
+   const parsed = new URL(url, window.location.origin);
+   return (parsed.pathname || '').toLowerCase();
+  } catch (_) {
+   return String(url).split('?')[0].split('#')[0].toLowerCase();
+  }
+ }
+
+ function slideImageUrls(slide) {
+  const urls = [];
+  const link = slide.querySelector('a.jofme-gallery-zoom-link, a');
+  const img = slide.querySelector('img');
+  if (link && link.getAttribute('href')) urls.push(link.getAttribute('href'));
+  if (img) {
+   if (img.getAttribute('src')) urls.push(img.getAttribute('src'));
+   if (img.currentSrc) urls.push(img.currentSrc);
+   if (img.dataset.originalSrc) urls.push(img.dataset.originalSrc);
+  }
+  return urls.map(normalizeImageUrl).filter(Boolean);
+ }
+
  function bindCarouselGallery(gallery) {
   if (!gallery || gallery.dataset.jofmeCarousel === '1') return;
   gallery.dataset.jofmeCarousel = '1';
 
   const slides = Array.from(gallery.querySelectorAll('.jofme-carousel-gallery__slide'));
   const thumbs = Array.from(gallery.querySelectorAll('.jofme-carousel-gallery__thumb'));
-  const navs = Array.from(gallery.querySelectorAll('.jofme-carousel-gallery__nav'));
   if (!slides.length) return;
 
   let index = Math.max(0, slides.findIndex((slide) => slide.classList.contains('is-active')));
@@ -312,23 +334,30 @@
    });
   }
 
-  navs.forEach((nav) => {
-   nav.addEventListener('click', () => {
+  gallery.addEventListener('click', (event) => {
+   const nav = event.target.closest('.jofme-carousel-gallery__nav');
+   if (nav && gallery.contains(nav)) {
+    event.preventDefault();
+    event.stopPropagation();
     show(index + Number(nav.dataset.dir || 0));
-   });
-  });
-  thumbs.forEach((thumb) => {
-   thumb.addEventListener('click', () => {
+    return;
+   }
+   const thumb = event.target.closest('.jofme-carousel-gallery__thumb');
+   if (thumb && gallery.contains(thumb)) {
+    event.preventDefault();
+    event.stopPropagation();
     show(Number(thumb.dataset.index || 0));
-   });
+   }
   });
 
   let touchX = null;
+  let touchY = null;
   gallery.addEventListener(
    'touchstart',
    (event) => {
     if (!event.changedTouches || !event.changedTouches[0]) return;
     touchX = event.changedTouches[0].clientX;
+    touchY = event.changedTouches[0].clientY;
    },
    { passive: true }
   );
@@ -336,10 +365,14 @@
    'touchend',
    (event) => {
     if (touchX === null || !event.changedTouches || !event.changedTouches[0]) return;
-    const delta = event.changedTouches[0].clientX - touchX;
+    const point = event.changedTouches[0];
+    const deltaX = point.clientX - touchX;
+    const deltaY = point.clientY - (touchY || point.clientY);
     touchX = null;
-    if (Math.abs(delta) < 40) return;
-    show(index + (delta < 0 ? 1 : -1));
+    touchY = null;
+    if (Math.abs(deltaX) < 40 || Math.abs(deltaX) < Math.abs(deltaY)) return;
+    if (event.target.closest('.jofme-carousel-gallery__thumb, .jofme-carousel-gallery__nav')) return;
+    show(index + (deltaX < 0 ? 1 : -1));
    },
    { passive: true }
   );
@@ -351,10 +384,37 @@
   const form = document.querySelector('form.variations_form');
   if (!form || !primary) return;
 
+  function findSlideIndexForVariation(variation) {
+   if (!variation || !variation.image) return -1;
+   const candidates = [
+    variation.image.full_src,
+    variation.image.src,
+    variation.image.url,
+    variation.image.gallery_thumbnail_src,
+    variation.image.thumb_src,
+   ]
+    .map(normalizeImageUrl)
+    .filter(Boolean);
+   if (!candidates.length) return -1;
+
+   return slides.findIndex((slide) => {
+    const urls = slideImageUrls(slide);
+    return urls.some((url) => candidates.some((candidate) => url === candidate || url.endsWith(candidate) || candidate.endsWith(url)));
+   });
+  }
+
   function applyVariationImage(variation) {
    if (!variation || !variation.image) return;
    const full = variation.image.full_src || variation.image.src;
    if (!full) return;
+
+   const matched = findSlideIndexForVariation(variation);
+   if (matched >= 0) {
+    resetPrimaryImage();
+    show(matched);
+    return;
+   }
+
    primary.setAttribute('src', full);
    primary.removeAttribute('srcset');
    primary.removeAttribute('sizes');
@@ -374,8 +434,16 @@
   function resetPrimaryImage() {
    if (!primary.dataset.originalSrc) return;
    primary.setAttribute('src', primary.dataset.originalSrc);
-   primary.removeAttribute('srcset');
-   primary.removeAttribute('sizes');
+   if (primary.dataset.originalSrcset) {
+    primary.setAttribute('srcset', primary.dataset.originalSrcset);
+   } else {
+    primary.removeAttribute('srcset');
+   }
+   if (primary.dataset.originalSizes) {
+    primary.setAttribute('sizes', primary.dataset.originalSizes);
+   } else {
+    primary.removeAttribute('sizes');
+   }
    const link = primary.closest('a');
    if (link && primary.dataset.originalHref) {
     link.setAttribute('href', primary.dataset.originalHref);
@@ -383,7 +451,10 @@
   }
 
   $(form).on('found_variation', (_, variation) => applyVariationImage(variation));
-  $(form).on('reset_data hide_variation', resetPrimaryImage);
+  $(form).on('reset_data hide_variation', () => {
+   resetPrimaryImage();
+   show(0);
+  });
  }
 
  document.querySelectorAll('.jofme-stacked-gallery').forEach(bindStackedGallery);

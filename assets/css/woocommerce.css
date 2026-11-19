@@ -189,12 +189,14 @@
 }
 
 .woocommerce div.product .woocommerce-tabs.wc-tabs-wrapper {
-	padding: 0% 15%;
+	padding: var(--jofme-tabs-padding-y, 1.75rem) var(--jofme-tabs-padding-x, 15%);
+	background: var(--jofme-tabs-bg, #111111);
+	color: var(--jofme-tabs-text, #ffffff);
 }
 
 @media (max-width: 767px) {
 	.woocommerce div.product .woocommerce-tabs.wc-tabs-wrapper {
-		padding: 0 1.25rem;
+		padding: var(--jofme-tabs-padding-y, 1.25rem) 1.25rem;
 	}
 }
 
@@ -204,7 +206,8 @@
 	border: 0;
 	display: flex;
 	flex-wrap: wrap;
-	gap: 0.5rem 1.5rem;
+	gap: var(--jofme-tabs-gap, 0.5rem 1.5rem);
+	background: transparent;
 }
 
 .woocommerce div.product .woocommerce-tabs ul.tabs::before {
@@ -220,24 +223,69 @@
 }
 
 .woocommerce div.product .woocommerce-tabs ul.tabs li a {
-	font-size: 12px;
+	font-size: var(--jofme-tabs-font-size, 12px);
 	font-weight: 600;
 	letter-spacing: 0.14em;
 	text-transform: uppercase;
 	padding: 0.5rem 0;
 	border-bottom: 1px solid transparent;
+	color: var(--jofme-tabs-text, #ffffff);
+	opacity: 0.72;
 }
 
+.woocommerce div.product .woocommerce-tabs ul.tabs li a:hover,
 .woocommerce div.product .woocommerce-tabs ul.tabs li.active a {
-	border-bottom-color: var(--jofme-color-accent);
-	color: var(--jofme-color-text);
+	opacity: 1;
+	color: var(--jofme-tabs-active-text, #ffffff);
+	border-bottom-color: var(--jofme-tabs-active-border, #ffffff);
 }
 
 .woocommerce div.product .woocommerce-tabs .panel {
 	margin: 0;
-	padding: 0;
+	padding: var(--jofme-tabs-panel-padding, 0);
 	border: 0;
 	box-shadow: none;
+	background: var(--jofme-tabs-panel-bg, transparent);
+	color: var(--jofme-tabs-text, #ffffff);
+}
+
+/* Pill tab style */
+body.jofme-tabs-pill .woocommerce div.product .woocommerce-tabs ul.tabs {
+	gap: 0.5rem;
+}
+
+body.jofme-tabs-pill .woocommerce div.product .woocommerce-tabs ul.tabs li a {
+	border-bottom: 0;
+	padding: 0.55rem 1rem;
+	border-radius: 999px;
+	background: rgba(255, 255, 255, 0.08);
+	opacity: 1;
+}
+
+body.jofme-tabs-pill .woocommerce div.product .woocommerce-tabs ul.tabs li.active a {
+	background: var(--jofme-tabs-active-bg, #ffffff);
+	color: var(--jofme-tabs-active-text, #111111);
+}
+
+/* Boxed tab style */
+body.jofme-tabs-boxed .woocommerce div.product .woocommerce-tabs ul.tabs {
+	gap: 0;
+	border-bottom: 1px solid rgba(255, 255, 255, 0.18);
+}
+
+body.jofme-tabs-boxed .woocommerce div.product .woocommerce-tabs ul.tabs li a {
+	border: 1px solid transparent;
+	border-bottom: 0;
+	padding: 0.7rem 1.1rem;
+	margin-bottom: -1px;
+	border-radius: 0;
+	opacity: 1;
+}
+
+body.jofme-tabs-boxed .woocommerce div.product .woocommerce-tabs ul.tabs li.active a {
+	background: var(--jofme-tabs-active-bg, rgba(255, 255, 255, 0.1));
+	border-color: rgba(255, 255, 255, 0.18);
+	border-bottom-color: var(--jofme-tabs-bg, #111111);
 }
 
 .woocommerce .related > h2,

@@ -3,7 +3,7 @@ Contributors: jofme
 Requires at least: 6.4
 Tested up to: 6.8
 Requires PHP: 7.4
-Stable tag: 1.7.45
+Stable tag: 1.7.46
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -30,6 +30,13 @@ strings / wpml-config.xml.
 * WPML or Polylang
 
 == Changelog ==
+
+= 1.7.46 =
+* Product gallery carousel: more reliable nav/swipe; variation images jump to matching slides.
+* Carousel thumbnails: no white border, left-aligned, larger (88px).
+* Product tabs: black background / white text by default, plus Customizer style options.
+* Product cards: wishlist heart (localStorage, with YITH/TI bridge when installed).
+* Bestsellers Tabs: carousel layout, up to 48 products, richer tab appearance controls.
 
 = 1.7.45 =
 * Bestsellers cards: larger color swatches (30px) and 30px product titles.

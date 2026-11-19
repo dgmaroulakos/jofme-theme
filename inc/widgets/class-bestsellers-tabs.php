@@ -254,21 +254,55 @@ class Jofme_Bestsellers_Tabs_Widget extends \Elementor\Widget_Base {
 				'label'   => __( 'Products per tab', 'jofme' ),
 				'type'    => \Elementor\Controls_Manager::NUMBER,
 				'min'     => 1,
-				'max'     => 24,
+				'max'     => 48,
 				'default' => 8,
+			)
+		);
+
+		$this->add_control(
+			'layout',
+			array(
+				'label'   => __( 'Products layout', 'jofme' ),
+				'type'    => \Elementor\Controls_Manager::SELECT,
+				'default' => 'grid',
+				'options' => array(
+					'grid'     => __( 'Grid', 'jofme' ),
+					'carousel' => __( 'Carousel', 'jofme' ),
+				),
 			)
 		);
 
 		$this->add_control(
 			'columns',
 			array(
-				'label'   => __( 'Columns', 'jofme' ),
-				'type'    => \Elementor\Controls_Manager::SELECT,
-				'default' => '4',
-				'options' => array(
+				'label'     => __( 'Columns', 'jofme' ),
+				'type'      => \Elementor\Controls_Manager::SELECT,
+				'default'   => '4',
+				'options'   => array(
 					'2' => '2',
 					'3' => '3',
 					'4' => '4',
+				),
+				'condition' => array(
+					'layout!' => 'carousel',
+				),
+			)
+		);
+
+		$this->add_control(
+			'carousel_slides',
+			array(
+				'label'       => __( 'Visible slides', 'jofme' ),
+				'description' => __( 'How many product cards are visible at once in the carousel.', 'jofme' ),
+				'type'        => \Elementor\Controls_Manager::SELECT,
+				'default'     => '4',
+				'options'     => array(
+					'2' => '2',
+					'3' => '3',
+					'4' => '4',
+				),
+				'condition'   => array(
+					'layout' => 'carousel',
 				),
 			)
 		);
@@ -343,12 +377,90 @@ class Jofme_Bestsellers_Tabs_Widget extends \Elementor\Widget_Base {
 		);
 
 		$this->add_control(
+			'tabs_heading',
+			array(
+				'label'     => __( 'Tabs', 'jofme' ),
+				'type'      => \Elementor\Controls_Manager::HEADING,
+				'separator' => 'before',
+			)
+		);
+
+		$this->add_control(
+			'tabs_style',
+			array(
+				'label'   => __( 'Tab style', 'jofme' ),
+				'type'    => \Elementor\Controls_Manager::SELECT,
+				'default' => 'underline',
+				'options' => array(
+					'underline' => __( 'Underline', 'jofme' ),
+					'pill'      => __( 'Pill', 'jofme' ),
+					'boxed'     => __( 'Boxed', 'jofme' ),
+				),
+			)
+		);
+
+		$this->add_control(
+			'tabs_bg',
+			array(
+				'label'     => __( 'Tabs background', 'jofme' ),
+				'type'      => \Elementor\Controls_Manager::COLOR,
+				'selectors' => array(
+					'{{WRAPPER}} .jofme-bestsellers__tabs' => 'background-color: {{VALUE}};',
+				),
+			)
+		);
+
+		$this->add_control(
+			'tab_color',
+			array(
+				'label'     => __( 'Tab text', 'jofme' ),
+				'type'      => \Elementor\Controls_Manager::COLOR,
+				'selectors' => array(
+					'{{WRAPPER}} .jofme-bestsellers__tab' => 'color: {{VALUE}};',
+				),
+			)
+		);
+
+		$this->add_control(
 			'tab_active_color',
 			array(
-				'label'     => __( 'Active tab color', 'jofme' ),
+				'label'     => __( 'Active tab text', 'jofme' ),
 				'type'      => \Elementor\Controls_Manager::COLOR,
 				'selectors' => array(
 					'{{WRAPPER}} .jofme-bestsellers__tab[aria-selected="true"]' => 'color: {{VALUE}}; border-color: {{VALUE}};',
+				),
+			)
+		);
+
+		$this->add_control(
+			'tab_active_bg',
+			array(
+				'label'     => __( 'Active tab background', 'jofme' ),
+				'type'      => \Elementor\Controls_Manager::COLOR,
+				'selectors' => array(
+					'{{WRAPPER}} .jofme-bestsellers--tabs-pill .jofme-bestsellers__tab[aria-selected="true"]' => 'background-color: {{VALUE}};',
+					'{{WRAPPER}} .jofme-bestsellers--tabs-boxed .jofme-bestsellers__tab[aria-selected="true"]' => 'background-color: {{VALUE}};',
+				),
+			)
+		);
+
+		$this->add_group_control(
+			\Elementor\Group_Control_Typography::get_type(),
+			array(
+				'name'     => 'tabs_typography',
+				'label'    => __( 'Tab typography', 'jofme' ),
+				'selector' => '{{WRAPPER}} .jofme-bestsellers__tab',
+			)
+		);
+
+		$this->add_responsive_control(
+			'tabs_padding',
+			array(
+				'label'      => __( 'Tabs padding', 'jofme' ),
+				'type'       => \Elementor\Controls_Manager::DIMENSIONS,
+				'size_units' => array( 'px', 'em', '%' ),
+				'selectors'  => array(
+					'{{WRAPPER}} .jofme-bestsellers__tabs' => 'padding: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
 				),
 			)
 		);
@@ -430,7 +542,7 @@ class Jofme_Bestsellers_Tabs_Widget extends \Elementor\Widget_Base {
 
 		$args = array(
 			'status'  => 'publish',
-			'limit'   => max( 1, min( 24, absint( $limit ) ) ),
+			'limit'   => max( 1, min( 48, absint( $limit ) ) ),
 			'orderby' => in_array( $orderby, array( 'popularity', 'date', 'menu_order', 'title', 'price' ), true ) ? $orderby : 'popularity',
 			'order'   => 'DESC',
 			'return'  => 'objects',
@@ -488,11 +600,18 @@ class Jofme_Bestsellers_Tabs_Widget extends \Elementor\Widget_Base {
 			? jofme_product_card_swatches_html( $product )
 			: '';
 
+		$wishlist = function_exists( 'jofme_wishlist_button_html' ) ? jofme_wishlist_button_html( $product ) : '';
+
 		echo '<article class="jofme-bestsellers__card">';
+		echo '<div class="jofme-bestsellers__media-wrap">';
 		echo '<a class="jofme-bestsellers__media" href="' . esc_url( $url ) . '">';
 		echo wp_kses_post( $media );
 		echo $badge; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- escaped in helper.
-		echo '</a><div class="jofme-bestsellers__meta">';
+		echo '</a>';
+		if ( $wishlist ) {
+			echo '<div class="jofme-bestsellers__actions">' . $wishlist . '</div>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- escaped in helper.
+		}
+		echo '</div><div class="jofme-bestsellers__meta">';
 		if ( $category ) {
 			echo '<p class="jofme-bestsellers__category">' . esc_html( $category ) . '</p>';
 		}
@@ -552,7 +671,12 @@ class Jofme_Bestsellers_Tabs_Widget extends \Elementor\Widget_Base {
 		$settings = $this->get_settings_for_display();
 		$tabs     = $this->build_tabs( $settings );
 		$uid      = 'jofme-bestsellers-' . $this->get_id();
-		$columns  = in_array( (string) $settings['columns'], array( '2', '3', '4' ), true ) ? (string) $settings['columns'] : '4';
+		$layout   = ( isset( $settings['layout'] ) && 'carousel' === $settings['layout'] ) ? 'carousel' : 'grid';
+		$columns  = in_array( (string) ( $settings['columns'] ?? '4' ), array( '2', '3', '4' ), true ) ? (string) $settings['columns'] : '4';
+		$slides   = in_array( (string) ( $settings['carousel_slides'] ?? '4' ), array( '2', '3', '4' ), true ) ? (string) $settings['carousel_slides'] : '4';
+		$tabs_style = in_array( (string) ( $settings['tabs_style'] ?? 'underline' ), array( 'underline', 'pill', 'boxed' ), true )
+			? (string) $settings['tabs_style']
+			: 'underline';
 		$limit    = isset( $settings['limit'] ) ? absint( $settings['limit'] ) : 8;
 		$orderby  = isset( $settings['orderby'] ) ? (string) $settings['orderby'] : 'popularity';
 		$base_category  = isset( $settings['query_category_id'] ) ? absint( $settings['query_category_id'] ) : 0;
@@ -565,7 +689,8 @@ class Jofme_Bestsellers_Tabs_Widget extends \Elementor\Widget_Base {
 			return;
 		}
 
-		echo '<section class="jofme-bestsellers" data-jofme-bestsellers>';
+		$section_class = 'jofme-bestsellers jofme-bestsellers--' . $layout . ' jofme-bestsellers--tabs-' . $tabs_style;
+		echo '<section class="' . esc_attr( $section_class ) . '" data-jofme-bestsellers data-layout="' . esc_attr( $layout ) . '">';
 		echo '<header class="jofme-bestsellers__header">';
 		if ( ! empty( $settings['title'] ) ) {
 			echo '<h2 class="jofme-bestsellers__title" id="' . esc_attr( $uid . '-title' ) . '">' . esc_html( $settings['title'] ) . '</h2>';
@@ -592,11 +717,25 @@ class Jofme_Bestsellers_Tabs_Widget extends \Elementor\Widget_Base {
 			echo '<div class="jofme-bestsellers__panel" role="tabpanel" id="' . esc_attr( $uid . '-panel-' . $tab['id'] ) . '" aria-labelledby="' . esc_attr( $uid . '-' . $tab['id'] ) . '"' . $hidden . '>';
 			if ( $products ) {
 				$any_products = true;
-				echo '<div class="jofme-bestsellers__grid jofme-bestsellers__grid--' . esc_attr( $columns ) . '">';
-				foreach ( $products as $product ) {
-					$this->render_product( $product, $settings );
+				if ( 'carousel' === $layout ) {
+					echo '<div class="jofme-bestsellers__carousel" data-jofme-bestsellers-carousel data-slides="' . esc_attr( $slides ) . '">';
+					echo '<button type="button" class="jofme-bestsellers__nav jofme-bestsellers__nav--prev" data-dir="-1" aria-label="' . esc_attr__( 'Previous products', 'jofme' ) . '">‹</button>';
+					echo '<div class="jofme-bestsellers__track jofme-bestsellers__track--' . esc_attr( $slides ) . '">';
+					foreach ( $products as $product ) {
+						echo '<div class="jofme-bestsellers__slide">';
+						$this->render_product( $product, $settings );
+						echo '</div>';
+					}
+					echo '</div>';
+					echo '<button type="button" class="jofme-bestsellers__nav jofme-bestsellers__nav--next" data-dir="1" aria-label="' . esc_attr__( 'Next products', 'jofme' ) . '">›</button>';
+					echo '</div>';
+				} else {
+					echo '<div class="jofme-bestsellers__grid jofme-bestsellers__grid--' . esc_attr( $columns ) . '">';
+					foreach ( $products as $product ) {
+						$this->render_product( $product, $settings );
+					}
+					echo '</div>';
 				}
-				echo '</div>';
 			} elseif ( \Elementor\Plugin::$instance->editor->is_edit_mode() ) {
 				echo '<p class="jofme-widget-notice">' . esc_html__( 'No visible products found for this tab. Assign a category and/or attribute, or add published products.', 'jofme' ) . '</p>';
 			}

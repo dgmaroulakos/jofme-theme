@@ -7,20 +7,41 @@
 .jofme-bestsellers__tab[aria-selected=true]{color:var(--jofme-color-text);border-bottom-color:currentColor}
 .jofme-bestsellers__tab:hover{color:var(--jofme-color-text)}
 .jofme-bestsellers__tab:focus-visible{outline:2px solid var(--jofme-color-accent);outline-offset:4px}
+.jofme-bestsellers--tabs-pill .jofme-bestsellers__tabs{gap:.5rem}
+.jofme-bestsellers--tabs-pill .jofme-bestsellers__tab{border-bottom:0;padding:.55rem 1rem;border-radius:999px;background:rgba(0,0,0,.05)}
+.jofme-bestsellers--tabs-pill .jofme-bestsellers__tab[aria-selected=true]{background:var(--jofme-color-text);color:var(--jofme-color-surface);border-color:transparent}
+.jofme-bestsellers--tabs-boxed .jofme-bestsellers__tabs{gap:0;border-bottom:1px solid var(--jofme-color-border)}
+.jofme-bestsellers--tabs-boxed .jofme-bestsellers__tab{border:1px solid transparent;border-bottom:0;padding:.7rem 1.1rem;margin-bottom:-1px}
+.jofme-bestsellers--tabs-boxed .jofme-bestsellers__tab[aria-selected=true]{background:rgba(0,0,0,.04);border-color:var(--jofme-color-border);border-bottom-color:var(--jofme-color-bg,#fff)}
 .jofme-bestsellers__panel[hidden]{display:none}
 .jofme-bestsellers__grid{display:grid;gap:clamp(1.25rem,3vw,2rem) clamp(1rem,2vw,1.5rem);grid-template-columns:repeat(4,minmax(0,1fr))}
 .jofme-bestsellers__grid--2{grid-template-columns:repeat(2,minmax(0,1fr))}
 .jofme-bestsellers__grid--3{grid-template-columns:repeat(3,minmax(0,1fr))}
 .jofme-bestsellers__grid--4{grid-template-columns:repeat(4,minmax(0,1fr))}
+.jofme-bestsellers__carousel{position:relative}
+.jofme-bestsellers__track{display:grid;grid-auto-flow:column;grid-auto-columns:calc((100% - (var(--jofme-bestsellers-gap,1.25rem) * 3)) / 4);gap:var(--jofme-bestsellers-gap,clamp(1rem,2vw,1.5rem));overflow-x:auto;scroll-snap-type:x mandatory;scroll-behavior:smooth;padding:0 0 .35rem;-webkit-overflow-scrolling:touch;scrollbar-width:none}
+.jofme-bestsellers__track::-webkit-scrollbar{display:none}
+.jofme-bestsellers__track--2{grid-auto-columns:calc((100% - var(--jofme-bestsellers-gap,1.25rem)) / 2)}
+.jofme-bestsellers__track--3{grid-auto-columns:calc((100% - (var(--jofme-bestsellers-gap,1.25rem) * 2)) / 3)}
+.jofme-bestsellers__track--4{grid-auto-columns:calc((100% - (var(--jofme-bestsellers-gap,1.25rem) * 3)) / 4)}
+.jofme-bestsellers__slide{scroll-snap-align:start;min-width:0}
+.jofme-bestsellers__nav{appearance:none;position:absolute;top:28%;transform:translateY(-50%);z-index:3;width:42px;height:42px;border:0;border-radius:50%;background:rgba(255,255,255,.9);color:var(--jofme-color-text);font-size:26px;line-height:1;cursor:pointer;display:grid;place-items:center;box-shadow:0 4px 16px rgba(0,0,0,.08)}
+.jofme-bestsellers__nav--prev{inset-inline-start:0}
+.jofme-bestsellers__nav--next{inset-inline-end:0}
+.jofme-bestsellers__nav:focus-visible{outline:2px solid var(--jofme-color-accent);outline-offset:3px}
+.jofme-bestsellers__nav[hidden],.jofme-bestsellers__nav:disabled{opacity:.35;cursor:default}
 .jofme-bestsellers__footer{margin-top:clamp(1.75rem,4vw,2.75rem);text-align:center}
 .jofme-bestsellers .jofme-widget-notice{margin:0;padding:1rem;background:#faf5e9;border:1px dashed var(--jofme-color-accent);font-size:13px}
 
 @media(max-width:1024px){
  .jofme-bestsellers__grid--4{grid-template-columns:repeat(3,minmax(0,1fr))}
+ .jofme-bestsellers__track--4{grid-auto-columns:calc((100% - (var(--jofme-bestsellers-gap,1rem) * 2)) / 3)}
 }
 @media(max-width:767px){
  .jofme-bestsellers__header{flex-direction:column;align-items:flex-start}
  .jofme-bestsellers__tabs{width:100%;overflow-x:auto;flex-wrap:nowrap;padding-bottom:.25rem;-webkit-overflow-scrolling:touch}
  .jofme-bestsellers__tab{flex:0 0 auto}
  .jofme-bestsellers__grid,.jofme-bestsellers__grid--2,.jofme-bestsellers__grid--3,.jofme-bestsellers__grid--4{grid-template-columns:repeat(2,minmax(0,1fr));gap:1rem .75rem}
+ .jofme-bestsellers__track,.jofme-bestsellers__track--2,.jofme-bestsellers__track--3,.jofme-bestsellers__track--4{grid-auto-columns:calc((100% - .75rem) / 2)}
+ .jofme-bestsellers__nav{width:36px;height:36px;font-size:22px}
 }
