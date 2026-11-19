@@ -145,6 +145,20 @@ function jofme_wishlist_maybe_ensure_page() {
 add_action( 'init', 'jofme_wishlist_maybe_ensure_page', 30 );
 
 /**
+ * Shared heart icon SVG for wishlist controls.
+ *
+ * @param int $size Pixel size.
+ * @return string
+ */
+function jofme_wishlist_heart_svg( $size = 20 ) {
+	$size = max( 16, absint( $size ) );
+	return sprintf(
+		'<svg class="jofme-wishlist__icon" width="%1$d" height="%1$d" viewBox="0 0 24 24" fill="none" aria-hidden="true" focusable="false"><path class="jofme-wishlist__path" d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>',
+		$size
+	);
+}
+
+/**
  * Render wishlist control markup for a product.
  *
  * @param WC_Product|null $product Product.
@@ -177,14 +191,13 @@ function jofme_wishlist_button_html( $product = null ) {
 
 	$label_add    = __( 'Add to wishlist', 'jofme' );
 	$label_remove = __( 'Remove from wishlist', 'jofme' );
-	$icon         = '<svg class="jofme-wishlist__icon" width="20" height="20" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path class="jofme-wishlist__path" d="M12 20.5s-7.2-4.35-9.33-8.2C1.1 9.55 2.05 6.2 5.1 5.2c1.85-.6 3.7.15 4.9 1.55C11.2 5.35 13.05 4.6 14.9 5.2c3.05 1 4 4.35 2.43 7.1C19.2 16.15 12 20.5 12 20.5Z" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg>';
 
 	return sprintf(
 		'<button type="button" class="jofme-wishlist" data-jofme-wishlist data-product-id="%1$d" aria-pressed="false" aria-label="%2$s" data-label-add="%2$s" data-label-remove="%3$s">%4$s</button>',
 		$product_id,
 		esc_attr( $label_add ),
 		esc_attr( $label_remove ),
-		$icon
+		jofme_wishlist_heart_svg( 20 )
 	);
 }
 
@@ -206,9 +219,7 @@ function jofme_wishlist_link() {
 	ob_start();
 	?>
 	<a class="jofme-wishlist-link" href="<?php echo esc_url( $url ); ?>" aria-label="<?php esc_attr_e( 'Wishlist', 'jofme' ); ?>">
-		<span class="jofme-wishlist-link__icon" aria-hidden="true">
-			<svg width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 20.5s-7.2-4.35-9.33-8.2C1.1 9.55 2.05 6.2 5.1 5.2c1.85-.6 3.7.15 4.9 1.55C11.2 5.35 13.05 4.6 14.9 5.2c3.05 1 4 4.35 2.43 7.1C19.2 16.15 12 20.5 12 20.5Z" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/></svg>
-		</span>
+		<span class="jofme-wishlist-link__icon" aria-hidden="true"><?php echo jofme_wishlist_heart_svg( 22 ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- static SVG helper. ?></span>
 		<span class="jofme-wishlist-count is-empty" data-jofme-wishlist-count>0</span>
 	</a>
 	<?php

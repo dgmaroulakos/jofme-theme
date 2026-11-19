@@ -18,7 +18,8 @@ function wp_nav_menu($args){
 class WooCommerce{}
 function wc_get_page_permalink($page){return '/account';}
 function jofme_cart_link(){return '<a class="jofme-cart-link" href="/cart" aria-label="Cart"><svg width="23" height="23" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.3" aria-hidden="true"><path d="M4 7h16l1 15H3L4 7Z"/><path d="M8 8V6a4 4 0 0 1 8 0v2"/></svg><span class="jofme-cart-count">0</span></a>';}
-function jofme_wishlist_link(){return '<a class="jofme-wishlist-link" href="/wishlist" aria-label="Wishlist"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 20.5s-7.2-4.35-9.33-8.2C1.1 9.55 2.05 6.2 5.1 5.2c1.85-.6 3.7.15 4.9 1.55C11.2 5.35 13.05 4.6 14.9 5.2c3.05 1 4 4.35 2.43 7.1C19.2 16.15 12 20.5 12 20.5Z" stroke="currentColor" stroke-width="1.4"/></svg><span class="jofme-wishlist-count is-empty" data-jofme-wishlist-count>0</span></a>';}
+function jofme_wishlist_heart_svg($size=22){return '<svg class="jofme-wishlist__icon" width="'.$size.'" height="'.$size.'" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path class="jofme-wishlist__path" d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" fill="none" stroke="currentColor" stroke-width="1.4"/></svg>';}
+function jofme_wishlist_link(){return '<a class="jofme-wishlist-link" href="/wishlist" aria-label="Wishlist">'.jofme_wishlist_heart_svg(22).'<span class="jofme-wishlist-count is-empty" data-jofme-wishlist-count>0</span></a>';}
 function get_product_search_form(){echo '<form class="woocommerce-product-search"><input type="search" aria-label="Search products" placeholder="Search jewelry"><button>Search</button></form>';}
 function get_search_form(){get_product_search_form();}
 function get_template_part($file){require dirname(__DIR__).'/'.$file.'.php';}
