@@ -12,11 +12,14 @@ const widget = fs.readFileSync(path.join(root, 'inc/widgets/class-bestsellers-ta
 
 assert.match(functions, /\/inc\/wishlist\.php/);
 assert.match(php, /function jofme_wishlist_button_html/);
+assert.match(php, /function jofme_wishlist_heart_svg/);
 assert.match(php, /data-jofme-wishlist/);
 assert.match(php, /yith_wcwl_add_to_wishlist/);
+assert.match(php, /M20\.84 4\.61a5\.5 5\.5/);
 assert.match(premium, /jofme_wishlist_button_html/);
 assert.match(widget, /jofme_wishlist_button_html/);
 assert.match(css, /\.jofme-wishlist/);
+assert.match(css, /ul\.products li\.product\{\s*position:relative/);
 assert.match(js, /jofme_wishlist_ids/);
 assert.match(js, /localStorage/);
 assert.match(php, /function jofme_wishlist_page_url/);
