@@ -3,7 +3,7 @@ Contributors: jofme
 Requires at least: 6.4
 Tested up to: 6.8
 Requires PHP: 7.4
-Stable tag: 1.7.46
+Stable tag: 1.7.47
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -30,6 +30,9 @@ strings / wpml-config.xml.
 * WPML or Polylang
 
 == Changelog ==
+
+= 1.7.47 =
+* Product tabs: active tab buttons use white text on black background (pill default).
 
 = 1.7.46 =
 * Product gallery carousel: more reliable nav/swipe; variation images jump to matching slides.

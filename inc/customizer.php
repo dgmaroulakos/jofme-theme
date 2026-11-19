@@ -402,7 +402,7 @@ function jofme_customize_register( $wp_customize ) {
 	$wp_customize->add_setting(
 		'jofme_tabs_style',
 		array(
-			'default'           => 'underline',
+			'default'           => 'pill',
 			'sanitize_callback' => 'jofme_sanitize_select',
 		)
 	);
@@ -425,7 +425,7 @@ function jofme_customize_register( $wp_customize ) {
 		'jofme_tabs_text'         => array( '#ffffff', __( 'Tabs text', 'jofme' ) ),
 		'jofme_tabs_active_text'  => array( '#ffffff', __( 'Active tab text', 'jofme' ) ),
 		'jofme_tabs_active_border'=> array( '#ffffff', __( 'Active tab accent', 'jofme' ) ),
-		'jofme_tabs_active_bg'    => array( '#ffffff', __( 'Active tab background (pill/boxed)', 'jofme' ) ),
+		'jofme_tabs_active_bg'    => array( '#111111', __( 'Active tab background', 'jofme' ) ),
 		'jofme_tabs_panel_bg'     => array( '', __( 'Panel background (optional)', 'jofme' ) ),
 	);
 
@@ -651,7 +651,7 @@ function jofme_customizer_css() {
 	$tabs_text    = jofme_sanitize_optional_hex_color( get_theme_mod( 'jofme_tabs_text', '#ffffff' ) );
 	$tabs_active  = jofme_sanitize_optional_hex_color( get_theme_mod( 'jofme_tabs_active_text', '#ffffff' ) );
 	$tabs_border  = jofme_sanitize_optional_hex_color( get_theme_mod( 'jofme_tabs_active_border', '#ffffff' ) );
-	$tabs_active_bg = jofme_sanitize_optional_hex_color( get_theme_mod( 'jofme_tabs_active_bg', '#ffffff' ) );
+	$tabs_active_bg = jofme_sanitize_optional_hex_color( get_theme_mod( 'jofme_tabs_active_bg', '#111111' ) );
 	$tabs_panel_bg  = jofme_sanitize_optional_hex_color( get_theme_mod( 'jofme_tabs_panel_bg', '' ) );
 	$tabs_font      = jofme_sanitize_tabs_font_size( get_theme_mod( 'jofme_tabs_font_size', 12 ) );
 	$tabs_pad_x     = jofme_sanitize_tabs_padding_x( get_theme_mod( 'jofme_tabs_padding_x', 15 ) );
@@ -669,7 +669,7 @@ function jofme_customizer_css() {
 		$tabs_border = $tabs_text;
 	}
 	if ( ! $tabs_active_bg ) {
-		$tabs_active_bg = '#ffffff';
+		$tabs_active_bg = '#111111';
 	}
 	$tabs_panel_bg_css = $tabs_panel_bg ? $tabs_panel_bg : 'transparent';
 
@@ -706,7 +706,7 @@ add_action( 'wp_enqueue_scripts', 'jofme_customizer_css', 20 );
  * @return array
  */
 function jofme_tabs_style_body_class( $classes ) {
-	$style = get_theme_mod( 'jofme_tabs_style', 'underline' );
+	$style = get_theme_mod( 'jofme_tabs_style', 'pill' );
 	if ( ! in_array( $style, array( 'underline', 'pill', 'boxed' ), true ) ) {
 		$style = 'underline';
 	}
