@@ -1,0 +1,28 @@
+/* Product-card wishlist heart. */
+.jofme-wishlist{
+ appearance:none;
+ display:grid;
+ place-items:center;
+ width:40px;
+ height:40px;
+ margin:0;
+ padding:0;
+ border:1px solid #e8e2d8;
+ background:#fffdf9;
+ color:#29231e;
+ border-radius:50%;
+ cursor:pointer;
+ box-shadow:0 3px 12px #00000005;
+ line-height:1;
+}
+.jofme-wishlist:hover{color:var(--jofme-color-accent)}
+.jofme-wishlist.is-active{color:#b42318;border-color:#f0c7c2}
+.jofme-wishlist.is-active .jofme-wishlist__path{fill:currentColor;stroke:currentColor}
+.jofme-wishlist__icon{display:block}
+.jofme-wishlist--plugin{display:contents}
+.jofme-wishlist--plugin .yith-wcwl-add-to-wishlist,
+.jofme-wishlist--plugin .tinv-wraper{margin:0}
+.jofme-card-actions .jofme-wishlist{flex:0 0 auto}
+@media(max-width:767px){
+ .jofme-wishlist{width:34px;height:34px}
+}

@@ -389,6 +389,106 @@ function jofme_customize_register( $wp_customize ) {
 		);
 	}
 
+	// Product tabs.
+	$wp_customize->add_section(
+		'jofme_product_tabs',
+		array(
+			'title'       => __( 'Product tabs', 'jofme' ),
+			'description' => __( 'Appearance of Description / Additional information / Reviews on single product pages.', 'jofme' ),
+			'panel'       => 'jofme_options',
+		)
+	);
+
+	$wp_customize->add_setting(
+		'jofme_tabs_style',
+		array(
+			'default'           => 'underline',
+			'sanitize_callback' => 'jofme_sanitize_select',
+		)
+	);
+	$wp_customize->add_control(
+		'jofme_tabs_style',
+		array(
+			'label'   => __( 'Tab style', 'jofme' ),
+			'section' => 'jofme_product_tabs',
+			'type'    => 'select',
+			'choices' => array(
+				'underline' => __( 'Underline', 'jofme' ),
+				'pill'      => __( 'Pill', 'jofme' ),
+				'boxed'     => __( 'Boxed', 'jofme' ),
+			),
+		)
+	);
+
+	$tab_colors = array(
+		'jofme_tabs_bg'           => array( '#111111', __( 'Tabs background', 'jofme' ) ),
+		'jofme_tabs_text'         => array( '#ffffff', __( 'Tabs text', 'jofme' ) ),
+		'jofme_tabs_active_text'  => array( '#ffffff', __( 'Active tab text', 'jofme' ) ),
+		'jofme_tabs_active_border'=> array( '#ffffff', __( 'Active tab accent', 'jofme' ) ),
+		'jofme_tabs_active_bg'    => array( '#ffffff', __( 'Active tab background (pill/boxed)', 'jofme' ) ),
+		'jofme_tabs_panel_bg'     => array( '', __( 'Panel background (optional)', 'jofme' ) ),
+	);
+
+	foreach ( $tab_colors as $id => $data ) {
+		$wp_customize->add_setting(
+			$id,
+			array(
+				'default'           => $data[0],
+				'sanitize_callback' => 'jofme_sanitize_optional_hex_color',
+			)
+		);
+		$wp_customize->add_control(
+			new WP_Customize_Color_Control(
+				$wp_customize,
+				$id,
+				array(
+					'label'   => $data[1],
+					'section' => 'jofme_product_tabs',
+				)
+			)
+		);
+	}
+
+	$wp_customize->add_setting(
+		'jofme_tabs_font_size',
+		array(
+			'default'           => 12,
+			'sanitize_callback' => 'jofme_sanitize_tabs_font_size',
+		)
+	);
+	$wp_customize->add_control(
+		'jofme_tabs_font_size',
+		array(
+			'label'       => __( 'Tab label font size (px)', 'jofme' ),
+			'section'     => 'jofme_product_tabs',
+			'type'        => 'number',
+			'input_attrs' => array(
+				'min' => 10,
+				'max' => 22,
+			),
+		)
+	);
+
+	$wp_customize->add_setting(
+		'jofme_tabs_padding_x',
+		array(
+			'default'           => 15,
+			'sanitize_callback' => 'jofme_sanitize_tabs_padding_x',
+		)
+	);
+	$wp_customize->add_control(
+		'jofme_tabs_padding_x',
+		array(
+			'label'       => __( 'Horizontal padding (%)', 'jofme' ),
+			'section'     => 'jofme_product_tabs',
+			'type'        => 'number',
+			'input_attrs' => array(
+				'min' => 0,
+				'max' => 30,
+			),
+		)
+	);
+
 	// Footer.
 	$wp_customize->add_section(
 		'jofme_footer',
@@ -427,6 +527,40 @@ function jofme_sanitize_select( $input, $setting ) {
 	$input   = sanitize_key( $input );
 	$choices = $setting->manager->get_control( $setting->id )->choices;
 	return array_key_exists( $input, $choices ) ? $input : $setting->default;
+}
+
+/**
+ * Sanitize optional hex color (empty allowed).
+ *
+ * @param mixed $value Raw value.
+ * @return string
+ */
+function jofme_sanitize_optional_hex_color( $value ) {
+	if ( '' === $value || null === $value ) {
+		return '';
+	}
+	$color = sanitize_hex_color( $value );
+	return $color ? $color : '';
+}
+
+/**
+ * Sanitize product tabs font size (10–22).
+ *
+ * @param mixed $value Raw value.
+ * @return int
+ */
+function jofme_sanitize_tabs_font_size( $value ) {
+	return max( 10, min( 22, absint( $value ) ) );
+}
+
+/**
+ * Sanitize product tabs horizontal padding percent (0–30).
+ *
+ * @param mixed $value Raw value.
+ * @return int
+ */
+function jofme_sanitize_tabs_padding_x( $value ) {
+	return max( 0, min( 30, absint( $value ) ) );
 }
 
 /**
@@ -513,6 +647,31 @@ function jofme_customizer_css() {
 	$sticky       = jofme_sanitize_sticky_header_padding( get_theme_mod( 'jofme_sticky_header_padding', 12 ) );
 	$logo_h       = jofme_sanitize_logo_max_height( get_theme_mod( 'jofme_logo_max_height', 100 ) );
 	$logo_w_m     = jofme_sanitize_logo_max_width_mobile( get_theme_mod( 'jofme_logo_max_width_mobile', 90 ) );
+	$tabs_bg      = jofme_sanitize_optional_hex_color( get_theme_mod( 'jofme_tabs_bg', '#111111' ) );
+	$tabs_text    = jofme_sanitize_optional_hex_color( get_theme_mod( 'jofme_tabs_text', '#ffffff' ) );
+	$tabs_active  = jofme_sanitize_optional_hex_color( get_theme_mod( 'jofme_tabs_active_text', '#ffffff' ) );
+	$tabs_border  = jofme_sanitize_optional_hex_color( get_theme_mod( 'jofme_tabs_active_border', '#ffffff' ) );
+	$tabs_active_bg = jofme_sanitize_optional_hex_color( get_theme_mod( 'jofme_tabs_active_bg', '#ffffff' ) );
+	$tabs_panel_bg  = jofme_sanitize_optional_hex_color( get_theme_mod( 'jofme_tabs_panel_bg', '' ) );
+	$tabs_font      = jofme_sanitize_tabs_font_size( get_theme_mod( 'jofme_tabs_font_size', 12 ) );
+	$tabs_pad_x     = jofme_sanitize_tabs_padding_x( get_theme_mod( 'jofme_tabs_padding_x', 15 ) );
+
+	if ( ! $tabs_bg ) {
+		$tabs_bg = '#111111';
+	}
+	if ( ! $tabs_text ) {
+		$tabs_text = '#ffffff';
+	}
+	if ( ! $tabs_active ) {
+		$tabs_active = $tabs_text;
+	}
+	if ( ! $tabs_border ) {
+		$tabs_border = $tabs_text;
+	}
+	if ( ! $tabs_active_bg ) {
+		$tabs_active_bg = '#ffffff';
+	}
+	$tabs_panel_bg_css = $tabs_panel_bg ? $tabs_panel_bg : 'transparent';
 
 	$css = ":root{
 		--jofme-color-text:{$primary};
@@ -525,9 +684,33 @@ function jofme_customizer_css() {
 		--jofme-sticky-header-pad:{$sticky}px;
 		--jofme-logo-max-h:{$logo_h}px;
 		--jofme-logo-max-w-mobile:{$logo_w_m}px;
+		--jofme-tabs-bg:{$tabs_bg};
+		--jofme-tabs-text:{$tabs_text};
+		--jofme-tabs-active-text:{$tabs_active};
+		--jofme-tabs-active-border:{$tabs_border};
+		--jofme-tabs-active-bg:{$tabs_active_bg};
+		--jofme-tabs-panel-bg:{$tabs_panel_bg_css};
+		--jofme-tabs-font-size:{$tabs_font}px;
+		--jofme-tabs-padding-x:{$tabs_pad_x}%;
 	}";
 	$css .= '@media(max-width:899px){:root{--jofme-header-h:var(--jofme-header-h-mobile);--jofme-header-stuck-h:var(--jofme-header-stuck-h-mobile);} }';
 
 	wp_add_inline_style( 'jofme-main', $css );
 }
 add_action( 'wp_enqueue_scripts', 'jofme_customizer_css', 20 );
+
+/**
+ * Body class for product tab style variant.
+ *
+ * @param array $classes Classes.
+ * @return array
+ */
+function jofme_tabs_style_body_class( $classes ) {
+	$style = get_theme_mod( 'jofme_tabs_style', 'underline' );
+	if ( ! in_array( $style, array( 'underline', 'pill', 'boxed' ), true ) ) {
+		$style = 'underline';
+	}
+	$classes[] = 'jofme-tabs-' . $style;
+	return $classes;
+}
+add_filter( 'body_class', 'jofme_tabs_style_body_class' );
