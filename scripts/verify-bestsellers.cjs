@@ -27,10 +27,17 @@ function makeRoot() {
     hidden: index !== 0,
     removeAttribute(name) { if (name === 'hidden') this.hidden = false; },
     setAttribute(name) { if (name === 'hidden') this.hidden = true; },
+    querySelectorAll() { return []; },
   }));
   const root = {
     dataset: {},
     contains(node) { return tabs.includes(node) || panels.includes(node); },
+    querySelector(sel) {
+      if (sel === '[role="tabpanel"]:not([hidden])') {
+        return panels.find((panel) => !panel.hidden) || null;
+      }
+      return null;
+    },
     querySelectorAll(sel) {
       if (sel === '[role="tab"]') return tabs;
       if (sel === '[role="tabpanel"]') return panels;
