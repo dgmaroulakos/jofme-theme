@@ -227,17 +227,24 @@
 	font-weight: 600;
 	letter-spacing: 0.14em;
 	text-transform: uppercase;
-	padding: 0.5rem 0;
+	padding: 0.55rem 1rem;
 	border-bottom: 1px solid transparent;
 	color: var(--jofme-tabs-text, #ffffff);
 	opacity: 0.72;
+	background: transparent;
 }
 
-.woocommerce div.product .woocommerce-tabs ul.tabs li a:hover,
+.woocommerce div.product .woocommerce-tabs ul.tabs li a:hover {
+	opacity: 1;
+	color: var(--jofme-tabs-active-text, #ffffff);
+}
+
 .woocommerce div.product .woocommerce-tabs ul.tabs li.active a {
 	opacity: 1;
 	color: var(--jofme-tabs-active-text, #ffffff);
-	border-bottom-color: var(--jofme-tabs-active-border, #ffffff);
+	background: var(--jofme-tabs-active-bg, #111111);
+	border-bottom-color: transparent;
+	box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.35);
 }
 
 .woocommerce div.product .woocommerce-tabs .panel {
@@ -258,13 +265,14 @@ body.jofme-tabs-pill .woocommerce div.product .woocommerce-tabs ul.tabs li a {
 	border-bottom: 0;
 	padding: 0.55rem 1rem;
 	border-radius: 999px;
-	background: rgba(255, 255, 255, 0.08);
+	background: rgba(255, 255, 255, 0.12);
 	opacity: 1;
 }
 
 body.jofme-tabs-pill .woocommerce div.product .woocommerce-tabs ul.tabs li.active a {
-	background: var(--jofme-tabs-active-bg, #ffffff);
-	color: var(--jofme-tabs-active-text, #111111);
+	background: var(--jofme-tabs-active-bg, #111111);
+	color: var(--jofme-tabs-active-text, #ffffff);
+	box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.35);
 }
 
 /* Boxed tab style */
@@ -280,12 +288,15 @@ body.jofme-tabs-boxed .woocommerce div.product .woocommerce-tabs ul.tabs li a {
 	margin-bottom: -1px;
 	border-radius: 0;
 	opacity: 1;
+	background: transparent;
 }
 
 body.jofme-tabs-boxed .woocommerce div.product .woocommerce-tabs ul.tabs li.active a {
-	background: var(--jofme-tabs-active-bg, rgba(255, 255, 255, 0.1));
-	border-color: rgba(255, 255, 255, 0.18);
-	border-bottom-color: var(--jofme-tabs-bg, #111111);
+	background: var(--jofme-tabs-active-bg, #111111);
+	color: var(--jofme-tabs-active-text, #ffffff);
+	border-color: rgba(255, 255, 255, 0.35);
+	border-bottom-color: var(--jofme-tabs-active-bg, #111111);
+	box-shadow: none;
 }
 
 .woocommerce .related > h2,
