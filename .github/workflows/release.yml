@@ -34,6 +34,7 @@ jobs:
           node --check assets/js/bestsellers-tabs.js
           node --check assets/js/size-guide.js
           node --check assets/js/size-guide-admin.js
+          node --check assets/js/wishlist.js
           node scripts/verify-catalog.cjs
           node scripts/verify-hover.cjs
           node scripts/verify-gallery.cjs
@@ -60,6 +61,9 @@ jobs:
           node .tests/bestsellers-card-media-padding.cjs
           node .tests/swatch-title-size.cjs
           node .tests/prebuilt-footer.cjs
+          node .tests/wishlist-heart.cjs
+          node .tests/wishlist-page.cjs
+          node .tests/bestsellers-carousel.cjs
       - name: Match release tag to theme versions
         if: startsWith(github.ref, 'refs/tags/')
         env:

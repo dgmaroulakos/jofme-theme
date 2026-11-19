@@ -287,6 +287,7 @@ p {
 .jofme-menu-toggle,
 .jofme-search-toggle,
 .jofme-account-link,
+.jofme-wishlist-link,
 .jofme-cart-link,
 .jofme-back-to-top {
 	appearance: none;
@@ -306,6 +307,7 @@ p {
 .jofme-menu-toggle svg,
 .jofme-search-toggle svg,
 .jofme-account-link svg,
+.jofme-wishlist-link svg,
 .jofme-cart-link svg {
 	display: block;
 	flex-shrink: 0;

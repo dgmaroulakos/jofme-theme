@@ -85,7 +85,12 @@ if ( 'editorial' === $layout ) {
 				<a class="jofme-account-link" href="<?php echo esc_url( wc_get_page_permalink( 'myaccount' ) ); ?>" aria-label="<?php esc_attr_e( 'My account', 'jofme' ); ?>">
 					<svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="12" cy="8" r="3.5" stroke="currentColor" stroke-width="1.4"/><path d="M5 19c1.5-3.5 4-5 7-5s5.5 1.5 7 5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
 				</a>
-				<?php echo jofme_cart_link(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
+				<?php
+				if ( function_exists( 'jofme_wishlist_link' ) ) {
+					echo jofme_wishlist_link(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- escaped in helper.
+				}
+				echo jofme_cart_link(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+				?>
 			<?php endif; ?>
 		</div>
 
