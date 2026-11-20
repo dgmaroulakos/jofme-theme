@@ -6,7 +6,9 @@
  const shopConfig = (typeof window !== 'undefined' && window.jofmeShop) ? window.jofmeShop : {};
  const isMobileCatalog = () => typeof window !== 'undefined' && typeof window.matchMedia === 'function' && window.matchMedia('(max-width: 767px)').matches;
  function viewButtons(root) {
-  return (root || document).querySelectorAll('.jofme-view button, .jofme-view__btn');
+  const scope = root && typeof root.querySelectorAll === 'function' ? root : document;
+  if (!scope || typeof scope.querySelectorAll !== 'function') return [];
+  return scope.querySelectorAll('.jofme-view button, .jofme-view__btn');
  }
  function normalizeView(view) {
   if (!allowed.includes(view)) return '2';
@@ -15,9 +17,10 @@
  }
  function setView(view) {
   view = normalizeView(view);
-  if (!catalog) return;
+  const buttons = viewButtons();
+  if (!catalog || !buttons.length) return;
   catalog.dataset.view = view;
-  viewButtons(catalog).forEach((button) => button.setAttribute('aria-pressed', String(button.dataset.view === view)));
+  buttons.forEach((button) => button.setAttribute('aria-pressed', String(button.dataset.view === view)));
  }
  const defaultView = allowed.find(view => document.body.classList.contains(`jofme-default-view-${view}`)) || '3';
  let savedView;
