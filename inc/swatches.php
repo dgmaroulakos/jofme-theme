@@ -531,12 +531,14 @@ function jofme_filter_attribute_control( $taxonomy, $key, $label ) {
  * @param string $label    Visible label.
  */
 function jofme_filter_swatches( $taxonomy, $key, $label ) {
-	$terms = get_terms(
-		array(
-			'taxonomy'   => $taxonomy,
-			'hide_empty' => true,
-		)
-	);
+	$terms = function_exists( 'jofme_catalog_filter_terms' )
+		? jofme_catalog_filter_terms( $taxonomy )
+		: get_terms(
+			array(
+				'taxonomy'   => $taxonomy,
+				'hide_empty' => true,
+			)
+		);
 	if ( is_wp_error( $terms ) || ! $terms ) {
 		return;
 	}
