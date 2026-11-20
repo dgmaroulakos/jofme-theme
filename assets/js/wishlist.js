@@ -191,6 +191,10 @@
  syncAll();
  initPages();
 
+ document.addEventListener('jofme:catalogupdated', () => {
+  syncAll();
+ });
+
  if (window.elementorFrontend && window.elementorFrontend.hooks) {
   window.elementorFrontend.hooks.addAction('frontend/element_ready/global', ($el) => {
    const node = $el[0] || $el;

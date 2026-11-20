@@ -18,14 +18,16 @@ function jofme_catalog_assets() {
   'jofme-premium',
   'jofmeShop',
   array(
-   'url'     => admin_url( 'admin-ajax.php' ),
-   'nonce'   => wp_create_nonce( 'jofme_preview' ),
-   'loading' => __( 'Loading…', 'jofme' ),
-   'error'   => __( 'Unable to load this product. Please try again.', 'jofme' ),
-   'added'   => __( 'Added to cart', 'jofme' ),
-   'view'    => __( 'View cart', 'jofme' ),
-   'more'    => __( 'More', 'jofme' ),
-   'less'    => __( 'Less', 'jofme' ),
+   'url'          => admin_url( 'admin-ajax.php' ),
+   'nonce'        => wp_create_nonce( 'jofme_preview' ),
+   'loading'      => __( 'Loading…', 'jofme' ),
+   'error'        => __( 'Unable to load this product. Please try again.', 'jofme' ),
+   'filterError'  => __( 'Unable to update filters. Please try again.', 'jofme' ),
+   'added'        => __( 'Added to cart', 'jofme' ),
+   'view'         => __( 'View cart', 'jofme' ),
+   'more'         => __( 'More', 'jofme' ),
+   'less'         => __( 'Less', 'jofme' ),
+   'ajaxFilters'  => true,
   )
  );
 }
@@ -370,8 +372,8 @@ function jofme_catalog_filters() {
   return;
  }
 
- echo '<div class="jofme-filters jofme-filters--sidebar">';
- echo '<form method="get" action="' . esc_url( $action ) . '" class="jofme-filters__form">';
+ echo '<div class="jofme-filters jofme-filters--sidebar" data-jofme-ajax-filters="1">';
+ echo '<form method="get" action="' . esc_url( $action ) . '" class="jofme-filters__form" data-jofme-ajax-filters-form="1">';
  echo '<div class="jofme-filter-fields">';
 
  foreach ( array( 's', 'post_type', 'orderby', 'lang' ) as $key ) {
@@ -401,7 +403,7 @@ function jofme_catalog_filters() {
  }
 
  if ( $show_price ) {
-  echo '<details class="jofme-filter-panel" open>';
+  echo '<details class="jofme-filter-panel" open data-filter-key="price">';
   echo '<summary class="jofme-filter-panel__summary">' . esc_html__( 'Price', 'jofme' ) . '</summary>';
   echo '<div class="jofme-filter-panel__price">';
   foreach ( array( 'min_price' => __( 'Minimum price', 'jofme' ), 'max_price' => __( 'Maximum price', 'jofme' ) ) as $key => $label ) {
@@ -568,7 +570,7 @@ function jofme_filter_checklist( $taxonomy, $key, $label ) {
   return;
  }
 
- echo '<details class="jofme-filter-panel" open>';
+ echo '<details class="jofme-filter-panel" open data-filter-key="' . esc_attr( $key ) . '">';
  echo '<summary class="jofme-filter-panel__summary">' . esc_html( $label ) . '</summary>';
  echo $list_html; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- built with escaped helpers above.
  if ( 0 === strpos( $key, 'filter_' ) ) {
@@ -705,6 +707,31 @@ function jofme_shop_sidebar_toggle() {
 }
 
 /**
+ * Open AJAX-replaceable catalog results wrapper (toolbar + products + pagination).
+ */
+function jofme_catalog_results_open() {
+ if ( ! is_shop() && ! is_product_taxonomy() ) {
+  return;
+ }
+ if ( ! empty( $GLOBALS['jofme_catalog_results_open'] ) ) {
+  return;
+ }
+ $GLOBALS['jofme_catalog_results_open'] = true;
+ echo '<div class="jofme-catalog-results" id="jofme-catalog-results" data-jofme-catalog-results="1" aria-live="polite">';
+}
+
+/**
+ * Close AJAX-replaceable catalog results wrapper.
+ */
+function jofme_catalog_results_close() {
+ if ( empty( $GLOBALS['jofme_catalog_results_open'] ) ) {
+  return;
+ }
+ $GLOBALS['jofme_catalog_results_open'] = false;
+ echo '</div>';
+}
+
+/**
  * Catalog toolbar above products: filters + sorting + columns, then result count alone.
  */
 function jofme_catalog_toolbar() {
@@ -726,8 +753,12 @@ function jofme_catalog_toolbar() {
 }
 remove_action( 'woocommerce_before_shop_loop', 'woocommerce_result_count', 20 );
 remove_action( 'woocommerce_before_shop_loop', 'woocommerce_catalog_ordering', 30 );
+add_action( 'woocommerce_before_shop_loop', 'jofme_catalog_results_open', 5 );
 add_action( 'woocommerce_before_shop_loop', 'jofme_catalog_toolbar', 20 );
+add_action( 'woocommerce_after_shop_loop', 'jofme_catalog_results_close', 99 );
+add_action( 'woocommerce_no_products_found', 'jofme_catalog_results_open', 0 );
 add_action( 'woocommerce_no_products_found', 'jofme_shop_sidebar_toggle', 5 );
+add_action( 'woocommerce_no_products_found', 'jofme_catalog_results_close', 99 );
 
 function jofme_card_actions() {
  global $product;

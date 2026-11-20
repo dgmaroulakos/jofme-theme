@@ -1,10 +1,13 @@
 (() => {
  'use strict';
  const catalog = document.querySelector('.jofme-shop');
- const controls = document.querySelectorAll('.jofme-view button');
  const allowed = ['1', '2', '3', '4', 'list'];
  const mobileOnly = ['1', '2'];
+ const shopConfig = (typeof window !== 'undefined' && window.jofmeShop) ? window.jofmeShop : {};
  const isMobileCatalog = () => typeof window !== 'undefined' && typeof window.matchMedia === 'function' && window.matchMedia('(max-width: 767px)').matches;
+ function viewButtons(root) {
+  return (root || document).querySelectorAll('.jofme-view button, .jofme-view__btn');
+ }
  function normalizeView(view) {
   if (!allowed.includes(view)) return '2';
   if (isMobileCatalog() && !mobileOnly.includes(view)) return '2';
@@ -12,19 +15,21 @@
  }
  function setView(view) {
   view = normalizeView(view);
-  if (!catalog || !controls.length) return;
+  if (!catalog) return;
   catalog.dataset.view = view;
-  controls.forEach(button => button.setAttribute('aria-pressed', String(button.dataset.view === view)));
+  viewButtons(catalog).forEach((button) => button.setAttribute('aria-pressed', String(button.dataset.view === view)));
  }
  const defaultView = allowed.find(view => document.body.classList.contains(`jofme-default-view-${view}`)) || '3';
  let savedView;
  try { savedView = localStorage.getItem('jofme-catalog-view'); } catch (_) {}
  setView(allowed.includes(savedView) ? savedView : defaultView);
- controls.forEach(button => button.addEventListener('click', () => {
+ document.addEventListener('click', (event) => {
+  const button = event.target.closest('.jofme-view button, .jofme-view__btn');
+  if (!button || (catalog && !catalog.contains(button) && !button.closest('.jofme-catalog-results'))) return;
   const view = normalizeView(button.dataset.view);
   setView(view);
   try { localStorage.setItem('jofme-catalog-view', view); } catch (_) {}
- }));
+ });
  if (typeof window !== 'undefined' && typeof window.addEventListener === 'function') {
   window.addEventListener('resize', () => {
    if (!catalog) return;
@@ -174,6 +179,204 @@
    label.textContent = open ? (jofmeShop.less || 'Less') : (jofmeShop.more || 'More');
   });
  });
+
+ /* AJAX catalog filters / sorting / pagination — fetch HTML, swap fragments. */
+ if (shopConfig.ajaxFilters !== false) {
+  let filterRequest;
+  let filterTimer;
+  const parser = typeof DOMParser !== 'undefined' ? new DOMParser() : null;
+
+  function catalogResults() {
+   return document.querySelector('[data-jofme-catalog-results], #jofme-catalog-results');
+  }
+
+  function filtersRoot() {
+   return document.querySelector('[data-jofme-ajax-filters], .jofme-filters');
+  }
+
+  function buildFilterUrl(form) {
+   const action = form.getAttribute('action') || window.location.href;
+   const url = new URL(action, window.location.origin);
+   const grouped = new Map();
+   new FormData(form).forEach((value, key) => {
+    if (value === '' || value == null) return;
+    const name = String(key).replace(/\[\]$/, '');
+    if (!grouped.has(name)) grouped.set(name, []);
+    grouped.get(name).push(String(value));
+   });
+   grouped.forEach((values, name) => {
+    if (name.indexOf('filter_') === 0 || name === 'jofme_collection') {
+     url.searchParams.set(name, values.join(','));
+    } else {
+     url.searchParams.set(name, values[values.length - 1]);
+    }
+   });
+   url.searchParams.delete('paged');
+   url.searchParams.delete('product-page');
+   return url.toString();
+  }
+
+  function captureOpenPanels(root) {
+   const open = {};
+   if (!root) return open;
+   root.querySelectorAll('details.jofme-filter-panel[data-filter-key]').forEach((panel) => {
+    open[panel.getAttribute('data-filter-key')] = panel.open;
+   });
+   return open;
+  }
+
+  function restoreOpenPanels(root, open) {
+   if (!root || !open) return;
+   root.querySelectorAll('details.jofme-filter-panel[data-filter-key]').forEach((panel) => {
+    const key = panel.getAttribute('data-filter-key');
+    if (Object.prototype.hasOwnProperty.call(open, key)) {
+     panel.open = !!open[key];
+    }
+   });
+  }
+
+  function closeMobileFilters() {
+   if (!window.matchMedia('(max-width: 959px)').matches) return;
+   const toggle = document.querySelector('.jofme-shop-sidebar-toggle[aria-expanded="true"]');
+   if (toggle) toggle.click();
+  }
+
+  function setLoading(isLoading) {
+   const shop = document.querySelector('.jofme-shop');
+   const results = catalogResults();
+   if (shop) shop.classList.toggle('is-ajax-loading', isLoading);
+   if (results) {
+    results.classList.toggle('is-ajax-loading', isLoading);
+    results.setAttribute('aria-busy', isLoading ? 'true' : 'false');
+   }
+  }
+
+  async function loadCatalog(url, options) {
+   const opts = options || {};
+   if (!parser || !url) return;
+   if (filterRequest) filterRequest.abort();
+   const controller = typeof AbortController !== 'undefined' ? new AbortController() : null;
+   filterRequest = controller;
+   setLoading(true);
+   const openPanels = captureOpenPanels(filtersRoot());
+   try {
+    const response = await fetch(url, {
+     method: 'GET',
+     credentials: 'same-origin',
+     headers: {
+      Accept: 'text/html',
+      'X-Requested-With': 'XMLHttpRequest',
+     },
+     signal: controller ? controller.signal : undefined,
+    });
+    if (!response.ok) throw new Error('catalog_http_' + response.status);
+    const html = await response.text();
+    const doc = parser.parseFromString(html, 'text/html');
+    const nextResults = doc.querySelector('[data-jofme-catalog-results], #jofme-catalog-results');
+    const currResults = catalogResults();
+    if (nextResults && currResults) {
+     currResults.replaceWith(document.importNode(nextResults, true));
+    }
+    const nextFilters = doc.querySelector('[data-jofme-ajax-filters], .jofme-filters');
+    const currFilters = filtersRoot();
+    if (nextFilters && currFilters) {
+     currFilters.replaceWith(document.importNode(nextFilters, true));
+     restoreOpenPanels(filtersRoot(), openPanels);
+    }
+    if (opts.push !== false && window.history && window.history.pushState) {
+     window.history.pushState({ jofmeCatalog: 1 }, '', url);
+    }
+    setView((catalog && catalog.dataset.view) || defaultView);
+    document.dispatchEvent(new CustomEvent('jofme:catalogupdated', { detail: { url } }));
+    if (opts.closeDrawer) closeMobileFilters();
+    const anchor = document.getElementById('jofme-catalog-products') || catalogResults();
+    if (opts.scroll !== false && anchor && typeof anchor.scrollIntoView === 'function') {
+     try { anchor.scrollIntoView({ behavior: 'smooth', block: 'start' }); } catch (_) { anchor.scrollIntoView(true); }
+    }
+   } catch (error) {
+    if (error && error.name === 'AbortError') return;
+    if (opts.fallback !== false) {
+     window.location.href = url;
+     return;
+    }
+   } finally {
+    if (filterRequest === controller) filterRequest = null;
+    setLoading(false);
+   }
+  }
+
+  function scheduleFilterLoad(url, options) {
+   clearTimeout(filterTimer);
+   filterTimer = setTimeout(() => loadCatalog(url, options), 120);
+  }
+
+  document.addEventListener('submit', (event) => {
+   const form = event.target.closest('[data-jofme-ajax-filters-form], .jofme-filters__form');
+   if (!form) return;
+   event.preventDefault();
+   scheduleFilterLoad(buildFilterUrl(form), { closeDrawer: true });
+  });
+
+  document.addEventListener('change', (event) => {
+   const checkbox = event.target.closest('.jofme-filter-panel__checkbox');
+   if (!checkbox) return;
+   const form = checkbox.closest('[data-jofme-ajax-filters-form], .jofme-filters__form');
+   if (!form) return;
+   scheduleFilterLoad(buildFilterUrl(form), { closeDrawer: false, scroll: false });
+  });
+
+  document.addEventListener('click', (event) => {
+   const clear = event.target.closest('.jofme-filter-actions a[href]');
+   if (clear) {
+    event.preventDefault();
+    scheduleFilterLoad(clear.href, { closeDrawer: true });
+    return;
+   }
+   const chip = event.target.closest('.jofme-active-filters a[href]');
+   if (chip) {
+    event.preventDefault();
+    scheduleFilterLoad(chip.href, { closeDrawer: false, scroll: false });
+    return;
+   }
+   const pageLink = event.target.closest('.woocommerce-pagination a[href]');
+   const results = catalogResults();
+   if (pageLink && ((results && results.contains(pageLink)) || (catalog && catalog.contains(pageLink)))) {
+    event.preventDefault();
+    scheduleFilterLoad(pageLink.href, { closeDrawer: false });
+   }
+  });
+
+  document.addEventListener('change', (event) => {
+   const select = event.target.closest('.woocommerce-ordering select');
+   if (!select) return;
+   const form = select.closest('form.woocommerce-ordering');
+   if (!form) return;
+   event.preventDefault();
+   event.stopPropagation();
+   const url = new URL(window.location.href);
+   url.searchParams.set('orderby', select.value);
+   url.searchParams.delete('paged');
+   url.searchParams.delete('product-page');
+   scheduleFilterLoad(url.toString(), { closeDrawer: false });
+  }, true);
+
+  document.addEventListener('submit', (event) => {
+   const form = event.target.closest('form.woocommerce-ordering');
+   if (!form) return;
+   event.preventDefault();
+   const select = form.querySelector('select[name="orderby"]') || form.querySelector('select');
+   const url = new URL(window.location.href);
+   if (select) url.searchParams.set('orderby', select.value);
+   url.searchParams.delete('paged');
+   url.searchParams.delete('product-page');
+   scheduleFilterLoad(url.toString(), { closeDrawer: false });
+  });
+
+  window.addEventListener('popstate', () => {
+   if (!catalogResults()) return;
+   loadCatalog(window.location.href, { push: false, closeDrawer: false, fallback: false, scroll: false });
+  });
+ }
 
  const dialog = document.getElementById('jofme-preview-dialog');
  if (!dialog) return;
