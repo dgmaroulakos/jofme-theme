@@ -15,9 +15,21 @@
 .jofme-filters--sidebar .jofme-filter-panel__checkbox{appearance:auto;-webkit-appearance:checkbox;display:inline-block!important;width:1rem!important;height:1rem!important;min-width:1rem;margin:0!important;padding:0!important;border:1px solid #bdbdbd;border-radius:2px;background:#fff;flex:0 0 auto;accent-color:#111;cursor:pointer}
 .jofme-filter-panel__name{flex:1 1 auto;min-width:0}
 .jofme-filter-panel__count{flex:0 0 auto;color:#9a9a9a;font-size:13px;font-variant-numeric:tabular-nums}
-.jofme-filter-panel__price{display:flex;flex-direction:column;gap:.75rem;padding:.75rem 1rem 1rem}
-.jofme-filters--sidebar .jofme-filter-panel__price-field{display:block;font-size:12px;color:inherit}
-.jofme-filters--sidebar .jofme-filter-panel__price-field input{display:block;width:100%;background:transparent;border:1px solid var(--jofme-color-border);padding:.65rem;font:inherit;margin-top:.4rem;color:inherit}
+.jofme-filter-panel__price{display:flex;flex-direction:column;gap:.85rem;padding:.85rem 1rem 1.1rem}
+.jofme-price-slider__values{display:flex;align-items:center;justify-content:space-between;gap:.5rem;font-size:13px;color:#111}
+.jofme-price-slider__sep{color:#9a9a9a}
+.jofme-price-slider__track{position:relative;height:28px;margin:0 .15rem;display:flex;align-items:center}
+.jofme-price-slider__track::before{content:"";position:absolute;left:0;right:0;top:50%;height:3px;margin-top:-1.5px;background:#e4e4e4;border-radius:999px;pointer-events:none}
+.jofme-price-slider__range{position:absolute;left:0;right:0;top:50%;height:3px;margin-top:-1.5px;background:#111;border-radius:999px;pointer-events:none;z-index:1}
+.jofme-filters--sidebar .jofme-price-slider__input{appearance:none;-webkit-appearance:none;position:absolute;inset:0;width:100%;height:28px;margin:0!important;padding:0!important;background:none;border:0!important;pointer:2;pointer:pointer;outline:none}
+.jofme-filters--sidebar .jofme-price-slider__input::-webkit-slider-runnable-track{height:3px;background:transparent;border:0}
+.jofme-filters--sidebar .jofme-price-slider__input::-webkit-slider-thumb{appearance:none;-webkit-appearance:none;width:16px;height:16px;margin-top:-6.5px;border:2px solid #111;border-radius:50%;background:#fff;box-shadow:0 1px 2px #0000001a;cursor:pointer;position:relative;z-index:3}
+.jofme-filters--sidebar .jofme-price-slider__input::-moz-range-track{height:3px;background:transparent;border:0}
+.jofme-filters--sidebar .jofme-price-slider__input::-moz-range-thumb{width:16px;height:16px;border:2px solid #111;border-radius:50%;background:#fff;box-shadow:0 1px 2px #0000001a;cursor:pointer}
+.jofme-filters--sidebar .jofme-price-slider__input--min{z-index:3}
+.jofme-filters--sidebar .jofme-price-slider__input--max{z-index:4}
+.jofme-filters--sidebar .jofme-price-slider__input:focus-visible::-webkit-slider-thumb{outline:2px solid var(--jofme-color-accent);outline-offset:2px}
+.jofme-filters--sidebar .jofme-price-slider__input:focus-visible::-moz-range-thumb{outline:2px solid var(--jofme-color-accent);outline-offset:2px}
 .jofme-filters--sidebar .jofme-filter-swatches{gap:.65rem}
 .jofme-filters--sidebar .jofme-filter-actions{display:flex;gap:1rem;align-items:center;flex-wrap:wrap;padding:1rem 0 0;font-size:12px}
 .jofme-filters--sidebar .jofme-filter-actions button{background:var(--jofme-color-text);color:var(--jofme-color-bg);padding:.75rem 1.25rem;border:0;cursor:pointer;font:inherit}

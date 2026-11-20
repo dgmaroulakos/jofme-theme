@@ -183,6 +183,74 @@
   });
  });
 
+ /* Dual-range price slider (updates hidden min_price / max_price). */
+ function formatPriceLabel(amount, currency, step) {
+  const decimals = step < 1 ? 2 : 0;
+  const number = Number(amount).toFixed(decimals);
+  return currency ? String(currency) + number : number;
+ }
+
+ function syncPriceSlider(root) {
+  if (!root) return;
+  const minInput = root.querySelector('.jofme-price-slider__input--min');
+  const maxInput = root.querySelector('.jofme-price-slider__input--max');
+  const minHidden = root.querySelector('[data-jofme-price-min]');
+  const maxHidden = root.querySelector('[data-jofme-price-max]');
+  const minLabel = root.querySelector('[data-jofme-price-min-label]');
+  const maxLabel = root.querySelector('[data-jofme-price-max-label]');
+  const range = root.querySelector('[data-jofme-price-range]');
+  if (!minInput || !maxInput) return;
+
+  const floor = Number(root.dataset.min || minInput.min || 0);
+  const ceil = Number(root.dataset.max || maxInput.max || 0);
+  const step = Number(root.dataset.step || minInput.step || 1);
+  const currency = root.dataset.currency || '';
+  let minVal = Number(minInput.value);
+  let maxVal = Number(maxInput.value);
+  if (minVal > maxVal) {
+   if (document.activeElement === minInput) maxVal = minVal;
+   else minVal = maxVal;
+   minInput.value = String(minVal);
+   maxInput.value = String(maxVal);
+  }
+  if (minHidden) minHidden.value = Math.abs(minVal - floor) > 0.0001 ? String(minVal) : '';
+  if (maxHidden) maxHidden.value = Math.abs(maxVal - ceil) > 0.0001 ? String(maxVal) : '';
+  if (minLabel) minLabel.textContent = formatPriceLabel(minVal, currency, step);
+  if (maxLabel) maxLabel.textContent = formatPriceLabel(maxVal, currency, step);
+  if (range && ceil > floor) {
+   const left = ((minVal - floor) / (ceil - floor)) * 100;
+   const right = ((ceil - maxVal) / (ceil - floor)) * 100;
+   range.style.left = left + '%';
+   range.style.right = right + '%';
+  }
+ }
+
+ function commitPriceSlider(root) {
+  syncPriceSlider(root);
+  const form = root && root.closest('form');
+  if (!form) return;
+  if (typeof form.requestSubmit === 'function') {
+   form.requestSubmit();
+   return;
+  }
+  form.dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }));
+ }
+
+ function initPriceSliders(scope) {
+  (scope || document).querySelectorAll('[data-jofme-price-slider]').forEach((root) => {
+   if (!root || root.dataset.ready === '1') return;
+   root.dataset.ready = '1';
+   const inputs = root.querySelectorAll('.jofme-price-slider__input');
+   inputs.forEach((input) => {
+    input.addEventListener('input', () => syncPriceSlider(root));
+    input.addEventListener('change', () => commitPriceSlider(root));
+   });
+   syncPriceSlider(root);
+  });
+ }
+ initPriceSliders();
+ document.addEventListener('jofme:catalogupdated', () => initPriceSliders());
+
  /* AJAX catalog filters / sorting / pagination — fetch HTML, swap fragments. */
  if (shopConfig.ajaxFilters !== false) {
   let filterRequest;

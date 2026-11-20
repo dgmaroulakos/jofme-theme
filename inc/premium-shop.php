@@ -403,13 +403,7 @@ function jofme_catalog_filters() {
  }
 
  if ( $show_price ) {
-  echo '<details class="jofme-filter-panel" open data-filter-key="price">';
-  echo '<summary class="jofme-filter-panel__summary">' . esc_html__( 'Price', 'jofme' ) . '</summary>';
-  echo '<div class="jofme-filter-panel__price">';
-  foreach ( array( 'min_price' => __( 'Minimum price', 'jofme' ), 'max_price' => __( 'Maximum price', 'jofme' ) ) as $key => $label ) {
-   echo '<label class="jofme-filter-panel__price-field">' . esc_html( $label ) . '<input type="number" min="0" step="0.01" name="' . esc_attr( $key ) . '" value="' . esc_attr( jofme_filter_value( $key ) ) . '"></label>';
-  }
-  echo '</div></details>';
+  jofme_filter_price_slider();
  }
  echo '</div>';
  echo '<div class="jofme-filter-actions"><button type="submit">' . esc_html__( 'Apply filters', 'jofme' ) . '</button><a href="' . esc_url( $action ) . '">' . esc_html__( 'Clear filters', 'jofme' ) . '</a></div>';
@@ -471,6 +465,115 @@ function jofme_suppress_duplicate_shop_filter_widgets( $instance, $widget, $args
  return $instance;
 }
 add_filter( 'widget_display_callback', 'jofme_suppress_duplicate_shop_filter_widgets', 10, 3 );
+
+/**
+ * Min/max product prices for the catalog price slider (scoped to archive when applicable).
+ *
+ * @return array{min:float,max:float,step:float}|null Null when unavailable.
+ */
+function jofme_catalog_price_bounds() {
+ static $bounds = null;
+ static $done   = false;
+ if ( $done ) {
+  return $bounds;
+ }
+ $done = true;
+
+ global $wpdb;
+ if ( empty( $wpdb->wc_product_meta_lookup ) ) {
+  $bounds = null;
+  return $bounds;
+ }
+
+ $object_ids = function_exists( 'jofme_catalog_filter_object_ids' ) ? jofme_catalog_filter_object_ids() : null;
+ if ( is_array( $object_ids ) ) {
+  if ( ! $object_ids ) {
+   $bounds = null;
+   return $bounds;
+  }
+  $ids = implode( ',', array_map( 'absint', $object_ids ) );
+  // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- IDs are absint-cast.
+  $row = $wpdb->get_row( "SELECT MIN(min_price) AS min_price, MAX(max_price) AS max_price FROM {$wpdb->wc_product_meta_lookup} WHERE product_id IN ({$ids})" );
+ } else {
+  $row = $wpdb->get_row(
+   "SELECT MIN(lookup.min_price) AS min_price, MAX(lookup.max_price) AS max_price
+   FROM {$wpdb->wc_product_meta_lookup} AS lookup
+   INNER JOIN {$wpdb->posts} AS posts ON lookup.product_id = posts.ID
+   WHERE posts.post_type IN ('product') AND posts.post_status = 'publish'"
+  );
+ }
+
+ $min = isset( $row->min_price ) ? (float) $row->min_price : 0.0;
+ $max = isset( $row->max_price ) ? (float) $row->max_price : 0.0;
+ if ( $max <= 0 && $min <= 0 ) {
+  $bounds = null;
+  return $bounds;
+ }
+ $min  = floor( $min );
+ $max  = ceil( $max );
+ if ( $max <= $min ) {
+  $max = $min + 1;
+ }
+ $step   = ( $max - $min ) >= 10 ? 1.0 : 0.01;
+ $bounds = array(
+  'min'  => $min,
+  'max'  => $max,
+  'step' => $step,
+ );
+ return $bounds;
+}
+
+/**
+ * Dual-range price slider for the catalog Filters panel.
+ */
+function jofme_filter_price_slider() {
+ $bounds = jofme_catalog_price_bounds();
+ if ( ! $bounds ) {
+  return;
+ }
+
+ $floor = (float) $bounds['min'];
+ $ceil  = (float) $bounds['max'];
+ $step  = (float) $bounds['step'];
+ $symbol = function_exists( 'get_woocommerce_currency_symbol' ) ? get_woocommerce_currency_symbol() : '';
+
+ $current_min = jofme_filter_value( 'min_price' );
+ $current_max = jofme_filter_value( 'max_price' );
+ $min_value   = '' !== $current_min ? max( $floor, min( $ceil, (float) $current_min ) ) : $floor;
+ $max_value   = '' !== $current_max ? max( $floor, min( $ceil, (float) $current_max ) ) : $ceil;
+ if ( $min_value > $max_value ) {
+  $tmp        = $min_value;
+  $min_value  = $max_value;
+  $max_value  = $tmp;
+ }
+
+ $min_name = ( abs( $min_value - $floor ) > 0.0001 ) ? (string) $min_value : '';
+ $max_name = ( abs( $max_value - $ceil ) > 0.0001 ) ? (string) $max_value : '';
+
+ $format = static function ( $amount ) use ( $symbol, $step ) {
+  $decimals = ( $step < 1 ) ? 2 : 0;
+  $number   = number_format_i18n( (float) $amount, $decimals );
+  return $symbol ? ( $symbol . $number ) : $number;
+ };
+
+ echo '<details class="jofme-filter-panel" open data-filter-key="price">';
+ echo '<summary class="jofme-filter-panel__summary">' . esc_html__( 'Price', 'jofme' ) . '</summary>';
+ echo '<div class="jofme-filter-panel__price jofme-price-slider" data-jofme-price-slider';
+ echo ' data-min="' . esc_attr( (string) $floor ) . '" data-max="' . esc_attr( (string) $ceil ) . '" data-step="' . esc_attr( (string) $step ) . '" data-currency="' . esc_attr( $symbol ) . '">';
+ echo '<div class="jofme-price-slider__values" aria-live="polite">';
+ echo '<span class="jofme-price-slider__value" data-jofme-price-min-label>' . esc_html( $format( $min_value ) ) . '</span>';
+ echo '<span class="jofme-price-slider__sep" aria-hidden="true">–</span>';
+ echo '<span class="jofme-price-slider__value" data-jofme-price-max-label>' . esc_html( $format( $max_value ) ) . '</span>';
+ echo '</div>';
+ echo '<div class="jofme-price-slider__track">';
+ echo '<div class="jofme-price-slider__range" data-jofme-price-range></div>';
+ echo '<input type="range" class="jofme-price-slider__input jofme-price-slider__input--min" min="' . esc_attr( (string) $floor ) . '" max="' . esc_attr( (string) $ceil ) . '" step="' . esc_attr( (string) $step ) . '" value="' . esc_attr( (string) $min_value ) . '" aria-label="' . esc_attr__( 'Minimum price', 'jofme' ) . '">';
+ echo '<input type="range" class="jofme-price-slider__input jofme-price-slider__input--max" min="' . esc_attr( (string) $floor ) . '" max="' . esc_attr( (string) $ceil ) . '" step="' . esc_attr( (string) $step ) . '" value="' . esc_attr( (string) $max_value ) . '" aria-label="' . esc_attr__( 'Maximum price', 'jofme' ) . '">';
+ echo '</div>';
+ echo '<input type="hidden" name="min_price" value="' . esc_attr( $min_name ) . '" data-jofme-price-min>';
+ echo '<input type="hidden" name="max_price" value="' . esc_attr( $max_name ) . '" data-jofme-price-max>';
+ echo '</div></details>';
+}
 
 /**
  * Product count for a filter term within the current archive scope.
