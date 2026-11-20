@@ -509,15 +509,15 @@ function jofme_card_swatches() {
 add_action( 'woocommerce_after_shop_loop_item', 'jofme_card_swatches', 7 );
 
 /**
- * Catalog filter control: swatches for color attributes, select otherwise.
+ * Catalog filter control: accordion checklist for every attribute (incl. color).
  *
  * @param string $taxonomy Taxonomy name.
  * @param string $key      Query arg.
  * @param string $label    Visible label.
  */
 function jofme_filter_attribute_control( $taxonomy, $key, $label ) {
-	if ( jofme_is_swatch_attribute( $taxonomy ) ) {
-		jofme_filter_swatches( $taxonomy, $key, $label );
+	if ( function_exists( 'jofme_filter_checklist' ) ) {
+		jofme_filter_checklist( $taxonomy, $key, $label );
 		return;
 	}
 	jofme_filter_select( $taxonomy, $key, $label );

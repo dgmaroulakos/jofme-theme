@@ -99,8 +99,56 @@ function jofme_catalog_tools() {
 add_action( 'woocommerce_before_main_content', 'jofme_catalog_tools', 25 );
 
 function jofme_filter_value( $key ) {
- return isset( $_GET[ $key ] ) && is_scalar( $_GET[ $key ] ) ? sanitize_text_field( wp_unslash( $_GET[ $key ] ) ) : ''; // Public read-only catalog parameters.
+ if ( ! isset( $_GET[ $key ] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- public catalog query args.
+  return '';
+ }
+ $value = wp_unslash( $_GET[ $key ] ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
+ if ( is_array( $value ) ) {
+  $parts = array();
+  foreach ( $value as $part ) {
+   if ( is_scalar( $part ) && '' !== $part ) {
+    $parts[] = sanitize_title( (string) $part );
+   }
+  }
+  return implode( ',', array_values( array_unique( array_filter( $parts ) ) ) );
+ }
+ return is_scalar( $value ) ? sanitize_text_field( (string) $value ) : '';
 }
+
+/**
+ * Selected catalog filter term slugs for a query key.
+ *
+ * @param string $key Query arg (filter_color, jofme_collection, …).
+ * @return string[]
+ */
+function jofme_filter_selected_slugs( $key ) {
+ $value = jofme_filter_value( $key );
+ if ( '' === $value ) {
+  return array();
+ }
+ return array_values( array_filter( array_map( 'sanitize_title', explode( ',', $value ) ) ) );
+}
+
+/**
+ * Normalize multi-checkbox filter args to WooCommerce comma-separated strings.
+ */
+function jofme_normalize_catalog_filter_query() {
+ if ( is_admin() || empty( $_GET ) || ! is_array( $_GET ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+  return;
+ }
+ foreach ( $_GET as $key => $value ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+  if ( ! is_string( $key ) || ! is_array( $value ) ) {
+   continue;
+  }
+  if ( 0 !== strpos( $key, 'filter_' ) && 'jofme_collection' !== $key ) {
+   continue;
+  }
+  $normalized = jofme_filter_value( $key );
+  $_GET[ $key ]     = $normalized; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+  $_REQUEST[ $key ] = $normalized;
+ }
+}
+add_action( 'init', 'jofme_normalize_catalog_filter_query', 0 );
 
 /**
  * Theme mod key for a catalog filter attribute checkbox.
@@ -353,20 +401,37 @@ function jofme_catalog_filters() {
  }
 
  if ( $show_price ) {
-  echo '<fieldset><legend>' . esc_html__( 'Price range', 'jofme' ) . ' (' . esc_html( get_woocommerce_currency_symbol() ) . ')</legend>';
+  echo '<details class="jofme-filter-panel" open>';
+  echo '<summary class="jofme-filter-panel__summary">' . esc_html__( 'Price', 'jofme' ) . '</summary>';
+  echo '<div class="jofme-filter-panel__price">';
   foreach ( array( 'min_price' => __( 'Minimum price', 'jofme' ), 'max_price' => __( 'Maximum price', 'jofme' ) ) as $key => $label ) {
-   echo '<label>' . esc_html( $label ) . '<input type="number" min="0" step="0.01" name="' . esc_attr( $key ) . '" value="' . esc_attr( jofme_filter_value( $key ) ) . '"></label>';
+   echo '<label class="jofme-filter-panel__price-field">' . esc_html( $label ) . '<input type="number" min="0" step="0.01" name="' . esc_attr( $key ) . '" value="' . esc_attr( jofme_filter_value( $key ) ) . '"></label>';
   }
-  echo '</fieldset>';
+  echo '</div></details>';
  }
  echo '</div>';
  echo '<div class="jofme-filter-actions"><button type="submit">' . esc_html__( 'Apply filters', 'jofme' ) . '</button><a href="' . esc_url( $action ) . '">' . esc_html__( 'Clear filters', 'jofme' ) . '</a></div>';
  echo '</form>';
 
  echo '<div class="jofme-active-filters">';
- foreach ( $_GET as $key => $value ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- public catalog query args.
-  if ( is_scalar( $value ) && '' !== $value && ( 0 === strpos( $key, 'filter_' ) || in_array( $key, array( 'min_price', 'max_price', 'jofme_collection' ), true ) ) ) {
-   echo '<a href="' . esc_url( remove_query_arg( array( $key, 'paged', 'product-page' ) ) ) . '">' . esc_html( sanitize_text_field( wp_unslash( $value ) ) ) . ' × <span class="screen-reader-text">' . esc_html__( 'Remove filter', 'jofme' ) . '</span></a>';
+ foreach ( array_keys( $_GET ) as $key ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- public catalog query args.
+  if ( ! is_string( $key ) ) {
+   continue;
+  }
+  $is_filter = ( 0 === strpos( $key, 'filter_' ) || in_array( $key, array( 'min_price', 'max_price', 'jofme_collection' ), true ) );
+  if ( ! $is_filter ) {
+   continue;
+  }
+  $raw = jofme_filter_value( $key );
+  if ( '' === $raw ) {
+   continue;
+  }
+  if ( in_array( $key, array( 'min_price', 'max_price' ), true ) ) {
+   echo '<a href="' . esc_url( remove_query_arg( array( $key, 'paged', 'product-page' ) ) ) . '">' . esc_html( $raw ) . ' × <span class="screen-reader-text">' . esc_html__( 'Remove filter', 'jofme' ) . '</span></a>';
+   continue;
+  }
+  foreach ( jofme_filter_selected_slugs( $key ) as $slug ) {
+   echo '<a href="' . esc_url( jofme_filter_remove_url( $key, $slug ) ) . '">' . esc_html( $slug ) . ' × <span class="screen-reader-text">' . esc_html__( 'Remove filter', 'jofme' ) . '</span></a>';
   }
  }
  echo '</div></div>';
@@ -405,14 +470,123 @@ function jofme_suppress_duplicate_shop_filter_widgets( $instance, $widget, $args
 }
 add_filter( 'widget_display_callback', 'jofme_suppress_duplicate_shop_filter_widgets', 10, 3 );
 
-function jofme_filter_select( $taxonomy, $key, $label ) {
+/**
+ * Product count for a filter term within the current archive scope.
+ *
+ * @param WP_Term     $term       Term.
+ * @param int[]|null  $object_ids Scoped product IDs, or null for global shop.
+ * @return int
+ */
+function jofme_catalog_filter_term_count( $term, $object_ids = null ) {
+ if ( ! ( $term instanceof WP_Term ) ) {
+  return 0;
+ }
+ if ( null === $object_ids && function_exists( 'jofme_catalog_filter_object_ids' ) ) {
+  $object_ids = jofme_catalog_filter_object_ids();
+ }
+ if ( ! is_array( $object_ids ) ) {
+  return absint( $term->count );
+ }
+ if ( ! $object_ids ) {
+  return 0;
+ }
+ $objects = get_objects_in_term( (int) $term->term_id, $term->taxonomy );
+ if ( is_wp_error( $objects ) || ! $objects ) {
+  return 0;
+ }
+ return count( array_intersect( array_map( 'intval', $objects ), array_map( 'intval', $object_ids ) ) );
+}
+
+/**
+ * URL that removes one selected filter slug (or the whole key when $slug is empty).
+ *
+ * @param string $key  Query arg.
+ * @param string $slug Optional single term slug to remove.
+ * @return string
+ */
+function jofme_filter_remove_url( $key, $slug = '' ) {
+ $attr_key = ( 0 === strpos( $key, 'filter_' ) ) ? 'query_type_' . substr( $key, 7 ) : '';
+ $drop     = array( 'paged', 'product-page' );
+ if ( '' === $slug ) {
+  $drop[] = $key;
+  if ( $attr_key ) {
+   $drop[] = $attr_key;
+  }
+  return remove_query_arg( $drop );
+ }
+ $remaining = array_values( array_diff( jofme_filter_selected_slugs( $key ), array( sanitize_title( $slug ) ) ) );
+ if ( ! $remaining ) {
+  $drop[] = $key;
+  if ( $attr_key ) {
+   $drop[] = $attr_key;
+  }
+  return remove_query_arg( $drop );
+ }
+ return remove_query_arg( array( 'paged', 'product-page' ), add_query_arg( $key, implode( ',', $remaining ) ) );
+}
+
+/**
+ * Accordion checklist filter (checkbox + label + count), matching the shop sidebar layout.
+ *
+ * @param string $taxonomy Taxonomy name.
+ * @param string $key      Query arg.
+ * @param string $label    Panel title.
+ */
+function jofme_filter_checklist( $taxonomy, $key, $label ) {
  $terms = function_exists( 'jofme_catalog_filter_terms' )
   ? jofme_catalog_filter_terms( $taxonomy )
   : get_terms( array( 'taxonomy' => $taxonomy, 'hide_empty' => true ) );
- if ( is_wp_error( $terms ) || ! $terms ) { return; }
- echo '<label>' . esc_html( $label ) . '<select name="' . esc_attr( $key ) . '"><option value="">' . esc_html__( 'All', 'jofme' ) . '</option>';
- foreach ( $terms as $term ) { echo '<option value="' . esc_attr( $term->slug ) . '" ' . selected( jofme_filter_value( $key ), $term->slug, false ) . '>' . esc_html( $term->name ) . '</option>'; }
- echo '</select></label>';
+ if ( is_wp_error( $terms ) || ! $terms ) {
+  return;
+ }
+
+ $selected    = jofme_filter_selected_slugs( $key );
+ $object_ids  = function_exists( 'jofme_catalog_filter_object_ids' ) ? jofme_catalog_filter_object_ids() : null;
+ $has_options = false;
+
+ ob_start();
+ echo '<ul class="jofme-filter-panel__list">';
+ foreach ( $terms as $term ) {
+  $count = jofme_catalog_filter_term_count( $term, $object_ids );
+  if ( $count < 1 ) {
+   continue;
+  }
+  $has_options = true;
+  $id          = 'jofme-filter-' . sanitize_html_class( $key . '-' . $term->slug );
+  $is_checked  = in_array( $term->slug, $selected, true );
+  echo '<li class="jofme-filter-panel__item">';
+  echo '<label class="jofme-filter-panel__option" for="' . esc_attr( $id ) . '">';
+  echo '<input id="' . esc_attr( $id ) . '" class="jofme-filter-panel__checkbox" type="checkbox" name="' . esc_attr( $key ) . '[]" value="' . esc_attr( $term->slug ) . '" ' . checked( $is_checked, true, false ) . '>';
+  echo '<span class="jofme-filter-panel__name">' . esc_html( $term->name ) . '</span>';
+  echo '<span class="jofme-filter-panel__count">' . absint( $count ) . '</span>';
+  echo '</label></li>';
+ }
+ echo '</ul>';
+ $list_html = ob_get_clean();
+
+ if ( ! $has_options ) {
+  return;
+ }
+
+ echo '<details class="jofme-filter-panel" open>';
+ echo '<summary class="jofme-filter-panel__summary">' . esc_html( $label ) . '</summary>';
+ echo $list_html; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- built with escaped helpers above.
+ if ( 0 === strpos( $key, 'filter_' ) ) {
+  // Multi-select attributes use OR so checking several metals keeps matching products.
+  echo '<input type="hidden" name="query_type_' . esc_attr( substr( $key, 7 ) ) . '" value="or">';
+ }
+ echo '</details>';
+}
+
+/**
+ * Backward-compatible alias: catalog filters render as accordion checklists.
+ *
+ * @param string $taxonomy Taxonomy name.
+ * @param string $key      Query arg.
+ * @param string $label    Panel title.
+ */
+function jofme_filter_select( $taxonomy, $key, $label ) {
+ jofme_filter_checklist( $taxonomy, $key, $label );
 }
 
 /**
@@ -421,8 +595,8 @@ function jofme_filter_select( $taxonomy, $key, $label ) {
  * @param WC_Query $query Product query.
  */
 function jofme_collection_query( $query ) {
- $slug = jofme_filter_value( 'jofme_collection' );
- if ( ! $slug ) {
+ $slugs = jofme_filter_selected_slugs( 'jofme_collection' );
+ if ( ! $slugs ) {
   return;
  }
  $tax = $query->get( 'tax_query' );
@@ -434,7 +608,8 @@ function jofme_collection_query( $query ) {
    array(
     'taxonomy' => 'product_tag',
     'field'    => 'slug',
-    'terms'    => $slug,
+    'terms'    => $slugs,
+    'operator' => 'IN',
    ),
   )
  );
