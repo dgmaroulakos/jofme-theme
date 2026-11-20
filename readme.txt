@@ -3,7 +3,7 @@ Contributors: jofme
 Requires at least: 6.4
 Tested up to: 6.8
 Requires PHP: 7.4
-Stable tag: 1.7.52
+Stable tag: 1.7.53
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -30,6 +30,9 @@ strings / wpml-config.xml.
 * WPML or Polylang
 
 == Changelog ==
+
+= 1.7.53 =
+* Shop filters: Price range uses a dual-handle slider (scoped to the current archive).
 
 = 1.7.52 =
 * Shop filters: AJAX updates for checkboxes, Apply/Clear, sorting, and pagination (no full page reload).
