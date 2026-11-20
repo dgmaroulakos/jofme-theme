@@ -165,6 +165,116 @@ function jofme_catalog_filter_attributes() {
 }
 
 /**
+ * Product IDs that scope catalog filter options to the current archive.
+ *
+ * On a product category / tag / attribute archive, only terms used by those
+ * products are offered. On the main shop, returns null (unscoped / global).
+ *
+ * @return int[]|null Product IDs, empty array when the archive has no products, or null when unscoped.
+ */
+function jofme_catalog_filter_object_ids() {
+ static $resolved = false;
+ static $ids      = null;
+
+ if ( $resolved ) {
+  return $ids;
+ }
+ $resolved = true;
+
+ if ( ! function_exists( 'is_product_taxonomy' ) || ! is_product_taxonomy() ) {
+  $ids = null;
+  return $ids;
+ }
+
+ $term = get_queried_object();
+ if ( ! $term || empty( $term->term_id ) || empty( $term->taxonomy ) || ! taxonomy_exists( $term->taxonomy ) ) {
+  $ids = array();
+  return $ids;
+ }
+
+ $args = array(
+  'status' => 'publish',
+  'limit'  => -1,
+  'return' => 'ids',
+ );
+
+ if ( 'product_cat' === $term->taxonomy ) {
+  $args['category'] = array( $term->slug );
+ } elseif ( 'product_tag' === $term->taxonomy ) {
+  $args['tag'] = array( $term->slug );
+ } else {
+  $args['tax_query'] = array(
+   array(
+    'taxonomy' => $term->taxonomy,
+    'field'    => 'term_id',
+    'terms'    => array( (int) $term->term_id ),
+   ),
+  );
+ }
+
+ if ( function_exists( 'wc_get_products' ) ) {
+  $found = wc_get_products( $args );
+  $ids   = array_values( array_filter( array_map( 'absint', (array) $found ) ) );
+  return $ids;
+ }
+
+ $query = new WP_Query(
+  array(
+   'post_type'              => 'product',
+   'post_status'            => 'publish',
+   'posts_per_page'         => -1,
+   'fields'                 => 'ids',
+   'no_found_rows'          => true,
+   'update_post_meta_cache' => false,
+   'update_post_term_cache' => false,
+   'tax_query'              => array( // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_tax_query -- scoped catalog filter lookup.
+    array(
+     'taxonomy'         => $term->taxonomy,
+     'field'            => 'term_id',
+     'terms'            => array( (int) $term->term_id ),
+     'include_children' => ( 'product_cat' === $term->taxonomy ),
+    ),
+   ),
+  )
+ );
+ $ids = array_values( array_filter( array_map( 'absint', (array) $query->posts ) ) );
+ return $ids;
+}
+
+/**
+ * Terms for a catalog filter, scoped to products in the current archive when applicable.
+ *
+ * @param string $taxonomy Taxonomy name.
+ * @param int    $number   Optional max terms (0 = all).
+ * @return WP_Term[]
+ */
+function jofme_catalog_filter_terms( $taxonomy, $number = 0 ) {
+ if ( ! $taxonomy || ! taxonomy_exists( $taxonomy ) ) {
+  return array();
+ }
+
+ $args = array(
+  'taxonomy'   => $taxonomy,
+  'hide_empty' => true,
+ );
+ if ( $number > 0 ) {
+  $args['number'] = absint( $number );
+  $args['fields'] = 'all';
+ }
+
+ $object_ids = jofme_catalog_filter_object_ids();
+ if ( is_array( $object_ids ) ) {
+  if ( ! $object_ids ) {
+   return array();
+  }
+  $args['object_ids'] = $object_ids;
+ }
+
+ $terms = get_terms( $args );
+ return ( is_wp_error( $terms ) || ! $terms ) ? array() : $terms;
+}
+
+/**
  * Whether the catalog has any attribute/tag/price filters to show.
  *
  * Used so the Filters panel can open even when the shop sidebar has no widgets.
@@ -177,33 +287,12 @@ function jofme_catalog_attribute_filters_available() {
  }
  foreach ( jofme_catalog_filter_attributes() as $attribute ) {
   $taxonomy = wc_attribute_taxonomy_name( $attribute->attribute_name );
-  if ( ! taxonomy_exists( $taxonomy ) ) {
-   continue;
-  }
-  $terms = get_terms(
-   array(
-    'taxonomy'   => $taxonomy,
-    'hide_empty' => true,
-    'number'     => 1,
-    'fields'     => 'ids',
-   )
-  );
-  if ( ! is_wp_error( $terms ) && $terms ) {
+  if ( jofme_catalog_filter_terms( $taxonomy, 1 ) ) {
    return true;
   }
  }
- if ( jofme_catalog_filter_collection_enabled() && taxonomy_exists( 'product_tag' ) ) {
-  $tags = get_terms(
-   array(
-    'taxonomy'   => 'product_tag',
-    'hide_empty' => true,
-    'number'     => 1,
-    'fields'     => 'ids',
-   )
-  );
-  if ( ! is_wp_error( $tags ) && $tags ) {
-   return true;
-  }
+ if ( jofme_catalog_filter_collection_enabled() && jofme_catalog_filter_terms( 'product_tag', 1 ) ) {
+  return true;
  }
  return jofme_catalog_filter_price_enabled();
 }
@@ -317,7 +406,9 @@ function jofme_suppress_duplicate_shop_filter_widgets( $instance, $widget, $args
 add_filter( 'widget_display_callback', 'jofme_suppress_duplicate_shop_filter_widgets', 10, 3 );
 
 function jofme_filter_select( $taxonomy, $key, $label ) {
- $terms = get_terms( array( 'taxonomy' => $taxonomy, 'hide_empty' => true ) );
+ $terms = function_exists( 'jofme_catalog_filter_terms' )
+  ? jofme_catalog_filter_terms( $taxonomy )
+  : get_terms( array( 'taxonomy' => $taxonomy, 'hide_empty' => true ) );
  if ( is_wp_error( $terms ) || ! $terms ) { return; }
  echo '<label>' . esc_html( $label ) . '<select name="' . esc_attr( $key ) . '"><option value="">' . esc_html__( 'All', 'jofme' ) . '</option>';
  foreach ( $terms as $term ) { echo '<option value="' . esc_attr( $term->slug ) . '" ' . selected( jofme_filter_value( $key ), $term->slug, false ) . '>' . esc_html( $term->name ) . '</option>'; }

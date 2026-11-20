@@ -18,6 +18,8 @@ assert.match(php, /function jofme_suppress_duplicate_shop_filter_widgets/);
 assert.match(php, /woocommerce_layered_nav/);
 assert.match(php, /widget_display_callback/);
 assert.match(php, /jofme_catalog_filter_attributes\s*\(/);
+assert.match(php, /function jofme_catalog_filter_object_ids/);
+assert.match(php, /function jofme_catalog_filter_terms/);
 assert.match(layout, /Jofme Options → Shop|enable under Jofme Options/);
 assert.match(workflow, /catalog-filter-attributes\.cjs/);
 
