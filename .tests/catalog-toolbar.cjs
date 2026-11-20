@@ -19,6 +19,8 @@ assert.doesNotMatch(php, /Filter collection/);
 assert.match(php, /function jofme_catalog_filters\s*\(/);
 assert.match(php, /jofme_shop_sidebar_filters/);
 assert.match(php, /wc_get_attribute_taxonomies\s*\(/);
+assert.match(php, /jofme_catalog_filter_attributes/);
+assert.match(php, /jofme_suppress_duplicate_shop_filter_widgets/);
 assert.match(css, /\.jofme-filters--sidebar\b/);
 assert.match(css, /jofme-catalog-toolbar__controls/);
 assert.match(css, /jofme-view__btn--desktop/);

@@ -103,7 +103,69 @@ function jofme_filter_value( $key ) {
 }
 
 /**
- * Whether the catalog has any attribute/tag terms to show as filters.
+ * Theme mod key for a catalog filter attribute checkbox.
+ *
+ * @param string $attribute_name Attribute slug (e.g. color).
+ * @return string
+ */
+function jofme_catalog_filter_attr_mod_key( $attribute_name ) {
+ return 'jofme_filter_attr_' . sanitize_key( $attribute_name );
+}
+
+/**
+ * Whether a global attribute should appear in the shop Filters panel.
+ *
+ * Defaults to enabled so newly created attributes show until turned off.
+ *
+ * @param string $attribute_name Attribute slug.
+ * @return bool
+ */
+function jofme_catalog_filter_attribute_enabled( $attribute_name ) {
+ $attribute_name = sanitize_key( $attribute_name );
+ if ( '' === $attribute_name ) {
+  return false;
+ }
+ return (bool) get_theme_mod( jofme_catalog_filter_attr_mod_key( $attribute_name ), true );
+}
+
+/**
+ * Whether the Collection (product_tag) filter is enabled.
+ *
+ * @return bool
+ */
+function jofme_catalog_filter_collection_enabled() {
+ return (bool) get_theme_mod( 'jofme_filter_show_collection', true );
+}
+
+/**
+ * Whether the price range filter is enabled.
+ *
+ * @return bool
+ */
+function jofme_catalog_filter_price_enabled() {
+ return (bool) get_theme_mod( 'jofme_filter_show_price', true );
+}
+
+/**
+ * Enabled global attributes for the catalog Filters panel.
+ *
+ * @return array<int,object>
+ */
+function jofme_catalog_filter_attributes() {
+ if ( ! function_exists( 'wc_get_attribute_taxonomies' ) ) {
+  return array();
+ }
+ $enabled = array();
+ foreach ( wc_get_attribute_taxonomies() as $attribute ) {
+  if ( ! empty( $attribute->attribute_name ) && jofme_catalog_filter_attribute_enabled( $attribute->attribute_name ) ) {
+   $enabled[] = $attribute;
+  }
+ }
+ return $enabled;
+}
+
+/**
+ * Whether the catalog has any attribute/tag/price filters to show.
  *
  * Used so the Filters panel can open even when the shop sidebar has no widgets.
  *
@@ -113,7 +175,7 @@ function jofme_catalog_attribute_filters_available() {
  if ( ! function_exists( 'wc_get_attribute_taxonomies' ) || ! function_exists( 'wc_attribute_taxonomy_name' ) ) {
   return false;
  }
- foreach ( wc_get_attribute_taxonomies() as $attribute ) {
+ foreach ( jofme_catalog_filter_attributes() as $attribute ) {
   $taxonomy = wc_attribute_taxonomy_name( $attribute->attribute_name );
   if ( ! taxonomy_exists( $taxonomy ) ) {
    continue;
@@ -130,7 +192,7 @@ function jofme_catalog_attribute_filters_available() {
    return true;
   }
  }
- if ( taxonomy_exists( 'product_tag' ) ) {
+ if ( jofme_catalog_filter_collection_enabled() && taxonomy_exists( 'product_tag' ) ) {
   $tags = get_terms(
    array(
     'taxonomy'   => 'product_tag',
@@ -143,14 +205,14 @@ function jofme_catalog_attribute_filters_available() {
    return true;
   }
  }
- return false;
+ return jofme_catalog_filter_price_enabled();
 }
 
 /**
  * Auto attribute / collection / price filters for the shop sidebar (off-canvas).
  *
- * Loops every global WooCommerce attribute so newly created attributes appear
- * without adding a separate widget per attribute.
+ * Only enabled attributes (Customizer → Shop) are listed. WooCommerce layered-nav
+ * widgets in Shop Sidebar are suppressed to avoid duplicate filters.
  */
 function jofme_catalog_filters() {
  if ( ! is_shop() && ! is_product_taxonomy() ) {
@@ -161,6 +223,13 @@ function jofme_catalog_filters() {
  }
  $action = is_product_taxonomy() ? get_term_link( get_queried_object() ) : wc_get_page_permalink( 'shop' );
  if ( is_wp_error( $action ) || ! $action ) {
+  return;
+ }
+
+ $attributes = jofme_catalog_filter_attributes();
+ $show_collection = jofme_catalog_filter_collection_enabled();
+ $show_price      = jofme_catalog_filter_price_enabled();
+ if ( ! $attributes && ! $show_collection && ! $show_price ) {
   return;
  }
 
@@ -181,7 +250,7 @@ function jofme_catalog_filters() {
   }
  }
 
- foreach ( wc_get_attribute_taxonomies() as $attribute ) {
+ foreach ( $attributes as $attribute ) {
   $taxonomy = wc_attribute_taxonomy_name( $attribute->attribute_name );
   if ( function_exists( 'jofme_filter_attribute_control' ) ) {
    jofme_filter_attribute_control( $taxonomy, 'filter_' . $attribute->attribute_name, $attribute->attribute_label );
@@ -190,13 +259,17 @@ function jofme_catalog_filters() {
   }
  }
 
- jofme_filter_select( 'product_tag', 'jofme_collection', __( 'Collection', 'jofme' ) );
-
- echo '<fieldset><legend>' . esc_html__( 'Price range', 'jofme' ) . ' (' . esc_html( get_woocommerce_currency_symbol() ) . ')</legend>';
- foreach ( array( 'min_price' => __( 'Minimum price', 'jofme' ), 'max_price' => __( 'Maximum price', 'jofme' ) ) as $key => $label ) {
-  echo '<label>' . esc_html( $label ) . '<input type="number" min="0" step="0.01" name="' . esc_attr( $key ) . '" value="' . esc_attr( jofme_filter_value( $key ) ) . '"></label>';
+ if ( $show_collection ) {
+  jofme_filter_select( 'product_tag', 'jofme_collection', __( 'Collection', 'jofme' ) );
  }
- echo '</fieldset>';
+
+ if ( $show_price ) {
+  echo '<fieldset><legend>' . esc_html__( 'Price range', 'jofme' ) . ' (' . esc_html( get_woocommerce_currency_symbol() ) . ')</legend>';
+  foreach ( array( 'min_price' => __( 'Minimum price', 'jofme' ), 'max_price' => __( 'Maximum price', 'jofme' ) ) as $key => $label ) {
+   echo '<label>' . esc_html( $label ) . '<input type="number" min="0" step="0.01" name="' . esc_attr( $key ) . '" value="' . esc_attr( jofme_filter_value( $key ) ) . '"></label>';
+  }
+  echo '</fieldset>';
+ }
  echo '</div>';
  echo '<div class="jofme-filter-actions"><button type="submit">' . esc_html__( 'Apply filters', 'jofme' ) . '</button><a href="' . esc_url( $action ) . '">' . esc_html__( 'Clear filters', 'jofme' ) . '</a></div>';
  echo '</form>';
@@ -210,6 +283,38 @@ function jofme_catalog_filters() {
  echo '</div></div>';
 }
 add_action( 'jofme_shop_sidebar_filters', 'jofme_catalog_filters' );
+
+/**
+ * Hide WooCommerce filter widgets in Shop Sidebar so attributes are not listed twice.
+ *
+ * Theme auto-filters (Customizer) are the single source for catalog filters.
+ *
+ * @param array     $instance Widget settings.
+ * @param WP_Widget $widget   Widget instance.
+ * @param array     $args     Sidebar args.
+ * @return array|false
+ */
+function jofme_suppress_duplicate_shop_filter_widgets( $instance, $widget, $args ) {
+ if ( false === $instance || ! is_array( $args ) || empty( $args['id'] ) || 'shop-sidebar' !== $args['id'] ) {
+  return $instance;
+ }
+ if ( ! function_exists( 'is_shop' ) || ( ! is_shop() && ! is_product_taxonomy() ) ) {
+  return $instance;
+ }
+ $id_base = isset( $widget->id_base ) ? (string) $widget->id_base : '';
+ $suppress = array(
+  'woocommerce_layered_nav',
+  'woocommerce_layered_nav_filters',
+  'woocommerce_price_filter',
+  'woocommerce_rating_filter',
+  'woocommerce_attribute_filter',
+ );
+ if ( in_array( $id_base, $suppress, true ) ) {
+  return false;
+ }
+ return $instance;
+}
+add_filter( 'widget_display_callback', 'jofme_suppress_duplicate_shop_filter_widgets', 10, 3 );
 
 function jofme_filter_select( $taxonomy, $key, $label ) {
  $terms = get_terms( array( 'taxonomy' => $taxonomy, 'hide_empty' => true ) );
@@ -540,6 +645,54 @@ function jofme_premium_customizer( $manager ) {
    )
   )
  );
+
+ $manager->add_setting( 'jofme_filter_show_collection', array( 'default' => true, 'sanitize_callback' => 'wp_validate_boolean' ) );
+ $manager->add_control(
+  'jofme_filter_show_collection',
+  array(
+   'label'       => __( 'Show Collection filter', 'jofme' ),
+   'description' => __( 'Filters panel: enable/disable Collection, Price, and each product attribute below. New attributes are on by default. WooCommerce filter widgets in Shop Sidebar are hidden so attributes are not listed twice.', 'jofme' ),
+   'section'     => 'jofme_shop',
+   'type'        => 'checkbox',
+  )
+ );
+ $manager->add_setting( 'jofme_filter_show_price', array( 'default' => true, 'sanitize_callback' => 'wp_validate_boolean' ) );
+ $manager->add_control(
+  'jofme_filter_show_price',
+  array(
+   'label'   => __( 'Show Price range filter', 'jofme' ),
+   'section' => 'jofme_shop',
+   'type'    => 'checkbox',
+  )
+ );
+
+ if ( function_exists( 'wc_get_attribute_taxonomies' ) ) {
+  foreach ( wc_get_attribute_taxonomies() as $attribute ) {
+   if ( empty( $attribute->attribute_name ) ) {
+    continue;
+   }
+   $mod_key = jofme_catalog_filter_attr_mod_key( $attribute->attribute_name );
+   $label   = ! empty( $attribute->attribute_label )
+    ? $attribute->attribute_label
+    : $attribute->attribute_name;
+   $manager->add_setting(
+    $mod_key,
+    array(
+     'default'           => true,
+     'sanitize_callback' => 'wp_validate_boolean',
+    )
+   );
+   $manager->add_control(
+    $mod_key,
+    array(
+     /* translators: %s: attribute label */
+     'label'   => sprintf( __( 'Show “%s” filter', 'jofme' ), $label ),
+     'section' => 'jofme_shop',
+     'type'    => 'checkbox',
+    )
+   );
+  }
+ }
 }
 add_action( 'customize_register', 'jofme_premium_customizer', 20 );
 function jofme_premium_classes( $classes ) {
