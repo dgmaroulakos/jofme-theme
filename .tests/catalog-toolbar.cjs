@@ -24,6 +24,8 @@ assert.match(php, /jofme_suppress_duplicate_shop_filter_widgets/);
 assert.match(css, /\.jofme-filters--sidebar\b/);
 assert.match(css, /\.jofme-filter-panel__summary\b/);
 assert.match(php, /function jofme_filter_checklist/);
+assert.match(php, /function jofme_catalog_results_open/);
+assert.match(js, /jofme:catalogupdated/);
 assert.match(css, /jofme-catalog-toolbar__controls/);
 assert.match(css, /jofme-view__btn--desktop/);
 assert.match(css, /jofme-card-description__more/);

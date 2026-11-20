@@ -67,6 +67,7 @@ jobs:
           node .tests/catalog-filter-attributes.cjs
           node .tests/catalog-filters-context.cjs
           node .tests/catalog-filters-accordion.cjs
+          node .tests/catalog-filters-ajax.cjs
       - name: Match release tag to theme versions
         if: startsWith(github.ref, 'refs/tags/')
         env:
