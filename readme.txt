@@ -3,7 +3,7 @@ Contributors: jofme
 Requires at least: 6.4
 Tested up to: 6.8
 Requires PHP: 7.4
-Stable tag: 1.7.48
+Stable tag: 1.7.49
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -30,6 +30,9 @@ strings / wpml-config.xml.
 * WPML or Polylang
 
 == Changelog ==
+
+= 1.7.49 =
+* Shop filters: choose which attributes appear in the Filters panel (Customizer → Shop); hide duplicate WooCommerce filter widgets.
 
 = 1.7.48 =
 * Wishlist: cleaner heart icon on product cards / header, reliable card positioning.

@@ -103,7 +103,7 @@ function jofme_layout_customize( $manager ) {
    $desc = '';
    if ( 'sidebar' === $option ) {
     $desc = 'catalog' === $context
-     ? __( 'The shop Filters panel lists every global product attribute automatically (new attributes appear without extra widgets). Optional Shop Sidebar widgets still render below. On mobile and tablet it opens as an off-canvas panel.', 'jofme' )
+     ? __( 'The shop Filters panel lists attributes you enable under Jofme Options → Shop (new attributes are on by default). WooCommerce filter widgets in Shop Sidebar are hidden to avoid duplicates; other widgets still show. On mobile and tablet it opens as an off-canvas panel.', 'jofme' )
      : __( 'The sidebar appears when its widget area contains widgets. On mobile it follows the content.', 'jofme' );
    }
    $manager->add_control( $id, array( 'label' => $label . ' — ' . $option_label, 'section' => 'jofme_layout', 'type' => 'select', 'choices' => $choices, 'description' => $desc ) );
