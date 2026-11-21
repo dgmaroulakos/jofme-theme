@@ -189,6 +189,129 @@ function jofme_is_wishlist_page() {
 }
 
 /**
+ * Preferred public slug for the native wishlist page.
+ *
+ * @return string
+ */
+function jofme_wishlist_desired_slug() {
+	return 'wishlist';
+}
+
+/**
+ * Ensure the wishlist page has a usable post_name (prefer "wishlist").
+ *
+ * @param int $page_id Page ID.
+ * @return string Current slug.
+ */
+function jofme_wishlist_ensure_slug( $page_id ) {
+	$page_id = absint( $page_id );
+	if ( ! $page_id ) {
+		return '';
+	}
+
+	$desired = jofme_wishlist_desired_slug();
+	$current = (string) get_post_field( 'post_name', $page_id );
+	if ( $desired === $current ) {
+		return $current;
+	}
+
+	$conflict = get_page_by_path( $desired );
+	if ( $conflict && (int) $conflict->ID !== $page_id ) {
+		return $current ? $current : $desired;
+	}
+
+	$updated = wp_update_post(
+		array(
+			'ID'        => $page_id,
+			'post_name' => $desired,
+		),
+		true
+	);
+	if ( is_wp_error( $updated ) ) {
+		return $current;
+	}
+
+	$slug = (string) get_post_field( 'post_name', $page_id );
+	if ( $slug && $slug !== $current ) {
+		update_option( 'jofme_wishlist_flush_rewrites', 1 );
+	}
+
+	return $slug ? $slug : $current;
+}
+
+/**
+ * Relative request path for a page permalink (no home subdirectory prefix).
+ *
+ * @param int $page_id Page ID.
+ * @return string
+ */
+function jofme_wishlist_page_request_path( $page_id ) {
+	$page_id = absint( $page_id );
+	if ( ! $page_id ) {
+		return '';
+	}
+
+	$permalink = get_permalink( $page_id );
+	if ( ! $permalink ) {
+		return '';
+	}
+
+	$path = (string) wp_parse_url( $permalink, PHP_URL_PATH );
+	$path = trim( $path, '/' );
+	if ( '' === $path ) {
+		return '';
+	}
+
+	$home_path = trim( (string) wp_parse_url( home_url( '/' ), PHP_URL_PATH ), '/' );
+	if ( $home_path && 0 === strpos( $path, $home_path . '/' ) ) {
+		$path = substr( $path, strlen( $home_path ) + 1 );
+	} elseif ( $home_path && $path === $home_path ) {
+		return '';
+	}
+
+	return trim( $path, '/' );
+}
+
+/**
+ * Register a top-priority rewrite so /wishlist/ always maps to the page ID.
+ *
+ * Fixes cases where ?page_id=N works but the pretty slug 404s (stale rules or
+ * WooCommerce/product slug conflicts).
+ */
+function jofme_wishlist_register_rewrite() {
+	if ( jofme_wishlist_has_yith() || jofme_wishlist_has_ti() ) {
+		return;
+	}
+	if ( ! get_option( 'permalink_structure' ) ) {
+		return;
+	}
+
+	$page_id = jofme_wishlist_page_id();
+	if ( ! $page_id ) {
+		return;
+	}
+
+	$paths = array();
+	$request_path = jofme_wishlist_page_request_path( $page_id );
+	if ( $request_path ) {
+		$paths[] = $request_path;
+	}
+
+	$slug = (string) get_post_field( 'post_name', $page_id );
+	if ( $slug ) {
+		$paths[] = $slug;
+	}
+	$paths[] = jofme_wishlist_desired_slug();
+	$paths   = array_values( array_unique( array_filter( $paths ) ) );
+
+	foreach ( $paths as $path ) {
+		$regex = '^' . preg_quote( $path, '/' ) . '/?$';
+		add_rewrite_rule( $regex, 'index.php?page_id=' . $page_id, 'top' );
+	}
+}
+add_action( 'init', 'jofme_wishlist_register_rewrite', 20 );
+
+/**
  * Create or repair a Wishlist page with the shortcode.
  *
  * @return int Page ID or 0.
@@ -205,17 +328,15 @@ function jofme_wishlist_ensure_page() {
 	jofme_wishlist_clear_invalid_page_id();
 
 	$page_id = jofme_wishlist_page_id();
-	if ( $page_id ) {
-		return $page_id;
-	}
-
-	$page_id = jofme_wishlist_find_existing_page();
 	$created = false;
+	if ( ! $page_id ) {
+		$page_id = jofme_wishlist_find_existing_page();
+	}
 	if ( ! $page_id ) {
 		$inserted = wp_insert_post(
 			array(
 				'post_title'   => __( 'Wishlist', 'jofme' ),
-				'post_name'    => 'wishlist',
+				'post_name'    => jofme_wishlist_desired_slug(),
 				'post_status'  => 'publish',
 				'post_type'    => 'page',
 				'post_content' => '[jofme_wishlist]',
@@ -234,6 +355,7 @@ function jofme_wishlist_ensure_page() {
 	}
 
 	jofme_wishlist_store_page_id( $page_id );
+	jofme_wishlist_ensure_slug( $page_id );
 
 	if ( $created ) {
 		update_option( 'jofme_wishlist_flush_rewrites', 1 );
@@ -255,14 +377,31 @@ function jofme_wishlist_maybe_ensure_page() {
 add_action( 'init', 'jofme_wishlist_maybe_ensure_page', 30 );
 
 /**
- * Flush rewrite rules once after creating the wishlist page.
+ * One-time rewrite upgrade when the theme ships slug/rewrite fixes.
+ */
+function jofme_wishlist_maybe_upgrade_rewrites() {
+	$target = '1.7.56';
+	if ( get_option( 'jofme_wishlist_rewrite_version' ) === $target ) {
+		return;
+	}
+	if ( ! jofme_wishlist_has_yith() && ! jofme_wishlist_has_ti() ) {
+		jofme_wishlist_ensure_page();
+		update_option( 'jofme_wishlist_flush_rewrites', 1 );
+	}
+	update_option( 'jofme_wishlist_rewrite_version', $target );
+}
+add_action( 'init', 'jofme_wishlist_maybe_upgrade_rewrites', 31 );
+
+/**
+ * Flush rewrite rules once after creating/repairing the wishlist page.
  */
 function jofme_wishlist_maybe_flush_rewrites() {
 	if ( ! get_option( 'jofme_wishlist_flush_rewrites' ) ) {
 		return;
 	}
 	delete_option( 'jofme_wishlist_flush_rewrites' );
-	flush_rewrite_rules( false );
+	// Hard flush: pretty /wishlist/ was 404 while ?page_id= worked.
+	flush_rewrite_rules( true );
 }
 add_action( 'init', 'jofme_wishlist_maybe_flush_rewrites', 99 );
 
