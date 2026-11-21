@@ -26,19 +26,126 @@ function jofme_wishlist_has_ti() {
 }
 
 /**
- * Resolved wishlist page ID (Customizer / option / plugin).
+ * Whether a page ID can be used as the theme wishlist page.
+ *
+ * Rejects the static front page so the header heart never points at Home
+ * (which also made “Edit” open the homepage in Customizer / Elementor).
+ *
+ * @param int $page_id Page ID.
+ * @return bool
+ */
+function jofme_wishlist_page_is_usable( $page_id ) {
+	$page_id = absint( $page_id );
+	if ( ! $page_id || 'page' !== get_post_type( $page_id ) || 'publish' !== get_post_status( $page_id ) ) {
+		return false;
+	}
+
+	if ( 'page' === get_option( 'show_on_front' ) && absint( get_option( 'page_on_front' ) ) === $page_id ) {
+		return false;
+	}
+
+	return true;
+}
+
+/**
+ * Persist wishlist page assignment.
+ *
+ * @param int $page_id Page ID.
+ */
+function jofme_wishlist_store_page_id( $page_id ) {
+	$page_id = absint( $page_id );
+	update_option( 'jofme_wishlist_page_id', $page_id );
+	set_theme_mod( 'jofme_wishlist_page_id', $page_id );
+}
+
+/**
+ * Clear an unusable stored wishlist page ID.
+ */
+function jofme_wishlist_clear_invalid_page_id() {
+	$theme_mod = absint( get_theme_mod( 'jofme_wishlist_page_id', 0 ) );
+	$option    = absint( get_option( 'jofme_wishlist_page_id', 0 ) );
+
+	if ( $theme_mod && ! jofme_wishlist_page_is_usable( $theme_mod ) ) {
+		remove_theme_mod( 'jofme_wishlist_page_id' );
+	}
+	if ( $option && ! jofme_wishlist_page_is_usable( $option ) ) {
+		delete_option( 'jofme_wishlist_page_id' );
+	}
+}
+
+/**
+ * Find an existing wishlist page by slug or shortcode content.
+ *
+ * @return int
+ */
+function jofme_wishlist_find_existing_page() {
+	$by_slug = get_posts(
+		array(
+			'post_type'              => 'page',
+			'post_status'            => 'publish',
+			'posts_per_page'         => 1,
+			'name'                   => 'wishlist',
+			'fields'                 => 'ids',
+			'no_found_rows'          => true,
+			'update_post_meta_cache' => false,
+			'update_post_term_cache' => false,
+		)
+	);
+	if ( $by_slug && jofme_wishlist_page_is_usable( (int) $by_slug[0] ) ) {
+		return (int) $by_slug[0];
+	}
+
+	$with_shortcode = get_posts(
+		array(
+			'post_type'              => 'page',
+			'post_status'            => 'publish',
+			'posts_per_page'         => 5,
+			's'                      => '[jofme_wishlist]',
+			'fields'                 => 'ids',
+			'no_found_rows'          => true,
+			'update_post_meta_cache' => false,
+			'update_post_term_cache' => false,
+		)
+	);
+	foreach ( (array) $with_shortcode as $candidate ) {
+		$candidate = (int) $candidate;
+		if ( ! jofme_wishlist_page_is_usable( $candidate ) ) {
+			continue;
+		}
+		$post = get_post( $candidate );
+		if ( $post && has_shortcode( (string) $post->post_content, 'jofme_wishlist' ) ) {
+			return $candidate;
+		}
+	}
+
+	return 0;
+}
+
+/**
+ * Resolved wishlist page ID (Customizer / option).
  *
  * @return int
  */
 function jofme_wishlist_page_id() {
 	$page_id = absint( get_theme_mod( 'jofme_wishlist_page_id', 0 ) );
-	if ( ! $page_id ) {
+	if ( ! jofme_wishlist_page_is_usable( $page_id ) ) {
 		$page_id = absint( get_option( 'jofme_wishlist_page_id', 0 ) );
 	}
-	if ( $page_id && 'publish' === get_post_status( $page_id ) ) {
-		return $page_id;
+	return jofme_wishlist_page_is_usable( $page_id ) ? $page_id : 0;
+}
+
+/**
+ * Sanitize Customizer wishlist page assignment.
+ *
+ * @param mixed $value Raw page ID.
+ * @return int
+ */
+function jofme_sanitize_wishlist_page_id( $value ) {
+	$page_id = absint( $value );
+	if ( ! $page_id ) {
+		return 0;
 	}
-	return 0;
+	return jofme_wishlist_page_is_usable( $page_id ) ? $page_id : 0;
 }
 
 /**
@@ -65,6 +172,9 @@ function jofme_wishlist_page_url() {
 	}
 
 	$page_id = jofme_wishlist_page_id();
+	if ( ! $page_id ) {
+		$page_id = jofme_wishlist_ensure_page();
+	}
 	return $page_id ? (string) get_permalink( $page_id ) : '';
 }
 
@@ -79,7 +189,7 @@ function jofme_is_wishlist_page() {
 }
 
 /**
- * Create a Wishlist page with the shortcode when missing.
+ * Create or repair a Wishlist page with the shortcode.
  *
  * @return int Page ID or 0.
  */
@@ -92,24 +202,17 @@ function jofme_wishlist_ensure_page() {
 		return jofme_wishlist_page_id();
 	}
 
+	jofme_wishlist_clear_invalid_page_id();
+
 	$page_id = jofme_wishlist_page_id();
 	if ( $page_id ) {
 		return $page_id;
 	}
 
-	$existing = get_posts(
-		array(
-			'post_type'      => 'page',
-			'post_status'    => 'publish',
-			'posts_per_page' => 1,
-			'name'           => 'wishlist',
-			'fields'         => 'ids',
-		)
-	);
-	if ( $existing ) {
-		$page_id = (int) $existing[0];
-	} else {
-		$page_id = (int) wp_insert_post(
+	$page_id = jofme_wishlist_find_existing_page();
+	$created = false;
+	if ( ! $page_id ) {
+		$inserted = wp_insert_post(
 			array(
 				'post_title'   => __( 'Wishlist', 'jofme' ),
 				'post_name'    => 'wishlist',
@@ -119,30 +222,49 @@ function jofme_wishlist_ensure_page() {
 			),
 			true
 		);
-		if ( is_wp_error( $page_id ) || ! $page_id ) {
+		if ( is_wp_error( $inserted ) || ! $inserted ) {
 			return 0;
 		}
+		$page_id = (int) $inserted;
+		$created = true;
 	}
 
-	update_option( 'jofme_wishlist_page_id', $page_id );
-	set_theme_mod( 'jofme_wishlist_page_id', $page_id );
+	if ( ! jofme_wishlist_page_is_usable( $page_id ) ) {
+		return 0;
+	}
+
+	jofme_wishlist_store_page_id( $page_id );
+
+	if ( $created ) {
+		update_option( 'jofme_wishlist_flush_rewrites', 1 );
+	}
 
 	return $page_id;
 }
 add_action( 'after_switch_theme', 'jofme_wishlist_ensure_page' );
 
 /**
- * Ensure a wishlist page exists once after update (non-destructive).
+ * Keep a usable wishlist page assigned (heals homepage / missing IDs).
  */
 function jofme_wishlist_maybe_ensure_page() {
-	if ( get_option( 'jofme_wishlist_page_bootstrapped' ) ) {
+	if ( jofme_wishlist_has_yith() || jofme_wishlist_has_ti() ) {
 		return;
 	}
-	if ( jofme_wishlist_ensure_page() ) {
-		update_option( 'jofme_wishlist_page_bootstrapped', 1 );
-	}
+	jofme_wishlist_ensure_page();
 }
 add_action( 'init', 'jofme_wishlist_maybe_ensure_page', 30 );
+
+/**
+ * Flush rewrite rules once after creating the wishlist page.
+ */
+function jofme_wishlist_maybe_flush_rewrites() {
+	if ( ! get_option( 'jofme_wishlist_flush_rewrites' ) ) {
+		return;
+	}
+	delete_option( 'jofme_wishlist_flush_rewrites' );
+	flush_rewrite_rules( false );
+}
+add_action( 'init', 'jofme_wishlist_maybe_flush_rewrites', 99 );
 
 /**
  * Shared heart icon SVG for wishlist controls.
@@ -487,16 +609,17 @@ function jofme_wishlist_customize_register( $wp_customize ) {
 		'jofme_wishlist_page_id',
 		array(
 			'default'           => 0,
-			'sanitize_callback' => 'absint',
+			'sanitize_callback' => 'jofme_sanitize_wishlist_page_id',
 		)
 	);
 	$wp_customize->add_control(
 		'jofme_wishlist_page_id',
 		array(
 			'label'       => __( 'Wishlist page', 'jofme' ),
-			'description' => __( 'Used for the header heart link and the native wishlist grid. Ignored when YITH or TI Wishlist is active.', 'jofme' ),
+			'description' => __( 'Must be a published page with [jofme_wishlist] (not the homepage). Used for the header heart link. Ignored when YITH or TI Wishlist is active.', 'jofme' ),
 			'section'     => 'jofme_wishlist',
 			'type'        => 'dropdown-pages',
+			'allow_null'  => true,
 		)
 	);
 
