@@ -20,6 +20,8 @@ assert.match(php, /function jofme_wishlist_ajax_products/);
 assert.match(php, /wp_ajax_nopriv_jofme_wishlist_products/);
 assert.match(php, /jofme_wishlist_page_id/);
 assert.match(php, /dropdown-pages/);
+assert.match(php, /jofme_wishlist_card_layout/);
+assert.match(php, /function jofme_wishlist_card_layout/);
 assert.match(php, /data-jofme-wishlist-page/);
 assert.match(js, /jofme_wishlist_products/);
 assert.match(js, /data-jofme-wishlist-page/);

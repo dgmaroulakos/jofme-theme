@@ -63,6 +63,7 @@ jobs:
           node .tests/prebuilt-footer.cjs
           node .tests/wishlist-heart.cjs
           node .tests/wishlist-page.cjs
+          node .tests/responsive-titles-icons.cjs
           node .tests/bestsellers-carousel.cjs
           node .tests/catalog-filter-attributes.cjs
           node .tests/catalog-filters-context.cjs

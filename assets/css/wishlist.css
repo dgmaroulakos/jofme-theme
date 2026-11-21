@@ -6,8 +6,8 @@
  appearance:none;
  display:grid;
  place-items:center;
- width:40px;
- height:40px;
+ width:var(--jofme-card-icon-size,40px);
+ height:var(--jofme-card-icon-size,40px);
  margin:0;
  padding:0;
  border:1px solid #e8e2d8;
@@ -24,8 +24,8 @@
 .jofme-wishlist.is-active .jofme-wishlist__path{fill:currentColor}
 .jofme-wishlist__icon{
  display:block;
- width:20px;
- height:20px;
+ width:var(--jofme-card-icon-svg,20px);
+ height:var(--jofme-card-icon-svg,20px);
  overflow:visible;
 }
 .jofme-wishlist--plugin{display:contents}
@@ -34,8 +34,8 @@
 .jofme-card-actions .jofme-wishlist,
 .jofme-bestsellers__actions .jofme-wishlist{flex:0 0 auto}
 @media(max-width:767px){
- .jofme-wishlist{width:34px;height:34px}
- .jofme-wishlist__icon{width:18px;height:18px}
+ .jofme-wishlist{width:var(--jofme-card-icon-size-mobile,34px);height:var(--jofme-card-icon-size-mobile,34px)}
+ .jofme-wishlist__icon{width:var(--jofme-card-icon-svg-mobile,17px);height:var(--jofme-card-icon-svg-mobile,17px)}
 }
 
 /* Header wishlist link. */

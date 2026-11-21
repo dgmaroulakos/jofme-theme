@@ -1028,10 +1028,66 @@ function jofme_preview_dialog() {
 add_action( 'wp_footer', 'jofme_preview_dialog' );
 function jofme_premium_customizer( $manager ) {
  $manager->remove_control( 'jofme_shop_columns' );
- foreach ( array( 'jofme_card_layout' => array( __( 'Product card layout', 'jofme' ), 'bestsellers', array( 'bestsellers' => __( 'Bestsellers (tabs card)', 'jofme' ), 'minimal' => __( 'Minimal', 'jofme' ), 'framed' => __( 'Framed', 'jofme' ), 'editorial' => __( 'Editorial', 'jofme' ), 'gallery' => __( 'Gallery (minimal product grid)', 'jofme' ) ) ), 'jofme_default_view' => array( __( 'Default catalog view', 'jofme' ), jofme_catalog_default_view(), array( '1' => '1 col', '2' => '2 col', '3' => '3 col', '4' => '4 col', 'list' => __( 'List', 'jofme' ) ) ) ) as $key => $config ) {
+ $card_choices = function_exists( 'jofme_product_card_layout_choices' )
+  ? jofme_product_card_layout_choices()
+  : array(
+   'bestsellers' => __( 'Bestsellers (tabs card)', 'jofme' ),
+   'minimal'     => __( 'Minimal', 'jofme' ),
+   'framed'      => __( 'Framed', 'jofme' ),
+   'editorial'   => __( 'Editorial', 'jofme' ),
+   'gallery'     => __( 'Gallery (minimal product grid)', 'jofme' ),
+  );
+ foreach (
+  array(
+   'jofme_card_layout'  => array( __( 'Product card layout', 'jofme' ), 'bestsellers', $card_choices ),
+   'jofme_default_view' => array( __( 'Default catalog view', 'jofme' ), jofme_catalog_default_view(), array( '1' => '1 col', '2' => '2 col', '3' => '3 col', '4' => '4 col', 'list' => __( 'List', 'jofme' ) ) ),
+  ) as $key => $config
+ ) {
   $manager->add_setting( $key, array( 'default' => $config[1], 'sanitize_callback' => 'jofme_sanitize_select' ) );
   $manager->add_control( $key, array( 'label' => $config[0], 'section' => 'jofme_shop', 'type' => 'select', 'choices' => $config[2] ) );
  }
+
+ $manager->add_setting(
+  'jofme_card_title_size',
+  array(
+   'default'           => 30,
+   'sanitize_callback' => 'jofme_sanitize_card_title_size',
+  )
+ );
+ $manager->add_control(
+  'jofme_card_title_size',
+  array(
+   'label'       => __( 'Product card title size (px)', 'jofme' ),
+   'description' => __( 'Applies to Bestsellers-style shop cards and the Bestsellers Tabs widget. Scales down automatically on small screens.', 'jofme' ),
+   'section'     => 'jofme_shop',
+   'type'        => 'number',
+   'input_attrs' => array(
+    'min' => 12,
+    'max' => 40,
+   ),
+  )
+ );
+
+ $manager->add_setting(
+  'jofme_card_icon_size',
+  array(
+   'default'           => 40,
+   'sanitize_callback' => 'jofme_sanitize_card_icon_size',
+  )
+ );
+ $manager->add_control(
+  'jofme_card_icon_size',
+  array(
+   'label'       => __( 'Product card icon size (px)', 'jofme' ),
+   'description' => __( 'Quick view, product link, and wishlist heart buttons on product cards.', 'jofme' ),
+   'section'     => 'jofme_shop',
+   'type'        => 'number',
+   'input_attrs' => array(
+    'min' => 28,
+    'max' => 52,
+   ),
+  )
+ );
  $manager->add_setting( 'jofme_shop_filters_icon', array( 'default' => 0, 'sanitize_callback' => 'absint' ) );
  $manager->add_control(
   new WP_Customize_Media_Control(
@@ -1140,7 +1196,47 @@ function jofme_bestsellers_sale_flash( $html, $post, $product ) {
 }
 add_filter( 'woocommerce_sale_flash', 'jofme_bestsellers_sale_flash', 20, 3 );
 
+/**
+ * Sanitize product card title size (12–40).
+ *
+ * @param mixed $value Raw value.
+ * @return int
+ */
+function jofme_sanitize_card_title_size( $value ) {
+ return max( 12, min( 40, absint( $value ) ) );
+}
+
+/**
+ * Sanitize product card icon button size (28–52).
+ *
+ * @param mixed $value Raw value.
+ * @return int
+ */
+function jofme_sanitize_card_icon_size( $value ) {
+ return max( 28, min( 52, absint( $value ) ) );
+}
+
+/**
+ * Enqueue product card styles + Customizer CSS variables.
+ */
 function jofme_product_card_assets() {
  wp_enqueue_style( 'jofme-product-cards', JOFME_URI . '/assets/css/product-cards.css', array( 'jofme-premium' ), JOFME_VERSION );
+
+ $title = jofme_sanitize_card_title_size( get_theme_mod( 'jofme_card_title_size', 30 ) );
+ $icon  = jofme_sanitize_card_icon_size( get_theme_mod( 'jofme_card_icon_size', 40 ) );
+ $icon_svg = max( 16, (int) round( $icon * 0.5 ) );
+ $title_mobile = max( 14, (int) round( $title * 0.7 ) );
+ $icon_mobile  = max( 30, (int) round( $icon * 0.85 ) );
+ $icon_svg_m   = max( 14, (int) round( $icon_mobile * 0.5 ) );
+
+ $css  = ':root{';
+ $css .= '--jofme-card-title-size:' . $title . 'px;';
+ $css .= '--jofme-card-title-size-mobile:' . $title_mobile . 'px;';
+ $css .= '--jofme-card-icon-size:' . $icon . 'px;';
+ $css .= '--jofme-card-icon-svg:' . $icon_svg . 'px;';
+ $css .= '--jofme-card-icon-size-mobile:' . $icon_mobile . 'px;';
+ $css .= '--jofme-card-icon-svg-mobile:' . $icon_svg_m . 'px;';
+ $css .= '}';
+ wp_add_inline_style( 'jofme-product-cards', $css );
 }
 add_action( 'wp_enqueue_scripts', 'jofme_product_card_assets', 28 );

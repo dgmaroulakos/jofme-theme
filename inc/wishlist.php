@@ -410,23 +410,66 @@ function jofme_wishlist_assets() {
 add_action( 'wp_enqueue_scripts', 'jofme_wishlist_assets', 36 );
 
 /**
+ * Product card layout choices (shared with shop Customizer).
+ *
+ * @return array<string,string>
+ */
+function jofme_product_card_layout_choices() {
+	return array(
+		'bestsellers' => __( 'Bestsellers (tabs card)', 'jofme' ),
+		'minimal'     => __( 'Minimal', 'jofme' ),
+		'framed'      => __( 'Framed', 'jofme' ),
+		'editorial'   => __( 'Editorial', 'jofme' ),
+		'gallery'     => __( 'Gallery (minimal product grid)', 'jofme' ),
+	);
+}
+
+/**
+ * Resolved product card layout for the wishlist page.
+ *
+ * @return string
+ */
+function jofme_wishlist_card_layout() {
+	$allowed = array_keys( jofme_product_card_layout_choices() );
+	$choice  = (string) get_theme_mod( 'jofme_wishlist_card_layout', 'inherit' );
+	if ( 'inherit' === $choice || '' === $choice ) {
+		$shop = (string) get_theme_mod( 'jofme_card_layout', 'bestsellers' );
+		return in_array( $shop, $allowed, true ) ? $shop : 'bestsellers';
+	}
+	return in_array( $choice, $allowed, true ) ? $choice : 'bestsellers';
+}
+
+/**
  * Body class on the wishlist page.
  *
  * @param array $classes Classes.
  * @return array
  */
 function jofme_wishlist_body_class( $classes ) {
-	if ( jofme_is_wishlist_page() ) {
-		$classes[] = 'jofme-wishlist-page-view';
-		$layout    = get_theme_mod( 'jofme_card_layout', 'bestsellers' );
-		$classes[] = 'jofme-card-' . sanitize_html_class( $layout );
+	if ( ! jofme_is_wishlist_page() ) {
+		return $classes;
 	}
+
+	$classes[] = 'jofme-wishlist-page-view';
+	$layout    = jofme_wishlist_card_layout();
+
+	// Replace shop card layout class so wishlist can use its own card style.
+	$classes = array_values(
+		array_filter(
+			$classes,
+			static function ( $class ) {
+				return 0 !== strpos( (string) $class, 'jofme-card-' );
+			}
+		)
+	);
+	$classes[] = 'jofme-card-' . sanitize_html_class( $layout );
+
 	return $classes;
 }
-add_filter( 'body_class', 'jofme_wishlist_body_class' );
+add_filter( 'body_class', 'jofme_wishlist_body_class', 25 );
 
 /**
- * Customizer: wishlist page assignment.
+ * Customizer: wishlist page assignment + card layout.
  *
  * @param WP_Customize_Manager $wp_customize Customizer.
  */
@@ -454,6 +497,29 @@ function jofme_wishlist_customize_register( $wp_customize ) {
 			'description' => __( 'Used for the header heart link and the native wishlist grid. Ignored when YITH or TI Wishlist is active.', 'jofme' ),
 			'section'     => 'jofme_wishlist',
 			'type'        => 'dropdown-pages',
+		)
+	);
+
+	$card_choices = array_merge(
+		array( 'inherit' => __( 'Same as shop product cards', 'jofme' ) ),
+		jofme_product_card_layout_choices()
+	);
+
+	$wp_customize->add_setting(
+		'jofme_wishlist_card_layout',
+		array(
+			'default'           => 'inherit',
+			'sanitize_callback' => 'jofme_sanitize_select',
+		)
+	);
+	$wp_customize->add_control(
+		'jofme_wishlist_card_layout',
+		array(
+			'label'       => __( 'Wishlist product card', 'jofme' ),
+			'description' => __( 'Choose which product card style the wishlist grid uses.', 'jofme' ),
+			'section'     => 'jofme_wishlist',
+			'type'        => 'select',
+			'choices'     => $card_choices,
 		)
 	);
 }
