@@ -306,6 +306,24 @@ body.jofme-tabs-boxed .woocommerce div.product .woocommerce-tabs ul.tabs li.acti
 	margin-bottom: 1.75rem;
 }
 
+.woocommerce .related ul.products li.product .woocommerce-loop-product__title,
+.woocommerce .upsells ul.products li.product .woocommerce-loop-product__title {
+	overflow-wrap: anywhere;
+}
+
+@media (max-width: 767px) {
+	.woocommerce .related > h2,
+	.woocommerce .upsells > h2 {
+		font-size: 1.35rem;
+		margin-bottom: 1.15rem;
+	}
+
+	.woocommerce .related ul.products,
+	.woocommerce .upsells ul.products {
+		gap: 1.15rem .65rem;
+	}
+}
+
 /* Cart & checkout */
 .woocommerce-cart .cart-collaterals .cart_totals,
 .woocommerce-checkout #payment {
