@@ -65,6 +65,7 @@ jobs:
           node .tests/wishlist-heart.cjs
           node .tests/wishlist-page.cjs
           node .tests/product-copy.cjs
+          node .tests/languages-el.cjs
           node .tests/responsive-titles-icons.cjs
           node .tests/bestsellers-carousel.cjs
           node .tests/catalog-filter-attributes.cjs
