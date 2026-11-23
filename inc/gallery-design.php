@@ -98,6 +98,73 @@ function jofme_gallery_design_assets() {
 add_action( 'wp_enqueue_scripts', 'jofme_gallery_design_assets', 35 );
 
 /**
+ * Expose variation image set to the frontend gallery switcher.
+ *
+ * Includes the variation featured image plus optional additional variation
+ * gallery images (core variation gallery or Additional Variation Images meta).
+ *
+ * @param array                $data      Variation data.
+ * @param WC_Product           $product   Parent product.
+ * @param WC_Product_Variation $variation Variation product.
+ * @return array
+ */
+function jofme_available_variation_gallery( $data, $product, $variation ) {
+	if ( ! is_array( $data ) || ! $variation instanceof WC_Product_Variation ) {
+		return $data;
+	}
+
+	$ids  = array();
+	$main = (int) $variation->get_image_id();
+	if ( $main ) {
+		$ids[] = $main;
+	}
+
+	foreach ( $variation->get_gallery_image_ids() as $id ) {
+		$id = (int) $id;
+		if ( $id && ! in_array( $id, $ids, true ) ) {
+			$ids[] = $id;
+		}
+	}
+
+	$extra = get_post_meta( $variation->get_id(), '_wc_additional_variation_images', true );
+	if ( is_string( $extra ) && '' !== $extra ) {
+		foreach ( array_filter( array_map( 'absint', explode( ',', $extra ) ) ) as $id ) {
+			if ( $id && ! in_array( $id, $ids, true ) ) {
+				$ids[] = $id;
+			}
+		}
+	} elseif ( is_array( $extra ) ) {
+		foreach ( $extra as $id ) {
+			$id = absint( $id );
+			if ( $id && ! in_array( $id, $ids, true ) ) {
+				$ids[] = $id;
+			}
+		}
+	}
+
+	$images = array();
+	foreach ( $ids as $id ) {
+		$full = wp_get_attachment_image_src( $id, 'full' );
+		if ( ! $full || empty( $full[0] ) ) {
+			continue;
+		}
+		$alt = get_post_meta( $id, '_wp_attachment_image_alt', true );
+		$images[] = array(
+			'id'       => $id,
+			'src'      => $full[0],
+			'full_src' => $full[0],
+			'width'    => (int) $full[1],
+			'height'   => (int) $full[2],
+			'alt'      => is_string( $alt ) ? $alt : '',
+		);
+	}
+
+	$data['jofme_gallery'] = $images;
+	return $data;
+}
+add_filter( 'woocommerce_available_variation', 'jofme_available_variation_gallery', 20, 3 );
+
+/**
  * Attachment IDs for the stacked product gallery (featured + gallery, unique).
  *
  * @param WC_Product|null $product Product.
