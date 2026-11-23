@@ -35,6 +35,7 @@ jobs:
           node --check assets/js/size-guide.js
           node --check assets/js/size-guide-admin.js
           node --check assets/js/wishlist.js
+          node --check assets/js/product-copy.js
           node scripts/verify-catalog.cjs
           node scripts/verify-hover.cjs
           node scripts/verify-gallery.cjs
@@ -63,6 +64,7 @@ jobs:
           node .tests/prebuilt-footer.cjs
           node .tests/wishlist-heart.cjs
           node .tests/wishlist-page.cjs
+          node .tests/product-copy.cjs
           node .tests/responsive-titles-icons.cjs
           node .tests/bestsellers-carousel.cjs
           node .tests/catalog-filter-attributes.cjs

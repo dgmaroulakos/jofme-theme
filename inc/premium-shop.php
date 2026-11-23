@@ -23,7 +23,7 @@ function jofme_catalog_assets() {
    'loading'      => __( 'Loading…', 'jofme' ),
    'error'        => __( 'Unable to load this product. Please try again.', 'jofme' ),
    'filterError'  => __( 'Unable to update filters. Please try again.', 'jofme' ),
-   'added'        => __( 'Added to cart', 'jofme' ),
+   'added'        => function_exists( 'jofme_get_product_copy' ) ? jofme_get_product_copy( 'added_to_cart' ) : __( 'Added to cart', 'jofme' ),
    'view'         => __( 'View cart', 'jofme' ),
    'more'         => __( 'More', 'jofme' ),
    'less'         => __( 'Less', 'jofme' ),

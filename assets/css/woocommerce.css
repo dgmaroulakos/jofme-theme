@@ -176,6 +176,73 @@
 	letter-spacing: 0.06em;
 }
 
+.woocommerce div.product .stock.low-stock {
+	color: var(--jofme-color-accent, #8a6a3d);
+}
+
+.woocommerce div.product .stock.out-of-stock {
+	letter-spacing: 0.1em;
+	text-transform: uppercase;
+}
+
+.jofme-product-shipping {
+	margin: 0.85rem 0 0;
+	font-size: 13px;
+	letter-spacing: 0.02em;
+	color: var(--jofme-color-text-muted, #6b6258);
+}
+
+.jofme-product-styling-help {
+	margin: 0.75rem 0 0;
+	font-size: 13px;
+	letter-spacing: 0.02em;
+}
+
+.jofme-product-styling-help__link {
+	text-decoration: underline;
+	text-underline-offset: 0.2em;
+}
+
+.jofme-restock-notify {
+	margin: 1rem 0 0;
+	display: flex;
+	flex-direction: column;
+	align-items: flex-start;
+	gap: 0.75rem;
+}
+
+.jofme-restock-notify__toggle {
+	min-height: 46px;
+}
+
+.jofme-restock-notify__form {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 0.5rem;
+	align-items: center;
+	width: 100%;
+}
+
+.jofme-restock-notify__form[hidden] {
+	display: none !important;
+}
+
+.jofme-restock-notify__email {
+	flex: 1 1 12rem;
+	min-height: 46px;
+	padding: 0 0.85rem;
+	border: 1px solid var(--jofme-color-border);
+	background: var(--jofme-color-surface, #fff);
+	font: inherit;
+}
+
+.jofme-restock-notify__status {
+	flex: 1 1 100%;
+	margin: 0;
+	font-size: 13px;
+	color: var(--jofme-color-text-muted, #6b6258);
+}
+
 .woocommerce div.product .product_meta {
 	font-size: 13px;
 	color: var(--jofme-color-text-muted);
