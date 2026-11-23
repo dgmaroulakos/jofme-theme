@@ -3,7 +3,7 @@ Contributors: jofme
 Requires at least: 6.4
 Tested up to: 6.8
 Requires PHP: 7.4
-Stable tag: 1.7.59
+Stable tag: 1.7.61
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -30,6 +30,9 @@ strings / wpml-config.xml.
 * WPML or Polylang
 
 == Changelog ==
+
+= 1.7.61 =
+* Variable gallery: show parent/featured images until a variation is selected; show variation photos on select; restore parent gallery on clear.
 
 = 1.7.59 =
 * Restock notify: cleaner inline UI (no toggle), loading/success states, Greek microcopy.
