@@ -16,9 +16,16 @@ $has_widgets = is_active_sidebar( 'footer-1' )
 	|| is_active_sidebar( 'footer-4' );
 $prebuilt    = 'brand_left' === $layout;
 $show_main   = $prebuilt || $has_widgets;
+$footer_classes = array(
+	'site-footer',
+	'site-footer--' . $layout,
+);
+if ( $prebuilt && function_exists( 'jofme_footer_logo_invert' ) && jofme_footer_logo_invert() ) {
+	$footer_classes[] = 'site-footer--invert-logo';
+}
 ?>
 
-<footer id="colophon" class="site-footer site-footer--<?php echo esc_attr( $layout ); ?>">
+<footer id="colophon" class="<?php echo esc_attr( implode( ' ', $footer_classes ) ); ?>">
 	<?php if ( $show_main ) : ?>
 		<div class="site-footer__widgets">
 			<?php if ( $prebuilt ) : ?>

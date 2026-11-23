@@ -95,6 +95,45 @@ function jofme_footer_customize( $manager ) {
 			)
 		);
 	}
+
+	$manager->add_setting(
+		'jofme_footer_logo',
+		array(
+			'default'           => 0,
+			'sanitize_callback' => 'absint',
+		)
+	);
+	$manager->add_control(
+		new WP_Customize_Media_Control(
+			$manager,
+			'jofme_footer_logo',
+			array(
+				'label'           => __( 'Footer logo', 'jofme' ),
+				'description'     => __( 'Optional. Leave empty to use the Site Identity logo from Customizer.', 'jofme' ),
+				'section'         => 'jofme_footer',
+				'mime_type'       => 'image',
+				'active_callback' => 'jofme_footer_is_prebuilt',
+			)
+		)
+	);
+
+	$manager->add_setting(
+		'jofme_footer_logo_invert',
+		array(
+			'default'           => true,
+			'sanitize_callback' => 'wp_validate_boolean',
+		)
+	);
+	$manager->add_control(
+		'jofme_footer_logo_invert',
+		array(
+			'label'           => __( 'Invert footer logo (light on dark)', 'jofme' ),
+			'description'     => __( 'Turn off to show the Customizer logo colors as uploaded.', 'jofme' ),
+			'section'         => 'jofme_footer',
+			'type'            => 'checkbox',
+			'active_callback' => 'jofme_footer_is_prebuilt',
+		)
+	);
 }
 add_action( 'customize_register', 'jofme_footer_customize', 25 );
 
@@ -176,13 +215,79 @@ function jofme_footer_prebuilt_col( $index ) {
 }
 
 /**
+ * Attachment ID for the prebuilt footer logo.
+ *
+ * Prefers an optional Footer logo; falls back to Site Identity custom_logo.
+ *
+ * @return int
+ */
+function jofme_footer_logo_id() {
+	$footer_id = absint( get_theme_mod( 'jofme_footer_logo', 0 ) );
+	if ( $footer_id && wp_attachment_is_image( $footer_id ) ) {
+		return $footer_id;
+	}
+
+	$site_id = absint( get_theme_mod( 'custom_logo', 0 ) );
+	if ( $site_id && wp_attachment_is_image( $site_id ) ) {
+		return $site_id;
+	}
+
+	return 0;
+}
+
+/**
+ * Whether the prebuilt footer should CSS-invert the logo.
+ *
+ * @return bool
+ */
+function jofme_footer_logo_invert() {
+	return (bool) get_theme_mod( 'jofme_footer_logo_invert', true );
+}
+
+/**
+ * Print the prebuilt footer logo from Customizer (Site Identity or Footer logo).
+ *
+ * Avoids the transparent-header dual-logo markup from jofme_site_branding().
+ */
+function jofme_footer_brand_logo() {
+	$logo_id = jofme_footer_logo_id();
+	if ( $logo_id ) {
+		$alt = get_post_meta( $logo_id, '_wp_attachment_image_alt', true );
+		$img = wp_get_attachment_image(
+			$logo_id,
+			'full',
+			false,
+			array(
+				'class'   => 'custom-logo',
+				'alt'     => $alt ? $alt : get_bloginfo( 'name' ),
+				'loading' => 'lazy',
+			)
+		);
+		if ( $img ) {
+			printf(
+				'<a href="%1$s" class="custom-logo-link" rel="home">%2$s</a>',
+				esc_url( home_url( '/' ) ),
+				$img // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- wp_get_attachment_image().
+			);
+			return;
+		}
+	}
+
+	printf(
+		'<p class="site-title"><a href="%1$s" rel="home">%2$s</a></p>',
+		esc_url( home_url( '/' ) ),
+		esc_html( get_bloginfo( 'name' ) )
+	);
+}
+
+/**
  * Brand column: logo + contact.
  */
 function jofme_footer_brand_column() {
 	$contact = jofme_footer_contact();
 	echo '<div class="site-footer__brand">';
 	echo '<div class="site-footer__brand-logo">';
-	jofme_site_branding();
+	jofme_footer_brand_logo();
 	echo '</div>';
 	if ( $contact ) {
 		echo '<ul class="site-footer__contact">';
