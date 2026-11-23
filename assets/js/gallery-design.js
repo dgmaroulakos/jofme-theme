@@ -183,13 +183,14 @@
 
  function slideImageUrls(slide) {
   const urls = [];
+  if (!slide || typeof slide.querySelector !== 'function') return urls;
   const link = slide.querySelector('a.jofme-gallery-zoom-link, a');
   const img = slide.querySelector('img');
   if (link && link.getAttribute('href')) urls.push(link.getAttribute('href'));
   if (img) {
    if (img.getAttribute('src')) urls.push(img.getAttribute('src'));
    if (img.currentSrc) urls.push(img.currentSrc);
-   if (img.dataset.originalSrc) urls.push(img.dataset.originalSrc);
+   if (img.dataset && img.dataset.originalSrc) urls.push(img.dataset.originalSrc);
   }
   return urls.map(normalizeImageUrl).filter(Boolean);
  }
@@ -235,6 +236,7 @@
     .filter(Boolean);
    const attachmentId = image.id ? String(image.id) : '';
    const matched = slides.findIndex((slide) => {
+    if (!slide || typeof slide.querySelector !== 'function') return false;
     const img = slide.querySelector('img');
     if (attachmentId && img && img.getAttribute('data-attachment_id') === attachmentId) {
      return true;
@@ -301,12 +303,26 @@
    visible[index] = true;
   });
   items.forEach((item, index) => {
+   if (!item || !item.classList || typeof item.classList.toggle !== 'function') return;
    item.classList.toggle('jofme-gallery-item--suppressed', !visible[index]);
   });
  }
 
  function clearSuppressedItems(items) {
-  items.forEach((item) => item.classList.remove('jofme-gallery-item--suppressed'));
+  items.forEach((item) => {
+   if (!item || !item.classList || typeof item.classList.remove !== 'function') return;
+   item.classList.remove('jofme-gallery-item--suppressed');
+  });
+ }
+
+ function setGalleryModeClass(gallery, variationMode, multi) {
+  if (!gallery || !gallery.classList) return;
+  if (variationMode) {
+   gallery.classList.add('is-variation-gallery');
+   gallery.classList.toggle('has-variation-multi', !!multi);
+  } else {
+   gallery.classList.remove('is-variation-gallery', 'has-variation-multi');
+  }
  }
 
  function bindStackedGallery(gallery) {
@@ -323,7 +339,7 @@
   dots.forEach((dot) => {
    dot.addEventListener('click', () => {
     const target = document.getElementById(dot.dataset.target);
-    if (!target || target.classList.contains('jofme-gallery-item--suppressed')) return;
+    if (!target || (target.classList && target.classList.contains('jofme-gallery-item--suppressed'))) return;
     scrollToElement(target);
     setCurrentDot(gallery, target.id);
    });
@@ -372,7 +388,7 @@
    restorePrimaryImage(primary);
    scrollToElement(items[0]);
    if (items[0]) setCurrentDot(gallery, items[0].id);
-   gallery.classList.remove('is-variation-gallery', 'has-variation-multi');
+   setGalleryModeClass(gallery, false);
   }
 
   function showVariationStackedGallery(variation) {
@@ -396,8 +412,7 @@
      .map((id) => dots.findIndex((dot) => dot.dataset.target === id))
      .filter((index) => index >= 0)
    );
-   gallery.classList.add('is-variation-gallery');
-   gallery.classList.toggle('has-variation-multi', visible.length > 1);
+   setGalleryModeClass(gallery, true, visible.length > 1);
    scrollToElement(items[visible[0]]);
    if (items[visible[0]]) setCurrentDot(gallery, items[visible[0]].id);
   }
@@ -484,7 +499,7 @@
    }
    const thumb = event.target.closest('.jofme-carousel-gallery__thumb');
    if (thumb && gallery.contains(thumb)) {
-    if (thumb.classList.contains('jofme-gallery-item--suppressed')) return;
+    if (thumb.classList && thumb.classList.contains('jofme-gallery-item--suppressed')) return;
     event.preventDefault();
     event.stopPropagation();
     show(Number(thumb.dataset.index || 0));
@@ -532,7 +547,7 @@
    clearSuppressedItems(slides);
    clearSuppressedItems(thumbs);
    restorePrimaryImage(primary);
-   gallery.classList.remove('is-variation-gallery');
+   setGalleryModeClass(gallery, false);
    show(0);
   }
 
@@ -545,7 +560,7 @@
     restorePrimaryImage(primary);
     setSuppressedItems(slides, matched);
     setSuppressedItems(thumbs, matched);
-    gallery.classList.add('is-variation-gallery');
+    setGalleryModeClass(gallery, true, matched.length > 1);
     show(matched[0]);
     return;
    }
@@ -553,7 +568,7 @@
    applyImageToPrimary(primary, images[0]);
    setSuppressedItems(slides, [0]);
    setSuppressedItems(thumbs, [0]);
-   gallery.classList.add('is-variation-gallery');
+   setGalleryModeClass(gallery, true, false);
    show(0);
   }
 
