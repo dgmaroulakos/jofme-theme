@@ -352,25 +352,43 @@ function jofme_render_restock_notify() {
 	}
 
 	$product_id = $product->get_id();
+	$uid        = (string) $product_id;
 	?>
-	<div class="jofme-restock-notify" data-product-id="<?php echo esc_attr( (string) $product_id ); ?>">
-		<button type="button" class="jofme-restock-notify__toggle button" aria-expanded="false" aria-controls="jofme-restock-form-<?php echo esc_attr( (string) $product_id ); ?>">
+	<div class="jofme-restock-notify" data-product-id="<?php echo esc_attr( $uid ); ?>">
+		<p class="jofme-restock-notify__title" id="jofme-restock-title-<?php echo esc_attr( $uid ); ?>">
 			<?php echo esc_html( $label ); ?>
-		</button>
-		<form id="jofme-restock-form-<?php echo esc_attr( (string) $product_id ); ?>" class="jofme-restock-notify__form" hidden>
-			<label class="screen-reader-text" for="jofme-restock-email-<?php echo esc_attr( (string) $product_id ); ?>"><?php esc_html_e( 'Email', 'jofme' ); ?></label>
-			<input
-				type="email"
-				id="jofme-restock-email-<?php echo esc_attr( (string) $product_id ); ?>"
-				class="jofme-restock-notify__email"
-				name="email"
-				required
-				autocomplete="email"
-				placeholder="<?php esc_attr_e( 'Email', 'jofme' ); ?>"
-			/>
-			<button type="submit" class="jofme-restock-notify__submit button"><?php echo esc_html( $label ); ?></button>
-			<p class="jofme-restock-notify__status" aria-live="polite" hidden></p>
+		</p>
+		<form
+			id="jofme-restock-form-<?php echo esc_attr( $uid ); ?>"
+			class="jofme-restock-notify__form"
+			aria-labelledby="jofme-restock-title-<?php echo esc_attr( $uid ); ?>"
+			novalidate
+		>
+			<label class="screen-reader-text" for="jofme-restock-email-<?php echo esc_attr( $uid ); ?>">
+				<?php esc_html_e( 'Email', 'jofme' ); ?>
+			</label>
+			<div class="jofme-restock-notify__row">
+				<input
+					type="email"
+					id="jofme-restock-email-<?php echo esc_attr( $uid ); ?>"
+					class="jofme-restock-notify__email"
+					name="email"
+					required
+					autocomplete="email"
+					inputmode="email"
+					placeholder="<?php echo esc_attr__( 'Το email σου', 'jofme' ); ?>"
+				/>
+				<button type="submit" class="jofme-restock-notify__submit">
+					<span class="jofme-restock-notify__submit-label"><?php echo esc_html__( 'Αποστολή', 'jofme' ); ?></span>
+					<span class="jofme-restock-notify__submit-busy" hidden><?php echo esc_html__( 'Αποστολή…', 'jofme' ); ?></span>
+				</button>
+			</div>
+			<p class="jofme-restock-notify__hint"><?php echo esc_html__( 'Θα σου στείλουμε ένα email μόλις ξανάρθει.', 'jofme' ); ?></p>
+			<p class="jofme-restock-notify__status" role="status" aria-live="polite" hidden></p>
 		</form>
+		<div class="jofme-restock-notify__done" hidden>
+			<p class="jofme-restock-notify__done-text"></p>
+		</div>
 	</div>
 	<?php
 }
@@ -397,9 +415,9 @@ function jofme_product_copy_assets() {
 		array(
 			'url'     => admin_url( 'admin-ajax.php' ),
 			'nonce'   => wp_create_nonce( 'jofme_restock_notify' ),
-			'success' => __( 'Thanks — we will email you when it is back.', 'jofme' ),
-			'error'   => __( 'Something went wrong. Please try again.', 'jofme' ),
-			'invalid' => __( 'Please enter a valid email.', 'jofme' ),
+			'success' => __( 'Τέλεια — θα σε ενημερώσουμε μόλις ξανάρθει.', 'jofme' ),
+			'error'   => __( 'Κάτι πήγε στραβά. Δοκίμασε ξανά.', 'jofme' ),
+			'invalid' => __( 'Βάλε ένα έγκυρο email.', 'jofme' ),
 		)
 	);
 }
@@ -415,12 +433,12 @@ function jofme_restock_notify_ajax() {
 	$product_id = isset( $_POST['product_id'] ) ? absint( $_POST['product_id'] ) : 0;
 
 	if ( ! is_email( $email ) || ! $product_id || 'product' !== get_post_type( $product_id ) ) {
-		wp_send_json_error( array( 'message' => __( 'Please enter a valid email.', 'jofme' ) ), 400 );
+		wp_send_json_error( array( 'message' => __( 'Βάλε ένα έγκυρο email.', 'jofme' ) ), 400 );
 	}
 
 	$product = wc_get_product( $product_id );
 	if ( ! $product ) {
-		wp_send_json_error( array( 'message' => __( 'Something went wrong. Please try again.', 'jofme' ) ), 400 );
+		wp_send_json_error( array( 'message' => __( 'Κάτι πήγε στραβά. Δοκίμασε ξανά.', 'jofme' ) ), 400 );
 	}
 
 	$subscribers = get_post_meta( $product_id, '_jofme_restock_emails', true );
@@ -449,7 +467,7 @@ function jofme_restock_notify_ajax() {
 
 	wp_send_json_success(
 		array(
-			'message' => __( 'Thanks — we will email you when it is back.', 'jofme' ),
+			'message' => __( 'Τέλεια — θα σε ενημερώσουμε μόλις ξανάρθει.', 'jofme' ),
 		)
 	);
 }
