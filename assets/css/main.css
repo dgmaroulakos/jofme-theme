@@ -619,6 +619,10 @@ body.jofme-nav-open {
 	max-height: 72px;
 	width: auto;
 	height: auto;
+}
+
+.site-footer--invert-logo .site-footer__brand-logo .custom-logo-link img,
+.site-footer--invert-logo .site-footer__brand-logo .custom-logo {
 	filter: brightness(0) invert(1);
 }
 
