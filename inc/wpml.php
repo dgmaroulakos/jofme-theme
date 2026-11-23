@@ -19,6 +19,17 @@ function jofme_wpml_register_strings() {
 
 	$announcement = get_theme_mod( 'jofme_announcement_text', '' );
 	$footer_copy  = get_theme_mod( 'jofme_footer_copyright', '' );
+	$product_keys = array(
+		'jofme_add_to_cart_text'       => 'Add to cart button',
+		'jofme_added_to_cart_text'     => 'Added to cart message',
+		'jofme_free_shipping_text'     => 'Free shipping line',
+		'jofme_low_stock_text'         => 'Low stock text',
+		'jofme_sold_out_text'          => 'Sold out text',
+		'jofme_restock_notify_text'    => 'Restock notify text',
+		'jofme_upsells_heading'        => 'Upsells heading',
+		'jofme_related_heading'        => 'Related products heading',
+		'jofme_styling_help_text'      => 'Styling help text',
+	);
 
 	if ( function_exists( 'icl_register_string' ) ) {
 		if ( $announcement ) {
@@ -26,6 +37,12 @@ function jofme_wpml_register_strings() {
 		}
 		if ( $footer_copy ) {
 			icl_register_string( 'Jofme', 'Footer copyright', $footer_copy );
+		}
+		foreach ( $product_keys as $mod => $name ) {
+			$val = get_theme_mod( $mod, '' );
+			if ( $val ) {
+				icl_register_string( 'Jofme', $name, $val );
+			}
 		}
 	}
 
@@ -35,6 +52,12 @@ function jofme_wpml_register_strings() {
 		}
 		if ( $footer_copy ) {
 			pll_register_string( 'jofme_footer_copyright', $footer_copy, 'Jofme', true );
+		}
+		foreach ( $product_keys as $mod => $name ) {
+			$val = get_theme_mod( $mod, '' );
+			if ( $val ) {
+				pll_register_string( $mod, $val, 'Jofme', true );
+			}
 		}
 	}
 }

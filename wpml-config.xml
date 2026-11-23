@@ -10,6 +10,16 @@
 		<key name="theme_mods_jofme">
 			<key name="jofme_announcement_text" />
 			<key name="jofme_footer_copyright" />
+			<key name="jofme_add_to_cart_text" />
+			<key name="jofme_added_to_cart_text" />
+			<key name="jofme_free_shipping_text" />
+			<key name="jofme_low_stock_text" />
+			<key name="jofme_sold_out_text" />
+			<key name="jofme_restock_notify_text" />
+			<key name="jofme_upsells_heading" />
+			<key name="jofme_related_heading" />
+			<key name="jofme_styling_help_text" />
+			<key name="jofme_styling_help_url" />
 		</key>
 	</admin-texts>
 	<shortcodes>
