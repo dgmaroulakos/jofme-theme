@@ -9,40 +9,96 @@
 		}
 	}
 
+	function setBusy(root, busy) {
+		var submit = root.querySelector('.jofme-restock-notify__submit');
+		var label = root.querySelector('.jofme-restock-notify__submit-label');
+		var busyLabel = root.querySelector('.jofme-restock-notify__submit-busy');
+		var email = root.querySelector('.jofme-restock-notify__email');
+		if (submit) {
+			submit.disabled = !!busy;
+			submit.setAttribute('aria-busy', busy ? 'true' : 'false');
+		}
+		if (label) {
+			label.hidden = !!busy;
+		}
+		if (busyLabel) {
+			busyLabel.hidden = !busy;
+		}
+		if (email) {
+			email.disabled = !!busy;
+		}
+	}
+
+	function showError(root, message) {
+		var status = root.querySelector('.jofme-restock-notify__status');
+		var email = root.querySelector('.jofme-restock-notify__email');
+		if (status) {
+			status.hidden = false;
+			status.textContent = message;
+			status.classList.add('is-error');
+			status.classList.remove('is-success');
+		}
+		if (email) {
+			email.classList.add('is-invalid');
+			email.focus();
+		}
+	}
+
+	function showSuccess(root, message) {
+		var form = root.querySelector('.jofme-restock-notify__form');
+		var done = root.querySelector('.jofme-restock-notify__done');
+		var doneText = root.querySelector('.jofme-restock-notify__done-text');
+		var title = root.querySelector('.jofme-restock-notify__title');
+		root.classList.add('is-success');
+		if (form) {
+			form.hidden = true;
+		}
+		if (title) {
+			title.hidden = true;
+		}
+		if (done) {
+			done.hidden = false;
+		}
+		if (doneText) {
+			doneText.textContent = message;
+		}
+	}
+
 	ready(function () {
 		var cfg = window.jofmeProductCopy || {};
 		document.querySelectorAll('.jofme-restock-notify').forEach(function (root) {
-			var toggle = root.querySelector('.jofme-restock-notify__toggle');
 			var form = root.querySelector('.jofme-restock-notify__form');
 			var email = root.querySelector('.jofme-restock-notify__email');
-			var status = root.querySelector('.jofme-restock-notify__status');
 			var productId = root.getAttribute('data-product-id');
-			if (!toggle || !form || !email || !productId) {
+			if (!form || !email || !productId || root.dataset.jofmeRestockBound) {
 				return;
 			}
+			root.dataset.jofmeRestockBound = '1';
 
-			toggle.addEventListener('click', function () {
-				var open = form.hasAttribute('hidden');
-				if (open) {
-					form.removeAttribute('hidden');
-					toggle.setAttribute('aria-expanded', 'true');
-					email.focus();
-				} else {
-					form.setAttribute('hidden', '');
-					toggle.setAttribute('aria-expanded', 'false');
+			email.addEventListener('input', function () {
+				email.classList.remove('is-invalid');
+				var status = root.querySelector('.jofme-restock-notify__status');
+				if (status && status.classList.contains('is-error')) {
+					status.hidden = true;
+					status.textContent = '';
+					status.classList.remove('is-error');
 				}
 			});
 
 			form.addEventListener('submit', function (event) {
 				event.preventDefault();
-				var value = (email.value || '').trim();
-				if (!value || value.indexOf('@') < 1) {
-					if (status) {
-						status.hidden = false;
-						status.textContent = cfg.invalid || 'Please enter a valid email.';
-					}
+				if (root.classList.contains('is-success') || root.classList.contains('is-loading')) {
 					return;
 				}
+
+				var value = (email.value || '').trim();
+				if (!value || value.indexOf('@') < 1) {
+					showError(root, cfg.invalid || 'Βάλε ένα έγκυρο email.');
+					return;
+				}
+
+				root.classList.add('is-loading');
+				setBusy(root, true);
 
 				var body = new FormData();
 				body.append('action', 'jofme_restock_notify');
@@ -61,32 +117,28 @@
 						});
 					})
 					.then(function (result) {
-						if (!status) {
+						root.classList.remove('is-loading');
+						setBusy(root, false);
+						if (result.ok) {
+							showSuccess(
+								root,
+								(result.data && result.data.data && result.data.data.message) ||
+									cfg.success ||
+									'Τέλεια — θα σε ενημερώσουμε μόλις ξανάρθει.'
+							);
 							return;
 						}
-						status.hidden = false;
-						if (result.ok) {
-							status.textContent =
-								(result.data && result.data.data && result.data.data.message) ||
-								cfg.success ||
-								'Thanks';
-							var submitBtn = form.querySelector('.jofme-restock-notify__submit');
-							if (submitBtn) {
-								submitBtn.setAttribute('disabled', '');
-							}
-							email.setAttribute('disabled', '');
-						} else {
-							status.textContent =
-								(result.data && result.data.data && result.data.data.message) ||
+						showError(
+							root,
+							(result.data && result.data.data && result.data.data.message) ||
 								cfg.error ||
-								'Error';
-						}
+								'Κάτι πήγε στραβά. Δοκίμασε ξανά.'
+						);
 					})
 					.catch(function () {
-						if (status) {
-							status.hidden = false;
-							status.textContent = cfg.error || 'Error';
-						}
+						root.classList.remove('is-loading');
+						setBusy(root, false);
+						showError(root, cfg.error || 'Κάτι πήγε στραβά. Δοκίμασε ξανά.');
 					});
 			});
 		});
