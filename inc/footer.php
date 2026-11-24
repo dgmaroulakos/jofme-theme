@@ -306,5 +306,8 @@ function jofme_footer_brand_column() {
 		}
 		echo '</ul>';
 	}
+	if ( function_exists( 'jofme_social_nav' ) ) {
+		jofme_social_nav( 'footer' );
+	}
 	echo '</div>';
 }

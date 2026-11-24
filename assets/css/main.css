@@ -287,6 +287,71 @@ p {
 .jofme-menu-toggle,
 .jofme-search-toggle,
 .jofme-account-link,
+.jofme-social {
+	display: inline-flex;
+	align-items: center;
+}
+
+.jofme-social__list {
+	list-style: none;
+	margin: 0;
+	padding: 0;
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: 0.35rem 0.55rem;
+}
+
+.jofme-social__link {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	padding: 0.35rem;
+	color: inherit;
+	line-height: 0;
+	text-decoration: none;
+}
+
+.jofme-social__link:hover {
+	color: var(--jofme-color-accent);
+}
+
+.jofme-social__link svg {
+	display: block;
+}
+
+.jofme-social--header {
+	margin-inline-end: 0.15rem;
+}
+
+@media (max-width: 899px) {
+	.site-header__end .jofme-social--header {
+		display: none;
+	}
+}
+
+.jofme-social--mobile {
+	margin-top: 1.75rem;
+	padding-top: 1.25rem;
+	border-top: 1px solid var(--jofme-color-border);
+}
+
+.jofme-social--footer {
+	margin-top: 1.15rem;
+}
+
+.site-footer .jofme-social__link {
+	color: #ebe4db;
+}
+
+.site-footer .jofme-social__link:hover {
+	color: var(--jofme-color-accent);
+}
+
+.site-footer__bottom .jofme-social--footer {
+	margin-top: 0;
+}
+
 .jofme-wishlist-link,
 .jofme-cart-link,
 .jofme-back-to-top {

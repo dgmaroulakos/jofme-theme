@@ -20,6 +20,12 @@
 			<key name="jofme_related_heading" />
 			<key name="jofme_styling_help_text" />
 			<key name="jofme_styling_help_url" />
+			<key name="jofme_social_instagram" />
+			<key name="jofme_social_facebook" />
+			<key name="jofme_social_tiktok" />
+			<key name="jofme_social_pinterest" />
+			<key name="jofme_social_youtube" />
+			<key name="jofme_social_x" />
 		</key>
 	</admin-texts>
 	<shortcodes>

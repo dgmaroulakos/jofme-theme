@@ -76,6 +76,11 @@ if ( 'editorial' === $layout ) {
 		<?php endif; ?>
 
 		<div class="site-header__end">
+			<?php
+			if ( function_exists( 'jofme_social_nav' ) ) {
+				jofme_social_nav( 'header' );
+			}
+			?>
 			<button type="button" class="jofme-search-toggle" aria-expanded="false" aria-controls="jofme-header-search">
 				<span class="screen-reader-text"><?php esc_html_e( 'Search', 'jofme' ); ?></span>
 				<svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="1.4"/><path d="M20 20l-3.5-3.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
