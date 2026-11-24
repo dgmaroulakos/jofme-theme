@@ -1,0 +1,2110 @@
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Jofme 1.7.65\n"
+"Report-Msgid-Bugs-To: https://github.com/dgmaroulakos/jofme-theme\n"
+"POT-Creation-Date: 2026-11-24 11:13+0000\n"
+"PO-Revision-Date: 2026-11-24 13:15+0200\n"
+"Last-Translator: Jofme\n"
+"Language-Team: Greek\n"
+"Language: el\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Domain: jofme\n"
+
+#: 404.php:14
+msgid "Page not found"
+msgstr "Η σελίδα δεν βρέθηκε"
+
+#: 404.php:17
+msgid ""
+"It looks like nothing was found at this location. Try a search or return to "
+"the shop."
+msgstr "Δεν βρέθηκε τίποτα εδώ. Δοκίμασε αναζήτηση ή επέστρεψε στο κατάστημα."
+
+#: 404.php:22 inc/wishlist.php:524
+msgid "Continue shopping"
+msgstr "Συνέχεια αγορών"
+
+#: comments.php:46
+msgid "Comments are closed."
+msgstr "Τα σχόλια είναι κλειστά."
+
+#: header.php:23
+msgid "Skip to content"
+msgstr "Μετάβαση στο περιεχόμενο"
+
+#: inc/category-cover.php:10 inc/category-cover.php:11
+msgid "Category cover"
+msgstr "Εικόνα κατηγορίας"
+
+#: inc/category-cover.php:15
+msgid "Choose cover"
+msgstr "Επιλογή εικόνας"
+
+#: inc/category-cover.php:15
+msgid "Remove cover"
+msgstr "Αφαίρεση εικόνας"
+
+#: inc/category-cover.php:16
+msgid ""
+"Wide image behind this category’s title, above products and sidebar. The "
+"category thumbnail remains separate."
+msgstr ""
+"Φαρδιά εικόνα πίσω από τον τίτλο της κατηγορίας, πάνω από προϊόντα και "
+"sidebar. Το thumbnail της κατηγορίας παραμένει ξεχωριστό."
+
+#: inc/category-cover.php:35
+msgid "Choose category cover"
+msgstr "Επιλογή εικόνας κατηγορίας"
+
+#: inc/category-cover.php:35
+msgid "Use as cover"
+msgstr "Χρήση ως εικόνα"
+
+#: inc/customizer.php:21
+msgid "Jofme Options"
+msgstr "Επιλογές Jofme"
+
+#: inc/customizer.php:30
+msgid "Header"
+msgstr "Header"
+
+#: inc/customizer.php:45
+msgid "Header layout"
+msgstr "Διάταξη header"
+
+#: inc/customizer.php:46
+msgid "Choose how logo, menu and icons are arranged in the header."
+msgstr "Επίλεξε πώς εμφανίζονται logo, μενού και εικονίδια στο header."
+
+#: inc/customizer.php:50
+msgid "Classic (logo left)"
+msgstr "Κλασικό (logo αριστερά)"
+
+#: inc/customizer.php:51
+msgid "Centered logo"
+msgstr "Κεντραρισμένο logo"
+
+#: inc/customizer.php:52 inc/premium-shop.php:1037 inc/wishlist.php:683
+msgid "Editorial"
+msgstr "Editorial"
+
+#: inc/customizer.php:53
+msgid "Stacked (logo above menu)"
+msgstr "Στοιβαγμένο (logo πάνω από το μενού)"
+
+#: inc/customizer.php:68
+msgid "Header width"
+msgstr "Πλάτος header"
+
+#: inc/customizer.php:69
+msgid "Horizontal width of the header bar (logo / menu row)."
+msgstr "Οριζόντιο πλάτος της μπάρας header (γραμμή logo / μενού)."
+
+#: inc/customizer.php:73
+msgid "Same as page content"
+msgstr "Ίδιο με το περιεχόμενο σελίδας"
+
+#: inc/customizer.php:74 inc/layout.php:100
+msgid "Boxed (1320px)"
+msgstr "Boxed (1320px)"
+
+#: inc/customizer.php:75 inc/layout.php:100
+msgid "Wide (1600px)"
+msgstr "Wide (1600px)"
+
+#: inc/customizer.php:76 inc/layout.php:100
+msgid "Narrow (960px)"
+msgstr "Narrow (960px)"
+
+#: inc/customizer.php:77 inc/layout.php:100
+msgid "Full width"
+msgstr "Πλήρες πλάτος"
+
+#: inc/customizer.php:92
+msgid "Sticky header"
+msgstr "Κολλητό header"
+
+#: inc/customizer.php:108
+msgid "Logo max height — desktop (px)"
+msgstr "Μέγιστο ύψος logo — desktop (px)"
+
+#: inc/customizer.php:109
+msgid "Maximum logo height on desktop/tablet. Default: 100."
+msgstr "Μέγιστο ύψος logo σε desktop/tablet. Προεπιλογή: 100."
+
+#: inc/customizer.php:130
+msgid "Logo max width — mobile (px)"
+msgstr "Μέγιστο πλάτος logo — mobile (px)"
+
+#: inc/customizer.php:131
+msgid "Maximum logo width under 900px. Default: 90."
+msgstr "Μέγιστο πλάτος logo κάτω από 900px. Προεπιλογή: 90."
+
+#: inc/customizer.php:152
+msgid "Header min height (px)"
+msgstr "Ελάχιστο ύψος header (px)"
+
+#: inc/customizer.php:153
+msgid "Minimum height of the header bar (logo / menu row) on desktop/tablet."
+msgstr "Ελάχιστο ύψος της μπάρας header σε desktop/tablet."
+
+#: inc/customizer.php:174
+msgid "Header min height — mobile (px)"
+msgstr "Ελάχιστο ύψος header — mobile (px)"
+
+#: inc/customizer.php:175
+msgid "Minimum height of the header bar under 900px width. Default: 80."
+msgstr "Ελάχιστο ύψος header κάτω από 900px. Προεπιλογή: 80."
+
+#: inc/customizer.php:196
+msgid "Stuck header height (px)"
+msgstr "Ύψος κολλημένου header (px)"
+
+#: inc/customizer.php:197
+msgid "Header bar height after it sticks on scroll (desktop/tablet)."
+msgstr "Ύψος header αφού κολλήσει στο scroll (desktop/tablet)."
+
+#: inc/customizer.php:218
+msgid "Stuck header height — mobile (px)"
+msgstr "Ύψος κολλημένου header — mobile (px)"
+
+#: inc/customizer.php:219
+msgid "Stuck header height under 900px width. Default: 64."
+msgstr "Ύψος κολλημένου header κάτω από 900px. Προεπιλογή: 64."
+
+#: inc/customizer.php:240
+msgid "Sticky header padding (px)"
+msgstr "Padding κολλημένου header (px)"
+
+#: inc/customizer.php:241
+msgid "Top/bottom padding inside the header when it is stuck while scrolling."
+msgstr "Πάνω/κάτω padding στο header όταν είναι κολλημένο στο scroll."
+
+#: inc/customizer.php:262
+msgid "Smooth page scroll"
+msgstr "Ομαλό scroll σελίδας"
+
+#: inc/customizer.php:263
+msgid ""
+"Adds a controlled scroll feel across the site. Disabled automatically when "
+"the visitor prefers reduced motion."
+msgstr ""
+"Προσθέτει ελεγχόμενο αίσθημα scroll σε όλο το site. Απενεργοποιείται "
+"αυτόματα όταν ο επισκέπτης προτιμά μειωμένη κίνηση."
+
+#: inc/customizer.php:279
+msgid "Scroll speed"
+msgstr "Ταχύτητα scroll"
+
+#: inc/customizer.php:283
+msgid "Slow"
+msgstr "Αργό"
+
+#: inc/customizer.php:284
+msgid "Medium"
+msgstr "Μεσαίο"
+
+#: inc/customizer.php:285
+msgid "Fast"
+msgstr "Γρήγορο"
+
+#: inc/customizer.php:301
+msgid "Announcement bar text"
+msgstr "Κείμενο μπάρας ανακοινώσεων"
+
+#: inc/customizer.php:302
+msgid "Leave empty to hide."
+msgstr "Άφησέ το κενό για απόκρυψη."
+
+#: inc/customizer.php:312
+msgid "Shop"
+msgstr "Κατάστημα"
+
+#: inc/customizer.php:327
+msgid "Product columns"
+msgstr "Στήλες προϊόντων"
+
+#: inc/customizer.php:347
+msgid "Products per page"
+msgstr "Προϊόντα ανά σελίδα"
+
+#: inc/customizer.php:361
+msgid "Colors"
+msgstr "Χρώματα"
+
+#: inc/customizer.php:367
+msgid "Primary text"
+msgstr "Κύριο κείμενο"
+
+#: inc/customizer.php:368
+msgid "Accent (gold)"
+msgstr "Accent (χρυσό)"
+
+#: inc/customizer.php:369 inc/widgets/class-editorial-story.php:23
+msgid "Background"
+msgstr "Φόντο"
+
+#: inc/customizer.php:396
+msgid "Product tabs"
+msgstr "Tabs προϊόντος"
+
+#: inc/customizer.php:397
+msgid ""
+"Appearance of Description / Additional information / Reviews on single "
+"product pages."
+msgstr ""
+"Εμφάνιση Περιγραφής / Επιπλέον πληροφοριών / Κριτικών στη σελίδα προϊόντος."
+
+#: inc/customizer.php:412 inc/widgets/class-bestsellers-tabs.php:391
+msgid "Tab style"
+msgstr "Στυλ tab"
+
+#: inc/customizer.php:416 inc/widgets/class-bestsellers-tabs.php:395
+msgid "Underline"
+msgstr "Υπογράμμιση"
+
+#: inc/customizer.php:417 inc/widgets/class-bestsellers-tabs.php:396
+msgid "Pill"
+msgstr "Pill"
+
+#: inc/customizer.php:418 inc/widgets/class-bestsellers-tabs.php:397
+msgid "Boxed"
+msgstr "Boxed"
+
+#: inc/customizer.php:424 inc/widgets/class-bestsellers-tabs.php:405
+msgid "Tabs background"
+msgstr "Φόντο tabs"
+
+#: inc/customizer.php:425
+msgid "Tabs text"
+msgstr "Κείμενο tabs"
+
+#: inc/customizer.php:426 inc/widgets/class-bestsellers-tabs.php:427
+msgid "Active tab text"
+msgstr "Κείμενο ενεργού tab"
+
+#: inc/customizer.php:427
+msgid "Active tab accent"
+msgstr "Accent ενεργού tab"
+
+#: inc/customizer.php:428 inc/widgets/class-bestsellers-tabs.php:438
+msgid "Active tab background"
+msgstr "Φόντο ενεργού tab"
+
+#: inc/customizer.php:429
+msgid "Panel background (optional)"
+msgstr "Φόντο panel (προαιρετικό)"
+
+#: inc/customizer.php:462
+msgid "Tab label font size (px)"
+msgstr "Μέγεθος γραμματοσειράς ετικέτας tab (px)"
+
+#: inc/customizer.php:482
+msgid "Horizontal padding (%)"
+msgstr "Οριζόντιο padding (%)"
+
+#: inc/customizer.php:496 template-parts/footer/site-footer.php:66
+msgid "Footer"
+msgstr "Footer"
+
+#: inc/customizer.php:511
+msgid "Copyright text"
+msgstr "Κείμενο copyright"
+
+#: inc/editorial.php:15
+msgid "Editorial header: transparent on the static homepage"
+msgstr "Editorial header: διάφανο στην αρχική"
+
+#: inc/editorial.php:15
+msgid "Enable when the homepage starts with a full-width photo or hero."
+msgstr "Ενεργοποίησέ το όταν η αρχική ξεκινά με full-width φωτογραφία ή hero."
+
+#: inc/editorial.php:22
+msgid "Transparent header logo"
+msgstr "Logo διάφανου header"
+
+#: inc/editorial.php:23
+msgid ""
+"Optional logo used while the header is transparent over the hero. Leave "
+"empty to keep the site logo (with color invert)."
+msgstr ""
+"Προαιρετικό logo όσο το header είναι διάφανο πάνω από το hero. Άφησέ το κενό"
+" για το logo του site (με αντιστροφή χρώματος)."
+
+#: inc/editorial.php:35
+msgid "Transparent header text color"
+msgstr "Χρώμα κειμένου διάφανου header"
+
+#: inc/editorial.php:36
+msgid "Menu, icons and title color while the header is transparent."
+msgstr "Χρώμα μενού, εικονιδίων και τίτλου όσο το header είναι διάφανο."
+
+#: inc/editorial.php:66
+msgid "Jofme"
+msgstr "Jofme"
+
+#: inc/enqueue.php:55 template-parts/header/editorial-header.php:9
+msgid "Open menu"
+msgstr "Άνοιγμα μενού"
+
+#: inc/enqueue.php:56 template-parts/header/panels.php:20
+msgid "Close menu"
+msgstr "Κλείσιμο μενού"
+
+#: inc/enqueue.php:57 template-parts/header/editorial-header.php:22
+#: template-parts/header/site-header.php:73
+msgid "Search"
+msgstr "Αναζήτηση"
+
+#: inc/footer.php:16
+msgid "Footer column 1"
+msgstr "Στήλη footer 1"
+
+#: inc/footer.php:17
+msgid "Footer column 2"
+msgstr "Στήλη footer 2"
+
+#: inc/footer.php:18
+msgid "Footer column 3"
+msgstr "Στήλη footer 3"
+
+#: inc/footer.php:40
+msgid "Footer layout"
+msgstr "Διάταξη footer"
+
+#: inc/footer.php:41
+msgid ""
+"Prebuilt brand layout places the logo and contact on the left, with three "
+"columns beside it."
+msgstr ""
+"Το έτοιμο brand layout βάζει logo και στοιχεία επικοινωνίας αριστερά, με "
+"τρεις στήλες δίπλα."
+
+#: inc/footer.php:45
+msgid "Widget columns (classic)"
+msgstr "Στήλες widget (κλασικό)"
+
+#: inc/footer.php:46
+msgid "Prebuilt: logo/contact left + 3 columns"
+msgstr "Έτοιμο: logo/επαφή αριστερά + 3 στήλες"
+
+#. translators: %d: column number
+#: inc/footer.php:65
+#, php-format
+msgid "Column %d title"
+msgstr "Τίτλος στήλης %d"
+
+#: inc/footer.php:74
+msgid "Address"
+msgstr "Διεύθυνση"
+
+#: inc/footer.php:75
+msgid "Phone"
+msgstr "Τηλέφωνο"
+
+#: inc/footer.php:76 inc/product-copy.php:368
+msgid "Email"
+msgstr "Email"
+
+#: inc/footer.php:77
+msgid "Opening hours"
+msgstr "Ωράριο"
+
+#: inc/footer.php:111
+msgid "Footer logo"
+msgstr "Logo footer"
+
+#: inc/footer.php:112
+msgid "Optional. Leave empty to use the Site Identity logo from Customizer."
+msgstr ""
+"Προαιρετικό. Άφησέ το κενό για το logo από Site Identity στο Customizer."
+
+#: inc/footer.php:130
+msgid "Invert footer logo (light on dark)"
+msgstr "Αντιστροφή logo footer (ανοιχτό σε σκούρο)"
+
+#: inc/footer.php:131
+msgid "Turn off to show the Customizer logo colors as uploaded."
+msgstr "Απενεργοποίησέ το για να φαίνονται τα χρώματα του logo όπως ανέβηκαν."
+
+#: inc/gallery-design.php:7
+msgid ""
+"Applies to Classic design. Gallery design uses its own image and purchase-"
+"panel layout."
+msgstr ""
+"Ισχύει για Classic design. Το Gallery design έχει δική του διάταξη εικόνας "
+"και purchase panel."
+
+#: inc/gallery-design.php:9
+msgid "Product pages — Design"
+msgstr "Σελίδες προϊόντος — Design"
+
+#: inc/gallery-design.php:9
+msgid "Classic"
+msgstr "Classic"
+
+#: inc/gallery-design.php:9
+msgid "Gallery (large image & minimal purchase panel)"
+msgstr "Gallery (μεγάλη εικόνα & minimal purchase panel)"
+
+#: inc/gallery-design.php:14
+msgid "Gallery design — Image display"
+msgstr "Gallery design — Εμφάνιση εικόνας"
+
+#: inc/gallery-design.php:15
+msgid "Only applies when Product pages — Design is set to Gallery."
+msgstr "Ισχύει μόνο όταν το Product pages — Design είναι Gallery."
+
+#: inc/gallery-design.php:19
+msgid "Stacked (scroll)"
+msgstr "Στοιβαγμένο (scroll)"
+
+#: inc/gallery-design.php:20 inc/widgets/class-bestsellers-tabs.php:270
+msgid "Carousel"
+msgstr "Carousel"
+
+#: inc/gallery-design.php:36
+msgid "Gallery design — Image background"
+msgstr "Gallery design — Φόντο εικόνας"
+
+#: inc/gallery-design.php:37
+msgid "Optional. Leave empty for no background behind product photos."
+msgstr "Προαιρετικό. Άφησέ το κενό για χωρίς φόντο πίσω από τις φωτογραφίες."
+
+#: inc/gallery-design.php:88
+msgid "Product image"
+msgstr "Εικόνα προϊόντος"
+
+#: inc/gallery-design.php:89 inc/premium-shop.php:1026 inc/size-guide.php:490
+#: inc/size-guide.php:530
+msgid "Close"
+msgstr "Κλείσιμο"
+
+#: inc/gallery-design.php:90 inc/gallery-design.php:321
+msgid "Previous image"
+msgstr "Προηγούμενη εικόνα"
+
+#: inc/gallery-design.php:91 inc/gallery-design.php:345
+msgid "Next image"
+msgstr "Επόμενη εικόνα"
+
+#. translators: 1: current image number, 2: total images
+#: inc/gallery-design.php:93
+#, php-format
+msgid "%1$s of %2$s"
+msgstr "%1$s από %2$s"
+
+#: inc/gallery-design.php:268
+msgid "Product images"
+msgstr "Εικόνες προϊόντος"
+
+#. translators: %d image number
+#: inc/gallery-design.php:271
+#, php-format
+msgid "Go to image %d"
+msgstr "Μετάβαση στην εικόνα %d"
+
+#. translators: %d image number
+#: inc/gallery-design.php:352 inc/premium-shop.php:949
+#, php-format
+msgid "Show image %d"
+msgstr "Εμφάνιση εικόνας %d"
+
+#: inc/gallery-design.php:383 inc/widgets/class-weekly-sales.php:29
+msgid "Description"
+msgstr "Περιγραφή"
+
+#: inc/gallery-design.php:386 inc/gallery-design.php:424
+msgid "Care instructions"
+msgstr "Οδηγίες φροντίδας"
+
+#: inc/gallery-design.php:421
+msgid "Decrease quantity"
+msgstr "Μείωση ποσότητας"
+
+#: inc/gallery-design.php:422
+msgid "Increase quantity"
+msgstr "Αύξηση ποσότητας"
+
+#: inc/gallery-design.php:424
+msgid "Optional care text shown in the Gallery product design."
+msgstr "Προαιρετικό κείμενο φροντίδας στο Gallery product design."
+
+#: inc/layout.php:41
+msgid "Slide from left"
+msgstr "Ολίσθηση από αριστερά"
+
+#: inc/layout.php:42
+msgid "Slide from right"
+msgstr "Ολίσθηση από δεξιά"
+
+#: inc/layout.php:43
+msgid "Slide from bottom"
+msgstr "Ολίσθηση από κάτω"
+
+#: inc/layout.php:44
+msgid "Fade"
+msgstr "Fade"
+
+#: inc/layout.php:45
+msgid "Scale"
+msgstr "Scale"
+
+#: inc/layout.php:63
+msgid "Sidebar"
+msgstr "Sidebar"
+
+#: inc/layout.php:65 inc/premium-shop.php:806 inc/premium-shop.php:808
+msgid "Filters"
+msgstr "Φίλτρα"
+
+#: inc/layout.php:65
+msgid "Close filters"
+msgstr "Κλείσιμο φίλτρων"
+
+#: inc/layout.php:96
+msgid "Layout Settings"
+msgstr "Ρυθμίσεις διάταξης"
+
+#: inc/layout.php:97
+msgid "Pages"
+msgstr "Σελίδες"
+
+#: inc/layout.php:97
+msgid "Blog categories"
+msgstr "Κατηγορίες blog"
+
+#: inc/layout.php:97
+msgid "Shop & product categories"
+msgstr "Κατάστημα & κατηγορίες προϊόντων"
+
+#: inc/layout.php:97
+msgid "Product pages"
+msgstr "Σελίδες προϊόντος"
+
+#: inc/layout.php:98
+msgid "Content width"
+msgstr "Πλάτος περιεχομένου"
+
+#: inc/layout.php:98
+msgid "Sidebar position"
+msgstr "Θέση sidebar"
+
+#: inc/layout.php:100
+msgid "No sidebar"
+msgstr "Χωρίς sidebar"
+
+#: inc/layout.php:100
+msgid "Left sidebar"
+msgstr "Αριστερό sidebar"
+
+#: inc/layout.php:100
+msgid "Right sidebar"
+msgstr "Δεξί sidebar"
+
+#: inc/layout.php:106
+msgid ""
+"The shop Filters panel lists attributes you enable under Jofme Options → "
+"Shop (new attributes are on by default). WooCommerce filter widgets in Shop "
+"Sidebar are hidden to avoid duplicates; other widgets still show. On mobile "
+"and tablet it opens as an off-canvas panel."
+msgstr ""
+"Το panel φίλτρων εμφανίζει τα attributes που ενεργοποιείς στο Jofme Options "
+"→ Shop (τα νέα είναι ενεργά από προεπιλογή). Τα WooCommerce filter widgets "
+"στο Shop Sidebar κρύβονται για να μην διπλοεμφανίζονται· τα υπόλοιπα widgets"
+" φαίνονται κανονικά. Σε mobile/tablet ανοίγει ως off-canvas."
+
+#: inc/layout.php:107
+msgid ""
+"The sidebar appears when its widget area contains widgets. On mobile it "
+"follows the content."
+msgstr ""
+"Το sidebar εμφανίζεται όταν έχει widgets. Σε mobile ακολουθεί το "
+"περιεχόμενο."
+
+#: inc/layout.php:114
+msgid "Shop & product categories — Off-canvas open effect"
+msgstr "Κατάστημα & κατηγορίες — εφέ ανοίγματος off-canvas"
+
+#: inc/layout.php:115
+msgid "How the filters sidebar opens on mobile and tablet (below 960px)."
+msgstr "Πώς ανοίγει το sidebar φίλτρων σε mobile/tablet (κάτω από 960px)."
+
+#: inc/layout.php:121
+msgid "Product pages — Gallery layout"
+msgstr "Σελίδες προϊόντος — διάταξη Gallery"
+
+#: inc/layout.php:121
+msgid "Gallery left"
+msgstr "Gallery αριστερά"
+
+#: inc/layout.php:121
+msgid "Gallery right"
+msgstr "Gallery δεξιά"
+
+#: inc/layout.php:121
+msgid "Gallery above summary"
+msgstr "Gallery πάνω από το summary"
+
+#: inc/premium-shop.php:23
+msgid "Loading…"
+msgstr "Φόρτωση…"
+
+#: inc/premium-shop.php:24
+msgid "Unable to load this product. Please try again."
+msgstr "Αδυναμία φόρτωσης προϊόντος. Δοκίμασε ξανά."
+
+#: inc/premium-shop.php:25
+msgid "Unable to update filters. Please try again."
+msgstr "Αδυναμία ενημέρωσης φίλτρων. Δοκίμασε ξανά."
+
+#: inc/premium-shop.php:26
+msgid "Added to cart"
+msgstr "Μπήκε στο καλάθι"
+
+#: inc/premium-shop.php:27 inc/product-copy.php:229 inc/template-tags.php:122
+msgid "View cart"
+msgstr "Δες το καλάθι"
+
+#: inc/premium-shop.php:28 inc/premium-shop.php:61
+msgid "More"
+msgstr "Περισσότερα"
+
+#: inc/premium-shop.php:29
+msgid "Less"
+msgstr "Λιγότερα"
+
+#: inc/premium-shop.php:86
+msgid "The collection"
+msgstr "Η συλλογή"
+
+#: inc/premium-shop.php:96 inc/size-guide.php:65
+msgid "Product categories"
+msgstr "Κατηγορίες προϊόντων"
+
+#: inc/premium-shop.php:402
+msgid "Collection"
+msgstr "Συλλογή"
+
+#: inc/premium-shop.php:409
+msgid "Apply filters"
+msgstr "Εφαρμογή φίλτρων"
+
+#: inc/premium-shop.php:409
+msgid "Clear filters"
+msgstr "Καθαρισμός φίλτρων"
+
+#: inc/premium-shop.php:426 inc/premium-shop.php:430
+msgid "Remove filter"
+msgstr "Αφαίρεση φίλτρου"
+
+#: inc/premium-shop.php:560 inc/widgets/class-bestsellers-tabs.php:321
+msgid "Price"
+msgstr "Τιμή"
+
+#: inc/premium-shop.php:570
+msgid "Minimum price"
+msgstr "Ελάχιστη τιμή"
+
+#: inc/premium-shop.php:571
+msgid "Maximum price"
+msgstr "Μέγιστη τιμή"
+
+#: inc/premium-shop.php:732
+msgid "Product view"
+msgstr "Προβολή προϊόντων"
+
+#: inc/premium-shop.php:733
+msgid "1 column"
+msgstr "1 στήλη"
+
+#: inc/premium-shop.php:733
+msgid "2 columns"
+msgstr "2 στήλες"
+
+#: inc/premium-shop.php:733
+msgid "3 columns"
+msgstr "3 στήλες"
+
+#: inc/premium-shop.php:733
+msgid "4 columns"
+msgstr "4 στήλες"
+
+#: inc/premium-shop.php:733
+msgid "List view"
+msgstr "Προβολή λίστας"
+
+#: inc/premium-shop.php:874 inc/premium-shop.php:1026
+msgid "Quick view"
+msgstr "Γρήγορη προβολή"
+
+#: inc/premium-shop.php:874
+msgid "Product details"
+msgstr "Λεπτομέρειες προϊόντος"
+
+#: inc/premium-shop.php:899
+msgid "View more"
+msgstr "Δες περισσότερα"
+
+#: inc/premium-shop.php:1000
+msgid "View full details"
+msgstr "Πλήρεις λεπτομέρειες"
+
+#: inc/premium-shop.php:1034 inc/wishlist.php:680
+msgid "Bestsellers (tabs card)"
+msgstr "Bestsellers (κάρτα tabs)"
+
+#: inc/premium-shop.php:1035 inc/wishlist.php:681
+msgid "Minimal"
+msgstr "Minimal"
+
+#: inc/premium-shop.php:1036 inc/wishlist.php:682
+msgid "Framed"
+msgstr "Framed"
+
+#: inc/premium-shop.php:1038 inc/wishlist.php:684
+msgid "Gallery (minimal product grid)"
+msgstr "Gallery (minimal πλέγμα προϊόντων)"
+
+#: inc/premium-shop.php:1042
+msgid "Product card layout"
+msgstr "Διάταξη κάρτας προϊόντος"
+
+#: inc/premium-shop.php:1043
+msgid "Default catalog view"
+msgstr "Προεπιλεγμένη προβολή καταλόγου"
+
+#: inc/premium-shop.php:1043
+msgid "List"
+msgstr "Λίστα"
+
+#: inc/premium-shop.php:1060
+msgid "Product card title size (px)"
+msgstr "Μέγεθος τίτλου κάρτας (px)"
+
+#: inc/premium-shop.php:1061
+msgid ""
+"Applies to Bestsellers-style shop cards and the Bestsellers Tabs widget. "
+"Scales down automatically on small screens."
+msgstr ""
+"Ισχύει για κάρτες Bestsellers στο κατάστημα και το widget Bestsellers Tabs. "
+"Μικραίνει αυτόματα σε μικρές οθόνες."
+
+#: inc/premium-shop.php:1081
+msgid "Product card icon size (px)"
+msgstr "Μέγεθος εικονιδίων κάρτας (px)"
+
+#: inc/premium-shop.php:1082
+msgid "Quick view, product link, and wishlist heart buttons on product cards."
+msgstr ""
+"Κουμπιά γρήγορης προβολής, συνδέσμου προϊόντος και καρδιάς wishlist στις "
+"κάρτες."
+
+#: inc/premium-shop.php:1097
+msgid "Filters button icon (SVG)"
+msgstr "Εικονίδιο κουμπιού φίλτρων (SVG)"
+
+#: inc/premium-shop.php:1098
+msgid ""
+"Optional SVG (or image) for the mobile/tablet Filters off-canvas button. "
+"Leave empty for the default icon."
+msgstr ""
+"Προαιρετικό SVG (ή εικόνα) για το κουμπί Φίλτρα σε mobile/tablet. Άφησέ το "
+"κενό για το προεπιλεγμένο."
+
+#: inc/premium-shop.php:1109
+msgid "Show Collection filter"
+msgstr "Εμφάνιση φίλτρου Συλλογής"
+
+#: inc/premium-shop.php:1110
+msgid ""
+"Filters panel: enable/disable Collection, Price, and each product attribute "
+"below. New attributes are on by default. WooCommerce filter widgets in Shop "
+"Sidebar are hidden so attributes are not listed twice."
+msgstr ""
+"Panel φίλτρων: ενεργοποίηση/απενεργοποίηση Συλλογής, Τιμής και κάθε "
+"attribute παρακάτω. Τα νέα attributes είναι ενεργά από προεπιλογή. Τα "
+"WooCommerce filter widgets στο Shop Sidebar κρύβονται για να μην "
+"διπλοεμφανίζονται."
+
+#: inc/premium-shop.php:1119
+msgid "Show Price range filter"
+msgstr "Εμφάνιση φίλτρου εύρους τιμής"
+
+#. translators: %s: attribute label
+#: inc/premium-shop.php:1145
+#, php-format
+msgid "Show “%s” filter"
+msgstr "Εμφάνιση φίλτρου “%s”"
+
+#: inc/premium-shop.php:1180 inc/widgets/class-weekly-sales.php:52
+msgid "Sale"
+msgstr "Προσφορά"
+
+#: inc/product-copy.php:106
+msgid "Product copy"
+msgstr "Κείμενα προϊόντος"
+
+#: inc/product-copy.php:107
+msgid "Labels and CTAs on the single product page."
+msgstr "Ετικέτες και CTA στη σελίδα προϊόντος."
+
+#: inc/product-copy.php:114
+msgid "Add to cart button"
+msgstr "Κουμπί προσθήκης στο καλάθι"
+
+#: inc/product-copy.php:115
+msgid "Added to cart message"
+msgstr "Μήνυμα μετά την προσθήκη"
+
+#: inc/product-copy.php:116
+msgid "Free shipping line"
+msgstr "Γραμμή δωρεάν αποστολής"
+
+#: inc/product-copy.php:117
+#, php-format
+msgid "Low stock text (use %d for quantity)"
+msgstr "Κείμενο χαμηλού αποθέματος (χρησιμοποίησε %d για ποσότητα)"
+
+#: inc/product-copy.php:118
+msgid "Sold out text"
+msgstr "Κείμενο εξαντλημένου"
+
+#: inc/product-copy.php:119
+msgid "Restock notify button"
+msgstr "Κουμπί ειδοποίησης επαναφοράς"
+
+#: inc/product-copy.php:120
+msgid "Upsells / pairs-well heading"
+msgstr "Επικεφαλίδα upsells / «ταιριάζει με»"
+
+#: inc/product-copy.php:121
+msgid "Related products heading"
+msgstr "Επικεφαλίδα related products"
+
+#: inc/product-copy.php:122
+msgid "Styling help text"
+msgstr "Κείμενο βοήθειας styling"
+
+#: inc/product-copy.php:155
+msgid "Low stock threshold"
+msgstr "Όριο χαμηλού αποθέματος"
+
+#: inc/product-copy.php:156
+msgid "Show the low-stock line when quantity is at or below this number."
+msgstr ""
+"Εμφάνισε το χαμηλό απόθεμα όταν η ποσότητα είναι ίση ή κάτω από αυτόν τον "
+"αριθμό."
+
+#: inc/product-copy.php:176
+msgid "Styling help link (Instagram DM)"
+msgstr "Σύνδεσμος βοήθειας styling (Instagram DM)"
+
+#: inc/product-copy.php:177
+msgid ""
+"e.g. https://ig.me/m/yourbrand or your Instagram profile URL. Leave empty to"
+" hide the CTA."
+msgstr ""
+"π.χ. https://ig.me/m/yourbrand ή το URL του Instagram. Άφησέ το κενό για "
+"απόκρυψη του CTA."
+
+#: inc/product-copy.php:379
+msgid "Το email σου"
+msgstr "Το email σου"
+
+#: inc/product-copy.php:382
+msgid "Αποστολή"
+msgstr "Αποστολή"
+
+#: inc/product-copy.php:383
+msgid "Αποστολή…"
+msgstr "Αποστολή…"
+
+#: inc/product-copy.php:386
+msgid "Θα σου στείλουμε ένα email μόλις ξανάρθει."
+msgstr "Θα σου στείλουμε ένα email μόλις ξανάρθει."
+
+#: inc/product-copy.php:418 inc/product-copy.php:470
+msgid "Τέλεια — θα σε ενημερώσουμε μόλις ξανάρθει."
+msgstr "Τέλεια — θα σε ενημερώσουμε μόλις ξανάρθει."
+
+#: inc/product-copy.php:419 inc/product-copy.php:441
+msgid "Κάτι πήγε στραβά. Δοκίμασε ξανά."
+msgstr "Κάτι πήγε στραβά. Δοκίμασε ξανά."
+
+#: inc/product-copy.php:420 inc/product-copy.php:436
+msgid "Βάλε ένα έγκυρο email."
+msgstr "Βάλε ένα έγκυρο email."
+
+#. translators: %s: product name
+#: inc/product-copy.php:455
+#, php-format
+msgid "[Jofme] Restock request: %s"
+msgstr "[Jofme] Αίτημα επαναφοράς: %s"
+
+#. translators: 1: email, 2: product name, 3: product edit URL
+#: inc/product-copy.php:460
+#, php-format
+msgid ""
+"%1$s asked to be notified when “%2$s” is back in stock.\n"
+"\n"
+"Edit product: %3$s\n"
+msgstr ""
+"%1$s ζήτησε ειδοποίηση όταν το “%2$s” ξανάρθει σε απόθεμα.\n"
+"\n"
+"Επεξεργασία προϊόντος: %3$s\n"
+
+#: inc/product-hover.php:21
+msgid "Change product image on hover"
+msgstr "Αλλαγή εικόνας προϊόντος στο hover"
+
+#: inc/product-hover.php:22
+msgid ""
+"Show the first gallery image over the main image on product cards. Products "
+"without another image keep their main photo."
+msgstr ""
+"Εμφάνισε την πρώτη εικόνα gallery πάνω από την κύρια στις κάρτες. Χωρίς "
+"δεύτερη εικόνα μένει η κύρια."
+
+#: inc/product-hover.php:27
+msgid "Product image hover scale"
+msgstr "Scale εικόνας στο hover"
+
+#: inc/product-hover.php:28
+msgid "Zoom factor on card image hover. Default 1.05. Use 1 for no zoom."
+msgstr ""
+"Παράγοντας zoom στο hover της κάρτας. Προεπιλογή 1.05. Βάλε 1 χωρίς zoom."
+
+#: inc/product-hover.php:35
+msgid "Smooth scroll to products on archive load"
+msgstr "Ομαλό scroll στα προϊόντα στο φόρτωμα archive"
+
+#: inc/product-hover.php:36
+msgid ""
+"On shop and category pages, gently scroll to the product grid after the page"
+" loads."
+msgstr ""
+"Σε κατάστημα και κατηγορίες, κάνε απαλό scroll στο πλέγμα προϊόντων μετά το "
+"φόρτωμα."
+
+#: inc/setup.php:49
+msgid "Primary Menu"
+msgstr "Κύριο μενού"
+
+#: inc/setup.php:50
+msgid "Secondary Menu"
+msgstr "Δευτερεύον μενού"
+
+#: inc/setup.php:51
+msgid "Footer Menu"
+msgstr "Μενού footer"
+
+#: inc/setup.php:52
+msgid "Mobile Menu"
+msgstr "Μενού mobile"
+
+#: inc/setup.php:71
+msgid "Blog Sidebar"
+msgstr "Sidebar blog"
+
+#: inc/setup.php:72
+msgid "Page Sidebar"
+msgstr "Sidebar σελίδας"
+
+#: inc/setup.php:73
+msgid "Product Sidebar"
+msgstr "Sidebar προϊόντος"
+
+#: inc/setup.php:74
+msgid "Shop Sidebar"
+msgstr "Sidebar καταστήματος"
+
+#: inc/setup.php:75
+msgid "Footer Column 1"
+msgstr "Στήλη footer 1"
+
+#: inc/setup.php:76
+msgid "Footer Column 2"
+msgstr "Στήλη footer 2"
+
+#: inc/setup.php:77
+msgid "Footer Column 3"
+msgstr "Στήλη footer 3"
+
+#: inc/setup.php:78
+msgid "Footer Column 4"
+msgstr "Στήλη footer 4"
+
+#. translators: %s: sidebar name
+#: inc/setup.php:88
+#, php-format
+msgid "Widgets in %s."
+msgstr "Widgets στο %s."
+
+#: inc/size-guide.php:22 inc/size-guide.php:32
+msgid "Size guides"
+msgstr "Οδηγοί μεγεθών"
+
+#: inc/size-guide.php:23 inc/size-guide.php:97 inc/size-guide.php:452
+msgid "Size guide"
+msgstr "Οδηγός μεγέθους"
+
+#: inc/size-guide.php:24 inc/size-guide.php:25
+msgid "Add size guide"
+msgstr "Προσθήκη οδηγού μεγέθους"
+
+#: inc/size-guide.php:26
+msgid "Edit size guide"
+msgstr "Επεξεργασία οδηγού μεγέθους"
+
+#: inc/size-guide.php:27
+msgid "New size guide"
+msgstr "Νέος οδηγός μεγέθους"
+
+#: inc/size-guide.php:28
+msgid "View size guide"
+msgstr "Προβολή οδηγού μεγέθους"
+
+#: inc/size-guide.php:29
+msgid "Search size guides"
+msgstr "Αναζήτηση οδηγών μεγεθών"
+
+#: inc/size-guide.php:30
+msgid "No size guides found"
+msgstr "Δεν βρέθηκαν οδηγοί μεγεθών"
+
+#: inc/size-guide.php:31
+msgid "No size guides found in Trash"
+msgstr "Δεν βρέθηκαν οδηγοί μεγεθών στα Διαγραμμένα"
+
+#: inc/size-guide.php:57
+msgid "PDF size guide"
+msgstr "PDF οδηγού μεγέθους"
+
+#: inc/size-guide.php:73
+msgid "Individual products"
+msgstr "Μεμονωμένα προϊόντα"
+
+#: inc/size-guide.php:96
+msgid "Button label"
+msgstr "Ετικέτα κουμπιού"
+
+#: inc/size-guide.php:98
+msgid "Shown on product pages. Leave empty to use the guide title."
+msgstr ""
+"Εμφανίζεται στις σελίδες προϊόντος. Άφησέ το κενό για τον τίτλο του οδηγού."
+
+#: inc/size-guide.php:102
+msgid "PDF file"
+msgstr "Αρχείο PDF"
+
+#: inc/size-guide.php:107
+msgid "Upload / import PDF"
+msgstr "Ανέβασμα / εισαγωγή PDF"
+
+#: inc/size-guide.php:108
+msgid "Remove PDF"
+msgstr "Αφαίρεση PDF"
+
+#: inc/size-guide.php:110
+msgid ""
+"Import a PDF size chart. Assign to categories and/or individual products. "
+"Multiple guides are supported."
+msgstr ""
+"Εισήγαγε PDF πίνακα μεγεθών. Ανέθεσέ το σε κατηγορίες και/ή μεμονωμένα "
+"προϊόντα. Υποστηρίζονται πολλοί οδηγοί."
+
+#: inc/size-guide.php:134
+msgid "No product categories found."
+msgstr "Δεν βρέθηκαν κατηγορίες προϊόντων."
+
+#: inc/size-guide.php:138
+msgid ""
+"Show this guide on products in the selected categories (including child "
+"categories)."
+msgstr ""
+"Εμφάνισε αυτόν τον οδηγό σε προϊόντα των επιλεγμένων κατηγοριών "
+"(συμπεριλαμβανομένων υποκατηγοριών)."
+
+#: inc/size-guide.php:159
+msgid ""
+"Also show this guide on specific products, even if their category is not "
+"selected."
+msgstr ""
+"Εμφάνισε επίσης σε συγκεκριμένα προϊόντα, ακόμη κι αν η κατηγορία τους δεν "
+"είναι επιλεγμένη."
+
+#: inc/size-guide.php:160
+msgid "Search for a product…"
+msgstr "Αναζήτηση προϊόντος…"
+
+#: inc/size-guide.php:276
+msgid "Select or upload PDF"
+msgstr "Επιλογή ή ανέβασμα PDF"
+
+#: inc/size-guide.php:277
+msgid "Use this PDF"
+msgstr "Χρήση αυτού του PDF"
+
+#: inc/size-guide.php:296
+msgid "PDF"
+msgstr "PDF"
+
+#: inc/size-guide.php:297
+msgid "Categories"
+msgstr "Κατηγορίες"
+
+#: inc/size-guide.php:298
+msgid "Products"
+msgstr "Προϊόντα"
+
+#: inc/size-guide.php:316
+msgid "View PDF"
+msgstr "Προβολή PDF"
+
+#: inc/size-guide.php:491
+msgid "Open PDF"
+msgstr "Άνοιγμα PDF"
+
+#: inc/social.php:17
+msgid "Instagram"
+msgstr "Instagram"
+
+#: inc/social.php:18
+msgid "Facebook"
+msgstr "Facebook"
+
+#: inc/social.php:19
+msgid "TikTok"
+msgstr "TikTok"
+
+#: inc/social.php:20
+msgid "Pinterest"
+msgstr "Pinterest"
+
+#: inc/social.php:21
+msgid "YouTube"
+msgstr "YouTube"
+
+#: inc/social.php:22
+msgid "X (Twitter)"
+msgstr "X (Twitter)"
+
+#: inc/social.php:35 inc/social.php:176
+msgid "Social media"
+msgstr "Social media"
+
+#: inc/social.php:36
+msgid ""
+"Add profile URLs to show icons in the header topbar and footer. Leave a "
+"field empty to hide that network."
+msgstr ""
+"Πρόσθεσε URLs προφίλ για εικονίδια στο topbar του header και στο footer. "
+"Άφησε κενό πεδίο για απόκρυψη δικτύου."
+
+#: inc/social.php:52
+msgid "Show social icons in header topbar"
+msgstr "Εμφάνιση social στο topbar του header"
+
+#: inc/social.php:53
+msgid "Desktop only. On mobile, icons stay in the menu drawer."
+msgstr "Μόνο desktop. Στο mobile τα εικονίδια μένουν στο μενού."
+
+#: inc/social.php:69
+msgid "Show social icons in footer"
+msgstr "Εμφάνιση social στο footer"
+
+#: inc/swatches.php:182 inc/swatches.php:213
+msgid "Display as color swatches"
+msgstr "Εμφάνιση ως χρωματικά swatches"
+
+#: inc/swatches.php:184 inc/swatches.php:215
+msgid ""
+"Show term colors on product cards, catalog filters, and the product page. "
+"Set each term color under Configure terms."
+msgstr ""
+"Εμφάνισε χρώματα όρων σε κάρτες, φίλτρα καταλόγου και σελίδα προϊόντος. "
+"Όρισε χρώμα σε κάθε όρο από Configure terms."
+
+#: inc/swatches.php:208
+msgid "Color swatches"
+msgstr "Χρωματικά swatches"
+
+#: inc/swatches.php:262
+msgid "Choose swatch color"
+msgstr "Επιλογή χρώματος swatch"
+
+#: inc/swatches.php:265
+msgid ""
+"Used on product cards, catalog filters, and variation swatches. Leave blank "
+"to use a default color from the term slug, or a text label when none "
+"matches."
+msgstr ""
+"Χρησιμοποιείται σε κάρτες, φίλτρα και variation swatches. Άφησέ το κενό για "
+"προεπιλογή από το slug του όρου, ή ετικέτα κειμένου αν δεν ταιριάζει."
+
+#: inc/swatches.php:268 inc/swatches.php:270
+msgid "Swatch color"
+msgstr "Χρώμα swatch"
+
+#: inc/swatches.php:553 inc/widgets/class-bestsellers-tabs.php:165
+#: inc/widgets/class-bestsellers-tabs.php:638
+msgid "All"
+msgstr "Όλα"
+
+#: inc/template-tags.php:75
+msgid "Posted on"
+msgstr "Δημοσιεύτηκε στις"
+
+#: inc/template-tags.php:89 inc/template-tags.php:98
+msgid ", "
+msgstr ", "
+
+#: inc/template-tags.php:93
+msgid "Categories:"
+msgstr "Κατηγορίες:"
+
+#: inc/template-tags.php:102
+msgid "Tags:"
+msgstr "Ετικέτες:"
+
+#: inc/theme-updates.php:80
+msgid "Enter a public GitHub repository as owner/repository."
+msgstr "Βάλε δημόσιο GitHub repository ως owner/repository."
+
+#: inc/theme-updates.php:93
+msgid "Jofme Updates"
+msgstr "Ενημερώσεις Jofme"
+
+#: inc/theme-updates.php:125
+msgid "Jofme — GitHub updates"
+msgstr "Jofme — ενημερώσεις GitHub"
+
+#: inc/theme-updates.php:127
+msgid ""
+"Connect a public GitHub repository. Stable releases must include a jofme.zip"
+" asset. Updates appear under Dashboard → Updates."
+msgstr ""
+"Σύνδεσε δημόσιο GitHub repository. Τα σταθερά releases πρέπει να "
+"περιλαμβάνουν jofme.zip. Οι ενημερώσεις εμφανίζονται στο Dashboard → "
+"Updates."
+
+#: inc/theme-updates.php:129
+msgid "Installed"
+msgstr "Εγκατεστημένο"
+
+#: inc/theme-updates.php:131
+msgid "Latest GitHub"
+msgstr "Τελευταίο GitHub"
+
+#: inc/theme-updates.php:136
+msgid "Update available"
+msgstr "Διαθέσιμη ενημέρωση"
+
+#: inc/theme-updates.php:138
+msgid "You are up to date."
+msgstr "Είσαι ενημερωμένος/η."
+
+#: inc/theme-updates.php:141
+msgid "Could not read the latest GitHub release."
+msgstr "Αδυναμία ανάγνωσης του τελευταίου GitHub release."
+
+#: inc/theme-updates.php:146
+msgid ""
+"Check the repository name and that the site can reach api.github.com or "
+"github.com."
+msgstr ""
+"Έλεγξε το όνομα του repository και ότι το site φτάνει στο api.github.com ή "
+"github.com."
+
+#: inc/theme-updates.php:151
+msgid ""
+"No installed theme named Jofme was found. The update ZIP must unpack into a "
+"folder that WordPress recognizes as this theme (usually jofme)."
+msgstr ""
+"Δεν βρέθηκε εγκατεστημένο theme με όνομα Jofme. Το ZIP ενημέρωσης πρέπει να "
+"αποσυμπιέζεται σε φάκελο που το WordPress αναγνωρίζει ως αυτό το theme "
+"(συνήθως jofme)."
+
+#: inc/theme-updates.php:153
+msgid "Check for updates now"
+msgstr "Έλεγχος ενημερώσεων τώρα"
+
+#: inc/theme-updates.php:156
+msgid "GitHub repository (owner/repository)"
+msgstr "GitHub repository (owner/repository)"
+
+#: inc/theme-updates.php:158
+msgid ""
+"Release checks are cached for one hour. Use “Check for updates now”, or save"
+" this setting again, to clear the cache. Then open Dashboard → Updates."
+msgstr ""
+"Οι έλεγχοι release κρατούνται σε cache για μία ώρα. Χρησιμοποίησε «Έλεγχος "
+"ενημερώσεων τώρα» ή αποθήκευσε ξανά τη ρύθμιση για καθαρισμό cache. Μετά "
+"άνοιξε Dashboard → Updates."
+
+#: inc/theme-updates.php:171
+msgid "Latest release tag is not a stable X.Y.Z version."
+msgstr "Το τελευταίο release tag δεν είναι σταθερή έκδοση X.Y.Z."
+
+#. translators: 1: zip URL, 2: error message
+#: inc/theme-updates.php:187
+#, php-format
+msgid "Could not verify %1$s (%2$s)."
+msgstr "Αδυναμία επαλήθευσης %1$s (%2$s)."
+
+#. translators: 1: version, 2: HTTP status
+#: inc/theme-updates.php:199
+#, php-format
+msgid "Release v%1$s has no downloadable jofme.zip (HTTP %2$d)."
+msgstr "Το release v%1$s δεν έχει downloadable jofme.zip (HTTP %2$d)."
+
+#. translators: %s: transport error
+#: inc/theme-updates.php:232
+#, php-format
+msgid "api.github.com failed: %s"
+msgstr "Αποτυχία api.github.com: %s"
+
+#. translators: 1: HTTP status, 2: optional GitHub message
+#: inc/theme-updates.php:247
+#, php-format
+msgid "api.github.com returned HTTP %1$d. %2$s"
+msgstr "Το api.github.com επέστρεψε HTTP %1$d. %2$s"
+
+#: inc/theme-updates.php:256
+msgid "GitHub API response was not a stable release."
+msgstr "Η απάντηση του GitHub API δεν ήταν σταθερό release."
+
+#. translators: %s: transport error
+#: inc/theme-updates.php:299
+#, php-format
+msgid "github.com releases.atom failed: %s"
+msgstr "Αποτυχία github.com releases.atom: %s"
+
+#. translators: %d: HTTP status
+#: inc/theme-updates.php:310
+#, php-format
+msgid "github.com releases.atom returned HTTP %d."
+msgstr "Το github.com releases.atom επέστρεψε HTTP %d."
+
+#: inc/theme-updates.php:317
+msgid "Could not parse a stable version from releases.atom."
+msgstr "Αδυναμία ανάγνωσης σταθερής έκδοσης από το releases.atom."
+
+#: inc/theme-updates.php:334
+msgid "Invalid GitHub repository name."
+msgstr "Μη έγκυρο όνομα GitHub repository."
+
+#: inc/typography.php:5
+msgid "Aeonik Pro (custom font files)"
+msgstr "Aeonik Pro (προσαρμοσμένα αρχεία γραμματοσειράς)"
+
+#: inc/typography.php:5
+msgid "System sans-serif"
+msgstr "System sans-serif"
+
+#: inc/typography.php:5
+msgid "System serif"
+msgstr "System serif"
+
+#: inc/typography.php:34
+msgid "Typography"
+msgstr "Τυπογραφία"
+
+#: inc/typography.php:35
+msgid "Text & navigation font"
+msgstr "Γραμματοσειρά κειμένου & πλοήγησης"
+
+#: inc/typography.php:35
+msgid "Headings font"
+msgstr "Γραμματοσειρά επικεφαλίδων"
+
+#: inc/typography.php:40
+msgid "Same as text font"
+msgstr "Ίδια με τη γραμματοσειρά κειμένου"
+
+#: inc/typography.php:42
+msgid "Menu font"
+msgstr "Γραμματοσειρά μενού"
+
+#: inc/typography.php:44
+msgid "Menu font size (px)"
+msgstr "Μέγεθος γραμματοσειράς μενού (px)"
+
+#: inc/typography.php:46
+msgid "Menu font weight"
+msgstr "Βάρος γραμματοσειράς μενού"
+
+#: inc/typography.php:48
+msgid "Menu letter spacing (em)"
+msgstr "Διάκενο γραμμάτων μενού (em)"
+
+#: inc/typography.php:50
+msgid "Menu text transform"
+msgstr "Μετασχηματισμός κειμένου μενού"
+
+#: inc/typography.php:50
+msgid "None"
+msgstr "Κανένα"
+
+#: inc/typography.php:50
+msgid "Uppercase"
+msgstr "Κεφαλαία"
+
+#: inc/typography.php:50
+msgid "Capitalize"
+msgstr "Κεφαλαίο πρώτο γράμμα"
+
+#: inc/typography.php:54
+#, php-format
+msgid "Custom Aeonik Pro — %s file"
+msgstr "Προσαρμοσμένο Aeonik Pro — αρχείο %s"
+
+#: inc/typography.php:54
+msgid "Optional WOFF/WOFF2 upload for the custom font choice."
+msgstr "Προαιρετικό ανέβασμα WOFF/WOFF2 για την επιλογή custom font."
+
+#: inc/typography.php:57
+#, php-format
+msgid "Custom Aeonik Pro — %s CDN file URL"
+msgstr "Προσαρμοσμένο Aeonik Pro — CDN URL αρχείου %s"
+
+#: inc/typography.php:57
+msgid ""
+"Optional direct .woff or .woff2 URL. Used when no font file is uploaded. The"
+" Aeonik Pro Light choice already uses its supplied CDN stylesheet."
+msgstr ""
+"Προαιρετικό άμεσο .woff ή .woff2 URL. Χρησιμοποιείται όταν δεν έχει ανέβει "
+"αρχείο. Η επιλογή Aeonik Pro Light χρησιμοποιεί ήδη το CDN stylesheet της."
+
+#: inc/widgets/class-bestsellers-tabs.php:26
+msgid "Bestsellers Tabs"
+msgstr "Bestsellers Tabs"
+
+#: inc/widgets/class-bestsellers-tabs.php:70
+msgid "— Select category —"
+msgstr "— Επίλεξε κατηγορία —"
+
+#: inc/widgets/class-bestsellers-tabs.php:95
+msgid "— Any attribute —"
+msgstr "— Οποιοδήποτε attribute —"
+
+#. translators: 1: attribute label, 2: term name
+#: inc/widgets/class-bestsellers-tabs.php:117
+#, php-format
+msgid "%1$s — %2$s"
+msgstr "%1$s — %2$s"
+
+#: inc/widgets/class-bestsellers-tabs.php:134
+msgid "Section"
+msgstr "Ενότητα"
+
+#: inc/widgets/class-bestsellers-tabs.php:141
+#: inc/widgets/class-bestsellers-tabs.php:320
+#: inc/widgets/class-editorial-story.php:13
+#: inc/widgets/class-weekly-sales.php:13 inc/widgets/class-weekly-sales.php:28
+msgid "Title"
+msgstr "Τίτλος"
+
+#: inc/widgets/class-bestsellers-tabs.php:143
+msgid "Bestsellers for a Reason"
+msgstr "Bestsellers for a Reason"
+
+#: inc/widgets/class-bestsellers-tabs.php:151
+msgid "Show “All” tab"
+msgstr "Εμφάνιση tab «Όλα»"
+
+#: inc/widgets/class-bestsellers-tabs.php:153
+#: inc/widgets/class-bestsellers-tabs.php:332
+msgid "Yes"
+msgstr "Ναι"
+
+#: inc/widgets/class-bestsellers-tabs.php:154
+#: inc/widgets/class-bestsellers-tabs.php:333
+msgid "No"
+msgstr "Όχι"
+
+#: inc/widgets/class-bestsellers-tabs.php:163
+msgid "“All” tab label"
+msgstr "Ετικέτα tab «Όλα»"
+
+#: inc/widgets/class-bestsellers-tabs.php:175
+msgid "Base query"
+msgstr "Βασικό query"
+
+#: inc/widgets/class-bestsellers-tabs.php:184
+msgid "Base category"
+msgstr "Βασική κατηγορία"
+
+#: inc/widgets/class-bestsellers-tabs.php:185
+msgid ""
+"Optional starting category for every tab (including “All”). A tab’s own "
+"category overrides this."
+msgstr ""
+"Προαιρετική αρχική κατηγορία για κάθε tab (συμπεριλαμβανομένου του «Όλα»). Η"
+" κατηγορία του tab υπερισχύει."
+
+#: inc/widgets/class-bestsellers-tabs.php:195
+msgid "Base attribute"
+msgstr "Βασικό attribute"
+
+#: inc/widgets/class-bestsellers-tabs.php:196
+msgid ""
+"Optional starting attribute filter for every tab (including “All”), in "
+"addition to category. Tab attributes are combined with this."
+msgstr ""
+"Προαιρετικό αρχικό φίλτρο attribute για κάθε tab (συμπεριλαμβανομένου του "
+"«Όλα»), επιπλέον της κατηγορίας. Τα attributes του tab συνδυάζονται με αυτό."
+
+#: inc/widgets/class-bestsellers-tabs.php:207
+msgid "Tab label"
+msgstr "Ετικέτα tab"
+
+#: inc/widgets/class-bestsellers-tabs.php:209
+#: inc/widgets/class-bestsellers-tabs.php:245
+msgid "Rings"
+msgstr "Δαχτυλίδια"
+
+#: inc/widgets/class-bestsellers-tabs.php:216
+msgid "Product category"
+msgstr "Κατηγορία προϊόντος"
+
+#: inc/widgets/class-bestsellers-tabs.php:217
+msgid "Optional. Leave empty to query by attribute only (or all products)."
+msgstr ""
+"Προαιρετικό. Άφησέ το κενό για φίλτρο μόνο με attribute (ή όλα τα προϊόντα)."
+
+#: inc/widgets/class-bestsellers-tabs.php:226
+msgid "Product attribute"
+msgstr "Attribute προϊόντος"
+
+#: inc/widgets/class-bestsellers-tabs.php:227
+msgid ""
+"Optional. Filter this tab’s products by a global attribute term (e.g. Color "
+"— Gold)."
+msgstr ""
+"Προαιρετικό. Φίλτραρε τα προϊόντα του tab με global attribute term (π.χ. "
+"Color — Gold)."
+
+#: inc/widgets/class-bestsellers-tabs.php:237
+#: inc/widgets/class-bestsellers-tabs.php:382
+msgid "Tabs"
+msgstr "Tabs"
+
+#: inc/widgets/class-bestsellers-tabs.php:238
+msgid "Each tab can query by category, attribute, or both."
+msgstr "Κάθε tab μπορεί να φιλτράρει κατά κατηγορία, attribute ή και τα δύο."
+
+#: inc/widgets/class-bestsellers-tabs.php:242
+msgid "Bracelets"
+msgstr "Βραχιόλια"
+
+#: inc/widgets/class-bestsellers-tabs.php:243
+msgid "Earrings"
+msgstr "Σκουλαρίκια"
+
+#: inc/widgets/class-bestsellers-tabs.php:244
+msgid "Necklaces"
+msgstr "Κολιέ"
+
+#: inc/widgets/class-bestsellers-tabs.php:254
+msgid "Products per tab"
+msgstr "Προϊόντα ανά tab"
+
+#: inc/widgets/class-bestsellers-tabs.php:265
+msgid "Products layout"
+msgstr "Διάταξη προϊόντων"
+
+#: inc/widgets/class-bestsellers-tabs.php:269
+msgid "Grid"
+msgstr "Πλέγμα"
+
+#: inc/widgets/class-bestsellers-tabs.php:278
+msgid "Columns"
+msgstr "Στήλες"
+
+#: inc/widgets/class-bestsellers-tabs.php:295
+msgid "Visible slides"
+msgstr "Ορατά slides"
+
+#: inc/widgets/class-bestsellers-tabs.php:296
+msgid "How many product cards are visible at once in the carousel."
+msgstr "Πόσες κάρτες προϊόντων φαίνονται μαζί στο carousel."
+
+#: inc/widgets/class-bestsellers-tabs.php:313
+msgid "Order by"
+msgstr "Ταξινόμηση κατά"
+
+#: inc/widgets/class-bestsellers-tabs.php:317
+msgid "Popularity"
+msgstr "Δημοφιλία"
+
+#: inc/widgets/class-bestsellers-tabs.php:318
+msgid "Latest"
+msgstr "Νεότερα"
+
+#: inc/widgets/class-bestsellers-tabs.php:319
+msgid "Menu order"
+msgstr "Σειρά μενού"
+
+#: inc/widgets/class-bestsellers-tabs.php:329
+msgid "Show attributes (like archive)"
+msgstr "Εμφάνιση attributes (όπως στο archive)"
+
+#: inc/widgets/class-bestsellers-tabs.php:330
+msgid ""
+"Display color/attribute swatches under each product, same as the shop "
+"archive cards."
+msgstr ""
+"Εμφάνισε χρώμα/attribute swatches κάτω από κάθε προϊόν, όπως στις κάρτες του"
+" καταστήματος."
+
+#: inc/widgets/class-bestsellers-tabs.php:342
+msgid "Footer link text"
+msgstr "Κείμενο συνδέσμου footer"
+
+#: inc/widgets/class-bestsellers-tabs.php:344
+msgid "View all"
+msgstr "Δες όλα"
+
+#: inc/widgets/class-bestsellers-tabs.php:352
+msgid "Footer link"
+msgstr "Σύνδεσμος footer"
+
+#: inc/widgets/class-bestsellers-tabs.php:363
+#: inc/widgets/class-editorial-story.php:22
+#: inc/widgets/class-weekly-sales.php:32
+msgid "Appearance"
+msgstr "Εμφάνιση"
+
+#: inc/widgets/class-bestsellers-tabs.php:371
+#: inc/widgets/class-editorial-story.php:24
+#: inc/widgets/class-weekly-sales.php:33
+msgid "Text color"
+msgstr "Χρώμα κειμένου"
+
+#: inc/widgets/class-bestsellers-tabs.php:416
+msgid "Tab text"
+msgstr "Κείμενο tab"
+
+#: inc/widgets/class-bestsellers-tabs.php:451
+msgid "Tab typography"
+msgstr "Τυπογραφία tab"
+
+#: inc/widgets/class-bestsellers-tabs.php:459
+msgid "Tabs padding"
+msgstr "Padding tabs"
+
+#: inc/widgets/class-bestsellers-tabs.php:472
+#: inc/widgets/class-editorial-story.php:25
+msgid "Title typography"
+msgstr "Τυπογραφία τίτλου"
+
+#: inc/widgets/class-bestsellers-tabs.php:480
+msgid "Section padding"
+msgstr "Padding ενότητας"
+
+#: inc/widgets/class-bestsellers-tabs.php:666
+msgid "WooCommerce is required for the Bestsellers Tabs widget."
+msgstr "Απαιτείται WooCommerce για το widget Bestsellers Tabs."
+
+#: inc/widgets/class-bestsellers-tabs.php:687
+msgid "Add at least one tab, or enable the “All” tab."
+msgstr "Πρόσθεσε τουλάχιστον ένα tab ή ενεργοποίησε το tab «Όλα»."
+
+#: inc/widgets/class-bestsellers-tabs.php:722
+msgid "Previous products"
+msgstr "Προηγούμενα προϊόντα"
+
+#: inc/widgets/class-bestsellers-tabs.php:730
+msgid "Next products"
+msgstr "Επόμενα προϊόντα"
+
+#: inc/widgets/class-bestsellers-tabs.php:740
+msgid ""
+"No visible products found for this tab. Assign a category and/or attribute, "
+"or add published products."
+msgstr ""
+"Δεν βρέθηκαν ορατά προϊόντα για αυτό το tab. Όρισε κατηγορία και/ή "
+"attribute, ή πρόσθεσε δημοσιευμένα προϊόντα."
+
+#: inc/widgets/class-editorial-story.php:6
+msgid "Editorial Story (Paola Dias)"
+msgstr "Editorial Story (Paola Dias)"
+
+#: inc/widgets/class-editorial-story.php:12
+msgid "Collection story"
+msgstr "Ιστορία συλλογής"
+
+#: inc/widgets/class-editorial-story.php:14
+msgid "Introduction"
+msgstr "Εισαγωγή"
+
+#: inc/widgets/class-editorial-story.php:14
+msgid ""
+"An intimate expression of modern jewelry, made for the moments that become "
+"your story."
+msgstr ""
+"Μια οικεία έκφραση σύγχρονου κοσμήματος, φτιαγμένη για στιγμές που γίνονται "
+"η ιστορία σου."
+
+#: inc/widgets/class-editorial-story.php:15
+msgid "Large editorial image"
+msgstr "Μεγάλη editorial εικόνα"
+
+#: inc/widgets/class-editorial-story.php:16
+msgid "Portrait / detail image"
+msgstr "Portrait / εικόνα λεπτομέρειας"
+
+#: inc/widgets/class-editorial-story.php:17
+msgid "Text below detail image"
+msgstr "Κείμενο κάτω από την εικόνα λεπτομέρειας"
+
+#: inc/widgets/class-editorial-story.php:17
+msgid ""
+"Discover a collection of expressive shapes and thoughtful details, selected "
+"to feel distinctly yours."
+msgstr ""
+"Ανακάλυψε μια συλλογή εκφραστικών σχημάτων και προσεγμένων λεπτομερειών, "
+"επιλεγμένων για να νιώθονται δικά σου."
+
+#: inc/widgets/class-editorial-story.php:18
+#: inc/widgets/class-weekly-sales.php:22
+msgid "Link text"
+msgstr "Κείμενο συνδέσμου"
+
+#: inc/widgets/class-editorial-story.php:18
+msgid "Explore the collection"
+msgstr "Εξερεύνησε τη συλλογή"
+
+#: inc/widgets/class-editorial-story.php:19
+msgid "Collection link"
+msgstr "Σύνδεσμος συλλογής"
+
+#: inc/widgets/class-editorial-story.php:20
+msgid "Large image position"
+msgstr "Θέση μεγάλης εικόνας"
+
+#: inc/widgets/class-editorial-story.php:20
+#: inc/widgets/class-editorial-story.php:29
+msgid "Left"
+msgstr "Αριστερά"
+
+#: inc/widgets/class-editorial-story.php:20
+#: inc/widgets/class-editorial-story.php:29
+msgid "Right"
+msgstr "Δεξιά"
+
+#: inc/widgets/class-editorial-story.php:26
+msgid "Text typography"
+msgstr "Τυπογραφία κειμένου"
+
+#: inc/widgets/class-editorial-story.php:27
+msgid "Content padding"
+msgstr "Padding περιεχομένου"
+
+#: inc/widgets/class-editorial-story.php:28
+msgid "Detail image width"
+msgstr "Πλάτος εικόνας λεπτομέρειας"
+
+#: inc/widgets/class-editorial-story.php:29
+msgid "Large image focal point"
+msgstr "Focal point μεγάλης εικόνας"
+
+#: inc/widgets/class-editorial-story.php:29
+msgid "Center"
+msgstr "Κέντρο"
+
+#: inc/widgets/class-editorial-story.php:29
+msgid "Top"
+msgstr "Πάνω"
+
+#: inc/widgets/class-weekly-sales.php:6
+msgid "Weekly Sales"
+msgstr "Εβδομαδιαίες προσφορές"
+
+#: inc/widgets/class-weekly-sales.php:12
+msgid "Section heading"
+msgstr "Επικεφαλίδα ενότητας"
+
+#: inc/widgets/class-weekly-sales.php:14
+msgid "Subtitle"
+msgstr "Υπότιτλος"
+
+#: inc/widgets/class-weekly-sales.php:14
+msgid "A considered selection of beautiful pieces, at special prices."
+msgstr "Μια επιμελημένη επιλογή όμορφων κομματιών, σε ειδικές τιμές."
+
+#: inc/widgets/class-weekly-sales.php:16
+msgid "Featured product"
+msgstr "Προβεβλημένο προϊόν"
+
+#: inc/widgets/class-weekly-sales.php:17
+msgid "WooCommerce product ID"
+msgstr "ID προϊόντος WooCommerce"
+
+#: inc/widgets/class-weekly-sales.php:17
+msgid ""
+"Leave 0 to show a visible sale product automatically. Find the ID under "
+"Products in WordPress. An explicit ID may also display a full-price product "
+"without a sale badge."
+msgstr ""
+"Άφησε 0 για αυτόματη εμφάνιση ορατού προϊόντος σε προσφορά. Βρες το ID στα "
+"Προϊόντα. Συγκεκριμένο ID μπορεί να δείξει και προϊόν πλήρους τιμής χωρίς "
+"σήμα προσφοράς."
+
+#: inc/widgets/class-weekly-sales.php:18
+msgid "Text below product (optional)"
+msgstr "Κείμενο κάτω από το προϊόν (προαιρετικό)"
+
+#: inc/widgets/class-weekly-sales.php:18
+msgid "Leave empty to use the product short description."
+msgstr "Άφησέ το κενό για τη σύντομη περιγραφή του προϊόντος."
+
+#: inc/widgets/class-weekly-sales.php:20
+msgid "Central campaign"
+msgstr "Κεντρική καμπάνια"
+
+#: inc/widgets/class-weekly-sales.php:21
+msgid "Campaign photo"
+msgstr "Φωτογραφία καμπάνιας"
+
+#: inc/widgets/class-weekly-sales.php:22
+msgid "Small label"
+msgstr "Μικρή ετικέτα"
+
+#: inc/widgets/class-weekly-sales.php:22
+msgid "The jewelry edit"
+msgstr "The jewelry edit"
+
+#: inc/widgets/class-weekly-sales.php:22
+msgid "Campaign title"
+msgstr "Τίτλος καμπάνιας"
+
+#: inc/widgets/class-weekly-sales.php:22
+msgid "Small details. Lasting impressions."
+msgstr "Μικρές λεπτομέρειες. Διαρκείς εντυπώσεις."
+
+#: inc/widgets/class-weekly-sales.php:22
+msgid "Campaign text"
+msgstr "Κείμενο καμπάνιας"
+
+#: inc/widgets/class-weekly-sales.php:22
+msgid ""
+"Explore everyday treasures and expressive pieces, chosen to celebrate your "
+"own style."
+msgstr ""
+"Εξερεύνησε καθημερινά κοσμήματα και εκφραστικά κομμάτια, επιλεγμένα για το "
+"δικό σου στυλ."
+
+#: inc/widgets/class-weekly-sales.php:22
+msgid "Shop the edit"
+msgstr "Δες την επιλογή"
+
+#: inc/widgets/class-weekly-sales.php:25
+msgid "Campaign link"
+msgstr "Σύνδεσμος καμπάνιας"
+
+#: inc/widgets/class-weekly-sales.php:27
+msgid "Right-hand story"
+msgstr "Ιστορία δεξιάς στήλης"
+
+#: inc/widgets/class-weekly-sales.php:28
+msgid "Made to feel like you"
+msgstr "Φτιαγμένα να σου ταιριάζουν"
+
+#: inc/widgets/class-weekly-sales.php:29
+msgid ""
+"Thoughtful shapes and luminous finishes bring a personal touch to the "
+"everyday."
+msgstr ""
+"Προσεγμένα σχήματα και φωτεινά φινιρίσματα δίνουν προσωπική πινελιά στην "
+"καθημερινότητα."
+
+#: inc/widgets/class-weekly-sales.php:30
+msgid "Detail photo"
+msgstr "Φωτογραφία λεπτομέρειας"
+
+#: inc/widgets/class-weekly-sales.php:34
+msgid "Campaign text color"
+msgstr "Χρώμα κειμένου καμπάνιας"
+
+#: inc/widgets/class-weekly-sales.php:35
+msgid "Photo overlay"
+msgstr "Overlay φωτογραφίας"
+
+#: inc/widgets/class-weekly-sales.php:36
+msgid "Section title typography"
+msgstr "Τυπογραφία τίτλου ενότητας"
+
+#: inc/widgets/class-weekly-sales.php:37
+msgid "Campaign title typography"
+msgstr "Τυπογραφία τίτλου καμπάνιας"
+
+#: inc/widgets/class-weekly-sales.php:38
+msgid "Column gap"
+msgstr "Κενό στηλών"
+
+#: inc/widgets/class-weekly-sales.php:39
+msgid "Campaign minimum height"
+msgstr "Ελάχιστο ύψος καμπάνιας"
+
+#: inc/widgets/class-weekly-sales.php:58
+msgid ""
+"Choose a published, visible WooCommerce product ID, or add products on sale "
+"for automatic selection. This message only appears in the editor."
+msgstr ""
+"Επίλεξε δημοσιευμένο, ορατό ID προϊόντος WooCommerce ή πρόσθεσε προϊόντα σε "
+"προσφορά για αυτόματη επιλογή. Το μήνυμα εμφανίζεται μόνο στον editor."
+
+#: inc/wishlist.php:338 inc/wishlist.php:482 inc/wishlist.php:515
+#: inc/wishlist.php:662 inc/wishlist.php:741
+msgid "Wishlist"
+msgstr "Wishlist"
+
+#: inc/wishlist.php:453 inc/wishlist.php:655
+msgid "Add to wishlist"
+msgstr "Προσθήκη στη wishlist"
+
+#: inc/wishlist.php:454 inc/wishlist.php:656
+msgid "Remove from wishlist"
+msgstr "Αφαίρεση από τη wishlist"
+
+#: inc/wishlist.php:514
+msgid "Saved for later"
+msgstr "Αποθηκευμένα για αργότερα"
+
+#: inc/wishlist.php:519 inc/wishlist.php:657
+msgid "Loading your wishlist…"
+msgstr "Φόρτωση wishlist…"
+
+#: inc/wishlist.php:522 inc/wishlist.php:658
+msgid "Your wishlist is empty."
+msgstr "Η wishlist σου είναι άδεια."
+
+#: inc/wishlist.php:659
+msgid "Unable to load your wishlist. Please try again."
+msgstr "Αδυναμία φόρτωσης wishlist. Δοκίμασε ξανά."
+
+#: inc/wishlist.php:660
+#, php-format
+msgid "%d items"
+msgstr "%d προϊόντα"
+
+#: inc/wishlist.php:661
+#, php-format
+msgid "%d item"
+msgstr "%d προϊόν"
+
+#: inc/wishlist.php:742
+msgid ""
+"Assign a page that contains the [jofme_wishlist] shortcode. A Wishlist page "
+"is created automatically when the theme is activated."
+msgstr ""
+"Όρισε σελίδα με το shortcode [jofme_wishlist]. Δημιουργείται αυτόματα σελίδα"
+" Wishlist στην ενεργοποίηση του theme."
+
+#: inc/wishlist.php:757
+msgid "Wishlist page"
+msgstr "Σελίδα wishlist"
+
+#: inc/wishlist.php:758
+msgid ""
+"Must be a published page with [jofme_wishlist] (not the homepage). Used for "
+"the header heart link. Ignored when YITH or TI Wishlist is active."
+msgstr ""
+"Πρέπει να είναι δημοσιευμένη σελίδα με [jofme_wishlist] (όχι η αρχική). "
+"Χρησιμοποιείται για την καρδιά στο header. Αγνοείται όταν είναι ενεργό YITH "
+"ή TI Wishlist."
+
+#: inc/wishlist.php:766
+msgid "Same as shop product cards"
+msgstr "Ίδιο με τις κάρτες καταστήματος"
+
+#: inc/wishlist.php:780
+msgid "Wishlist product card"
+msgstr "Κάρτα προϊόντος wishlist"
+
+#: inc/wishlist.php:781
+msgid "Choose which product card style the wishlist grid uses."
+msgstr "Επίλεξε ποιο στυλ κάρτας χρησιμοποιεί το πλέγμα wishlist."
+
+#. translators: %s: lowest variation price. Uses WooCommerce string for i18n.
+#: inc/woocommerce.php:177
+#, php-format
+msgid "From %s"
+msgstr "Από %s"
+
+#. translators: %1$s: year, %2$s: site name
+#: inc/wpml.php:108
+#, php-format
+msgid "© %1$s %2$s. All rights reserved."
+msgstr "© %1$s %2$s. Με επιφύλαξη παντός δικαιώματος."
+
+#. translators: %s: search query
+#: search.php:19
+#, php-format
+msgid "Search results for: %s"
+msgstr "Αποτελέσματα αναζήτησης για: %s"
+
+#: single.php:21
+msgid "Previous"
+msgstr "Προηγούμενο"
+
+#: single.php:22
+msgid "Next"
+msgstr "Επόμενο"
+
+#: template-parts/content/content-none.php:10
+msgid "Nothing found"
+msgstr "Δεν βρέθηκε τίποτα"
+
+#: template-parts/content/content-none.php:14
+msgid ""
+"Sorry, nothing matched your search. Please try again with different "
+"keywords."
+msgstr "Δεν βρέθηκε κάτι που να ταιριάζει. Δοκίμασε με διαφορετικές λέξεις."
+
+#: template-parts/content/content-none.php:17
+msgid "It seems we cannot find what you are looking for."
+msgstr "Φαίνεται ότι δεν μπορούμε να βρούμε αυτό που ψάχνεις."
+
+#: template-parts/content/content-page.php:20
+#: template-parts/content/content-single.php:25
+msgid "Pages:"
+msgstr "Σελίδες:"
+
+#: template-parts/footer/site-footer.php:83
+msgid "Back to top"
+msgstr "Επιστροφή επάνω"
+
+#: template-parts/header/editorial-header.php:12
+#: template-parts/header/site-header.php:57
+#: template-parts/header/site-header.php:91
+msgid "Primary"
+msgstr "Κύριο"
+
+#: template-parts/header/editorial-header.php:15
+#: template-parts/header/site-header.php:78
+msgid "My account"
+msgstr "Ο λογαριασμός μου"
+
+#: template-parts/header/panels.php:19
+msgid "Mobile"
+msgstr "Mobile"
+
+#: template-parts/header/site-header.php:29
+msgid "Menu"
+msgstr "Μενού"
+
+#: template-parts/header/site-header.php:41
+msgid "Primary Left"
+msgstr "Κύριο αριστερά"
+
+#: template-parts/header/topbar.php:25
+msgid "Top bar"
+msgstr "Top bar"
