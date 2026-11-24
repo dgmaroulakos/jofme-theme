@@ -420,6 +420,14 @@ p {
 	margin-top: 1.15rem;
 }
 
+.jofme-social__title {
+	margin: 0 0 0.75rem;
+	color: #f5f0ea;
+	font-size: 12px;
+	letter-spacing: 0.14em;
+	text-transform: uppercase;
+}
+
 .site-footer .jofme-social__link {
 	color: #ebe4db;
 }
@@ -430,6 +438,10 @@ p {
 
 .site-footer__bottom .jofme-social--footer {
 	margin-top: 0;
+}
+
+.site-footer__bottom .jofme-social__title {
+	margin-bottom: 0.5rem;
 }
 
 .jofme-wishlist-link,

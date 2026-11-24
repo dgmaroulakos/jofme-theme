@@ -174,6 +174,9 @@ function jofme_social_nav( $context = 'footer' ) {
 	);
 
 	echo '<nav class="' . esc_attr( implode( ' ', $classes ) ) . '" aria-label="' . esc_attr__( 'Social media', 'jofme' ) . '">';
+	if ( 'footer' === $context ) {
+		echo '<p class="jofme-social__title">' . esc_html__( 'Follow us', 'jofme' ) . '</p>';
+	}
 	echo '<ul class="jofme-social__list">';
 	foreach ( $links as $slug => $item ) {
 		$svg = jofme_social_icon_svg( $slug );

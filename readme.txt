@@ -3,7 +3,7 @@ Contributors: jofme
 Requires at least: 6.4
 Tested up to: 6.8
 Requires PHP: 7.4
-Stable tag: 1.7.65
+Stable tag: 1.7.66
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -30,6 +30,9 @@ strings / wpml-config.xml.
 * WPML or Polylang
 
 == Changelog ==
+
+= 1.7.66 =
+* Footer socials: add "Follow us" / «Ακολούθησέ μας» title above the icons.
 
 = 1.7.65 =
 * Greek translation: ship languages/jofme-el.po + jofme-el.mo (and el.po/.mo) covering all theme strings.
