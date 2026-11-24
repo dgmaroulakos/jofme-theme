@@ -1,10 +1,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Jofme 1.7.66\n"
+"Project-Id-Version: Jofme 1.7.67\n"
 "Report-Msgid-Bugs-To: https://github.com/dgmaroulakos/jofme-theme\n"
-"POT-Creation-Date: 2026-11-24 13:25+0000\n"
-"PO-Revision-Date: 2026-11-24 15:25+0200\n"
+"POT-Creation-Date: 2026-11-24 15:34+0000\n"
+"PO-Revision-Date: 2026-11-24 17:35+0200\n"
 "Last-Translator: Jofme\n"
 "Language-Team: Greek\n"
 "Language: el\n"
@@ -514,23 +514,31 @@ msgstr "Μετάβαση στην εικόνα %d"
 msgid "Show image %d"
 msgstr "Εμφάνιση εικόνας %d"
 
-#: inc/gallery-design.php:383 inc/widgets/class-weekly-sales.php:29
+#: inc/gallery-design.php:395
+msgid "SKU:"
+msgstr "Κωδικός:"
+
+#: inc/gallery-design.php:395
+msgid "N/A"
+msgstr "Μ/Δ"
+
+#: inc/gallery-design.php:407 inc/widgets/class-weekly-sales.php:29
 msgid "Description"
 msgstr "Περιγραφή"
 
-#: inc/gallery-design.php:386 inc/gallery-design.php:424
+#: inc/gallery-design.php:410 inc/gallery-design.php:449
 msgid "Care instructions"
 msgstr "Οδηγίες φροντίδας"
 
-#: inc/gallery-design.php:421
+#: inc/gallery-design.php:446
 msgid "Decrease quantity"
 msgstr "Μείωση ποσότητας"
 
-#: inc/gallery-design.php:422
+#: inc/gallery-design.php:447
 msgid "Increase quantity"
 msgstr "Αύξηση ποσότητας"
 
-#: inc/gallery-design.php:424
+#: inc/gallery-design.php:449
 msgid "Optional care text shown in the Gallery product design."
 msgstr "Προαιρετικό κείμενο φροντίδας στο Gallery product design."
 
@@ -980,16 +988,16 @@ msgstr ""
 "Παράγοντας zoom στο hover της κάρτας. Προεπιλογή 1.05. Βάλε 1 χωρίς zoom."
 
 #: inc/product-hover.php:35
-msgid "Smooth scroll to products on archive load"
-msgstr "Ομαλό scroll στα προϊόντα στο φόρτωμα archive"
+msgid "Smooth scroll to breadcrumbs on page load"
+msgstr "Ομαλό scroll στα breadcrumbs στο άνοιγμα σελίδας"
 
 #: inc/product-hover.php:36
 msgid ""
-"On shop and category pages, gently scroll to the product grid after the page"
-" loads."
+"On shop, category, and product pages, gently scroll so the breadcrumbs sit "
+"just below the header after load."
 msgstr ""
-"Σε κατάστημα και κατηγορίες, κάνε απαλό scroll στο πλέγμα προϊόντων μετά το "
-"φόρτωμα."
+"Σε κατάστημα, κατηγορία και προϊόν, ομαλό scroll ώστε τα breadcrumbs να "
+"κάθονται κάτω από το header μετά το φόρτωμα."
 
 #: inc/setup.php:49
 msgid "Primary Menu"

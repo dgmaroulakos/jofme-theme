@@ -11,6 +11,7 @@
 	text-transform: uppercase;
 	color: var(--jofme-color-text-muted);
 	margin-bottom: 1.75rem;
+	scroll-margin-top: calc(var(--jofme-header-h, 100px) + 12px);
 }
 
 .woocommerce .woocommerce-result-count,
