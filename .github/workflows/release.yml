@@ -67,6 +67,8 @@ jobs:
           node .tests/product-copy.cjs
           node .tests/variation-gallery.cjs
           node .tests/social-links.cjs
+          node .tests/header-icon-buttons.cjs
+          node .tests/variable-price-from.cjs
           node .tests/responsive-titles-icons.cjs
           node .tests/bestsellers-carousel.cjs
           node .tests/catalog-filter-attributes.cjs

@@ -3,7 +3,7 @@ Contributors: jofme
 Requires at least: 6.4
 Tested up to: 6.8
 Requires PHP: 7.4
-Stable tag: 1.7.62
+Stable tag: 1.7.63
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -30,6 +30,10 @@ strings / wpml-config.xml.
 * WPML or Polylang
 
 == Changelog ==
+
+= 1.7.63 =
+* Mobile header: remove white background / border chrome on search and burger toggles.
+* Variable products: show "From {min}" only — hide the second (max) price in ranges.
 
 = 1.7.62 =
 * Header & footer: Social media icons from Customizer (Instagram, Facebook, TikTok, Pinterest, YouTube, X).

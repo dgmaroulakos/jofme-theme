@@ -159,3 +159,21 @@ add_filter( 'body_class', 'jofme_woocommerce_body_class' );
 
 // Sidebars are rendered inside the theme layout wrappers.
 remove_action( 'woocommerce_sidebar', 'woocommerce_get_sidebar', 10 );
+
+/**
+ * Variable products: show "From {min}" only (hide range max / second price).
+ *
+ * @param string     $price Formatted range HTML.
+ * @param string|int $from  Min price (numeric or already formatted).
+ * @param string|int $to    Max price (unused).
+ * @return string
+ */
+function jofme_format_price_range_from_only( $price, $from, $to ) {
+	unset( $price, $to );
+
+	$formatted = is_numeric( $from ) ? wc_price( (float) $from ) : $from;
+
+	/* translators: %s: lowest variation price. Uses WooCommerce string for i18n. */
+	return sprintf( __( 'From %s', 'woocommerce' ), $formatted );
+}
+add_filter( 'woocommerce_format_price_range', 'jofme_format_price_range_from_only', 10, 3 );
