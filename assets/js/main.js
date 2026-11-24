@@ -414,7 +414,7 @@
 		});
 	}
 
-	/* Shop / category archives: smooth-scroll to the product grid on entry. */
+	/* Shop / category / product: smooth-scroll to breadcrumbs on entry. */
 	function isProductArchive() {
 		return (
 			body.classList.contains('woocommerce') &&
@@ -424,8 +424,14 @@
 				body.classList.contains('woocommerce-shop'))
 		);
 	}
-	function scrollArchiveToProducts() {
-		if (!scrollConfig.archiveProducts || !isProductArchive()) {
+	function isSingleProduct() {
+		return body.classList.contains('single-product');
+	}
+	function scrollEntryToBreadcrumbs() {
+		if (!scrollConfig.archiveProducts) {
+			return;
+		}
+		if (!isProductArchive() && !isSingleProduct()) {
 			return;
 		}
 		if (window.location.hash) {
@@ -434,11 +440,16 @@
 		if ((window.scrollY || window.pageYOffset || 0) > 16) {
 			return;
 		}
-		const target = qs('#jofme-catalog-products') || qs('.jofme-shop ul.products') || qs('ul.products');
+		const target =
+			qs('.woocommerce-breadcrumb') ||
+			qs('#jofme-catalog-products') ||
+			qs('.jofme-shop ul.products') ||
+			qs('ul.products');
 		if (!target) {
 			return;
 		}
-		const headerOffset = parseFloat(getComputedStyle(doc.documentElement).getPropertyValue('--jofme-header-h')) || 0;
+		const headerOffset =
+			parseFloat(getComputedStyle(doc.documentElement).getPropertyValue('--jofme-header-h')) || 0;
 		const top = target.getBoundingClientRect().top + (window.scrollY || 0) - headerOffset - 12;
 		if (top <= 24) {
 			return;
@@ -448,9 +459,9 @@
 		}, 150);
 	}
 	if (doc.readyState === 'complete') {
-		scrollArchiveToProducts();
+		scrollEntryToBreadcrumbs();
 	} else {
-		window.addEventListener('load', scrollArchiveToProducts, { once: true });
+		window.addEventListener('load', scrollEntryToBreadcrumbs, { once: true });
 	}
 
 	/* Escape closes overlays */

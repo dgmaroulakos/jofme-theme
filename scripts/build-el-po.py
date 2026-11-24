@@ -479,6 +479,12 @@ TR: dict[str, str] = {
 	"Top bar": "Top bar",
 	"From %s": "Από %s",
 	"Follow us": "Ακολούθησέ μας",
+	"Smooth scroll to breadcrumbs on page load": "Ομαλό scroll στα breadcrumbs στο άνοιγμα σελίδας",
+	"On shop, category, and product pages, gently scroll so the breadcrumbs sit just below the header after load.": "Σε κατάστημα, κατηγορία και προϊόν, ομαλό scroll ώστε τα breadcrumbs να κάθονται κάτω από το header μετά το φόρτωμα.",
+	"Smooth scroll to products on archive load": "Ομαλό scroll στα προϊόντα στο άνοιγμα archive",
+	"On shop and category pages, gently scroll to the product grid after the page loads.": "Σε κατάστημα και κατηγορία, ομαλό scroll στο πλέγμα προϊόντων μετά το φόρτωμα.",
+	"SKU:": "Κωδικός:",
+	"N/A": "Μ/Δ",
 }
 
 
@@ -502,10 +508,10 @@ def main() -> int:
 	pot = polib.pofile(str(POT))
 	po = polib.POFile()
 	po.metadata = {
-		"Project-Id-Version": "Jofme 1.7.66",
+		"Project-Id-Version": "Jofme 1.7.67",
 		"Report-Msgid-Bugs-To": "https://github.com/dgmaroulakos/jofme-theme",
 		"POT-Creation-Date": pot.metadata.get("POT-Creation-Date", ""),
-		"PO-Revision-Date": "2026-11-24 15:25+0200",
+		"PO-Revision-Date": "2026-11-24 17:35+0200",
 		"Last-Translator": "Jofme",
 		"Language-Team": "Greek",
 		"Language": "el",

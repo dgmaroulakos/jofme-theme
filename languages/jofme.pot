@@ -6,9 +6,9 @@
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: Jofme 1.7.66\n"
+"Project-Id-Version: Jofme 1.7.67\n"
 "Report-Msgid-Bugs-To: https://github.com/dgmaroulakos/jofme-theme\n"
-"POT-Creation-Date: 2026-11-24 13:25+0000\n"
+"POT-Creation-Date: 2026-11-24 15:34+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -505,23 +505,31 @@ msgstr ""
 msgid "Show image %d"
 msgstr ""
 
-#: inc/gallery-design.php:383 inc/widgets/class-weekly-sales.php:29
+#: inc/gallery-design.php:395
+msgid "SKU:"
+msgstr ""
+
+#: inc/gallery-design.php:395
+msgid "N/A"
+msgstr ""
+
+#: inc/gallery-design.php:407 inc/widgets/class-weekly-sales.php:29
 msgid "Description"
 msgstr ""
 
-#: inc/gallery-design.php:386 inc/gallery-design.php:424
+#: inc/gallery-design.php:410 inc/gallery-design.php:449
 msgid "Care instructions"
 msgstr ""
 
-#: inc/gallery-design.php:421
+#: inc/gallery-design.php:446
 msgid "Decrease quantity"
 msgstr ""
 
-#: inc/gallery-design.php:422
+#: inc/gallery-design.php:447
 msgid "Increase quantity"
 msgstr ""
 
-#: inc/gallery-design.php:424
+#: inc/gallery-design.php:449
 msgid "Optional care text shown in the Gallery product design."
 msgstr ""
 
@@ -945,13 +953,13 @@ msgid "Zoom factor on card image hover. Default 1.05. Use 1 for no zoom."
 msgstr ""
 
 #: inc/product-hover.php:35
-msgid "Smooth scroll to products on archive load"
+msgid "Smooth scroll to breadcrumbs on page load"
 msgstr ""
 
 #: inc/product-hover.php:36
 msgid ""
-"On shop and category pages, gently scroll to the product grid after the page "
-"loads."
+"On shop, category, and product pages, gently scroll so the breadcrumbs sit "
+"just below the header after load."
 msgstr ""
 
 #: inc/setup.php:49
