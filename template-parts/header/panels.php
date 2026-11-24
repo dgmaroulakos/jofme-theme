@@ -27,6 +27,9 @@ defined( 'ABSPATH' ) || exit;
 					'fallback_cb'    => false,
 				)
 			);
+			if ( function_exists( 'jofme_social_nav' ) ) {
+				jofme_social_nav( 'mobile' );
+			}
 			?>
 		</nav>
 	</div>

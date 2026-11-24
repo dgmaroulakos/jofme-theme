@@ -9,9 +9,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-$announcement = jofme_get_announcement_text();
-$layout       = get_theme_mod( 'jofme_header_layout', 'classic' );
-$allowed      = array( 'classic', 'centered', 'editorial', 'stacked' );
+$layout  = get_theme_mod( 'jofme_header_layout', 'classic' );
+$allowed = array( 'classic', 'centered', 'editorial', 'stacked' );
 if ( ! in_array( $layout, $allowed, true ) ) {
 	$layout = 'classic';
 }
@@ -19,15 +18,9 @@ if ( 'editorial' === $layout ) {
 	get_template_part( 'template-parts/header/editorial-header' );
 	return;
 }
-?>
 
-<?php if ( $announcement ) : ?>
-	<div class="jofme-announcement" role="region" aria-label="<?php esc_attr_e( 'Announcement', 'jofme' ); ?>">
-		<div class="jofme-container">
-			<p><?php echo esc_html( $announcement ); ?></p>
-		</div>
-	</div>
-<?php endif; ?>
+get_template_part( 'template-parts/header/topbar' );
+?>
 
 <header id="masthead" class="site-header site-header--<?php echo esc_attr( $layout ); ?>">
 	<div class="jofme-container site-header__inner">

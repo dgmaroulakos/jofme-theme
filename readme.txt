@@ -3,7 +3,7 @@ Contributors: jofme
 Requires at least: 6.4
 Tested up to: 6.8
 Requires PHP: 7.4
-Stable tag: 1.7.60
+Stable tag: 1.7.65
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -31,8 +31,21 @@ strings / wpml-config.xml.
 
 == Changelog ==
 
-= 1.7.60 =
-* Greek translation: ship languages/jofme-el.po + jofme-el.mo (and el.po/.mo).
+= 1.7.65 =
+* Greek translation: ship languages/jofme-el.po + jofme-el.mo (and el.po/.mo) covering all theme strings.
+
+= 1.7.64 =
+* Header: move desktop social icons into the topbar (with announcement); mobile keeps icons in the drawer.
+
+= 1.7.63 =
+* Mobile header: remove white background / border chrome on search and burger toggles.
+* Variable products: show "From {min}" only — hide the second (max) price in ranges.
+
+= 1.7.62 =
+* Header & footer: Social media icons from Customizer (Instagram, Facebook, TikTok, Pinterest, YouTube, X).
+
+= 1.7.61 =
+* Variable gallery: show parent/featured images until a variation is selected; show variation photos on select; restore parent gallery on clear.
 
 = 1.7.59 =
 * Restock notify: cleaner inline UI (no toggle), loading/success states, Greek microcopy.

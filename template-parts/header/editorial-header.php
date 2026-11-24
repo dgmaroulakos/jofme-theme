@@ -1,10 +1,8 @@
 <?php
 /** Editorial header. @package Jofme */
 defined( 'ABSPATH' ) || exit;
-$announcement = jofme_get_announcement_text();
-if ( $announcement ) : ?>
- <div class="jofme-announcement"><div class="jofme-container"><p><?php echo esc_html( $announcement ); ?></p></div></div>
-<?php endif; ?>
+get_template_part( 'template-parts/header/topbar' );
+?>
 <header id="masthead" class="site-header site-header--editorial">
  <div class="jofme-container site-header__inner">
   <div class="site-header__start">

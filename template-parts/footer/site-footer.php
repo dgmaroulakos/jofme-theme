@@ -55,6 +55,13 @@ if ( $prebuilt && function_exists( 'jofme_footer_logo_invert' ) && jofme_footer_
 		<div class="jofme-container site-footer__bottom-inner">
 			<p class="site-footer__copyright"><?php echo wp_kses_post( jofme_get_footer_copyright() ); ?></p>
 
+			<?php
+			// Classic widget footer: socials live in the bottom bar (prebuilt shows them in the brand column).
+			if ( ! $prebuilt && function_exists( 'jofme_social_nav' ) ) {
+				jofme_social_nav( 'footer' );
+			}
+			?>
+
 			<?php if ( has_nav_menu( 'footer' ) ) : ?>
 				<nav class="footer-navigation" aria-label="<?php esc_attr_e( 'Footer', 'jofme' ); ?>">
 					<?php

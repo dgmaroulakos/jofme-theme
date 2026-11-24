@@ -9,7 +9,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-define( 'JOFME_VERSION', '1.7.60' );
+define( 'JOFME_VERSION', '1.7.65' );
 define( 'JOFME_DIR', get_template_directory() );
 define( 'JOFME_URI', get_template_directory_uri() );
 
@@ -31,6 +31,7 @@ $jofme_includes = array(
 	'/inc/gallery-design.php',
 	'/inc/size-guide.php',
 	'/inc/footer.php',
+	'/inc/social.php',
 	'/inc/elementor.php',
 	'/inc/editorial.php',
 	'/inc/wpml.php',
