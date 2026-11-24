@@ -372,6 +372,30 @@ function jofme_gallery_summary_category() {
  global $product;
  if ( $product ) { echo '<div class="jofme-product-category">' . wp_kses_post( wc_get_product_category_list( $product->get_id(), ', ' ) ) . '</div>'; }
 }
+
+/**
+ * SKU on the gallery product summary (full product_meta is removed).
+ * Uses WooCommerce .sku markup so variation select updates the value.
+ */
+function jofme_gallery_product_sku() {
+	global $product;
+	if ( ! $product || ! is_a( $product, 'WC_Product' ) ) {
+		return;
+	}
+	if ( ! function_exists( 'wc_product_sku_enabled' ) || ! wc_product_sku_enabled() ) {
+		return;
+	}
+
+	$sku = $product->get_sku();
+	if ( ! $sku && ! $product->is_type( 'variable' ) ) {
+		return;
+	}
+
+	echo '<div class="jofme-product-sku">';
+	echo '<span class="sku_wrapper">' . esc_html__( 'SKU:', 'woocommerce' ) . ' <span class="sku">' . esc_html( $sku ? $sku : __( 'N/A', 'woocommerce' ) ) . '</span></span>';
+	echo '</div>';
+}
+
 function jofme_gallery_details() {
  global $product;
  if ( ! $product ) { return; }
@@ -409,6 +433,7 @@ function jofme_gallery_single_hooks() {
  remove_action( 'woocommerce_single_product_summary', 'woocommerce_template_single_excerpt', 20 );
  remove_action( 'woocommerce_single_product_summary', 'woocommerce_template_single_meta', 40 );
  add_action( 'woocommerce_single_product_summary', 'jofme_gallery_summary_category', 4 );
+ add_action( 'woocommerce_single_product_summary', 'jofme_gallery_product_sku', 11 );
  add_action( 'woocommerce_single_product_summary', 'jofme_gallery_details', 45 );
  add_filter( 'woocommerce_product_tabs', 'jofme_gallery_product_tabs', 99 );
  add_action( 'woocommerce_before_quantity_input_field', 'jofme_quantity_minus' );

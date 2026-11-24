@@ -478,6 +478,7 @@ TR: dict[str, str] = {
 	"X (Twitter)": "X (Twitter)",
 	"Top bar": "Top bar",
 	"From %s": "Από %s",
+	"Follow us": "Ακολούθησέ μας",
 }
 
 
@@ -501,10 +502,10 @@ def main() -> int:
 	pot = polib.pofile(str(POT))
 	po = polib.POFile()
 	po.metadata = {
-		"Project-Id-Version": "Jofme 1.7.65",
+		"Project-Id-Version": "Jofme 1.7.66",
 		"Report-Msgid-Bugs-To": "https://github.com/dgmaroulakos/jofme-theme",
 		"POT-Creation-Date": pot.metadata.get("POT-Creation-Date", ""),
-		"PO-Revision-Date": "2026-11-24 13:15+0200",
+		"PO-Revision-Date": "2026-11-24 15:25+0200",
 		"Last-Translator": "Jofme",
 		"Language-Team": "Greek",
 		"Language": "el",

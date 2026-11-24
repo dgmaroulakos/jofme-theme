@@ -1,10 +1,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Jofme 1.7.65\n"
+"Project-Id-Version: Jofme 1.7.66\n"
 "Report-Msgid-Bugs-To: https://github.com/dgmaroulakos/jofme-theme\n"
-"POT-Creation-Date: 2026-11-24 11:13+0000\n"
-"PO-Revision-Date: 2026-11-24 13:15+0200\n"
+"POT-Creation-Date: 2026-11-24 13:25+0000\n"
+"PO-Revision-Date: 2026-11-24 15:25+0200\n"
 "Last-Translator: Jofme\n"
 "Language-Team: Greek\n"
 "Language: el\n"
@@ -1217,6 +1217,10 @@ msgstr "Μόνο desktop. Στο mobile τα εικονίδια μένουν σ�
 #: inc/social.php:69
 msgid "Show social icons in footer"
 msgstr "Εμφάνιση social στο footer"
+
+#: inc/social.php:178
+msgid "Follow us"
+msgstr "Ακολούθησέ μας"
 
 #: inc/swatches.php:182 inc/swatches.php:213
 msgid "Display as color swatches"
