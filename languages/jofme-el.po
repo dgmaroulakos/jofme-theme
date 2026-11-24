@@ -1,10 +1,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Jofme 1.7.60\n"
+"Project-Id-Version: Jofme 1.7.65\n"
 "Report-Msgid-Bugs-To: https://github.com/dgmaroulakos/jofme-theme\n"
-"POT-Creation-Date: 2026-11-23 15:24+0000\n"
-"PO-Revision-Date: 2026-11-23 17:20+0200\n"
+"POT-Creation-Date: 2026-11-24 11:13+0000\n"
+"PO-Revision-Date: 2026-11-24 13:15+0200\n"
 "Last-Translator: Jofme\n"
 "Language-Team: Greek\n"
 "Language: el\n"
@@ -27,15 +27,6 @@ msgstr "Δεν βρέθηκε τίποτα εδώ. Δοκίμασε αναζήτ
 #: 404.php:22 inc/wishlist.php:524
 msgid "Continue shopping"
 msgstr "Συνέχεια αγορών"
-
-#. translators: 1: comment count, 2: post title
-#: comments.php:24
-#, php-format
-msgctxt "comments title"
-msgid "%1$s thought on &ldquo;%2$s&rdquo;"
-msgid_plural "%1$s thoughts on &ldquo;%2$s&rdquo;"
-msgstr[0] "%1$s σχόλιο στο &ldquo;%2$s&rdquo;"
-msgstr[1] "%1$s σχόλια στο &ldquo;%2$s&rdquo;"
 
 #: comments.php:46
 msgid "Comments are closed."
@@ -316,7 +307,7 @@ msgstr "Μέγεθος γραμματοσειράς ετικέτας tab (px)"
 msgid "Horizontal padding (%)"
 msgstr "Οριζόντιο padding (%)"
 
-#: inc/customizer.php:496 template-parts/footer/site-footer.php:59
+#: inc/customizer.php:496 template-parts/footer/site-footer.php:66
 msgid "Footer"
 msgstr "Footer"
 
@@ -356,7 +347,7 @@ msgstr "Χρώμα μενού, εικονιδίων και τίτλου όσο �
 msgid "Jofme"
 msgstr "Jofme"
 
-#: inc/enqueue.php:55 template-parts/header/editorial-header.php:11
+#: inc/enqueue.php:55 template-parts/header/editorial-header.php:9
 msgid "Open menu"
 msgstr "Άνοιγμα μενού"
 
@@ -364,8 +355,8 @@ msgstr "Άνοιγμα μενού"
 msgid "Close menu"
 msgstr "Κλείσιμο μενού"
 
-#: inc/enqueue.php:57 template-parts/header/editorial-header.php:24
-#: template-parts/header/site-header.php:80
+#: inc/enqueue.php:57 template-parts/header/editorial-header.php:22
+#: template-parts/header/site-header.php:73
 msgid "Search"
 msgstr "Αναζήτηση"
 
@@ -493,11 +484,11 @@ msgstr "Εικόνα προϊόντος"
 msgid "Close"
 msgstr "Κλείσιμο"
 
-#: inc/gallery-design.php:90 inc/gallery-design.php:254
+#: inc/gallery-design.php:90 inc/gallery-design.php:321
 msgid "Previous image"
 msgstr "Προηγούμενη εικόνα"
 
-#: inc/gallery-design.php:91 inc/gallery-design.php:278
+#: inc/gallery-design.php:91 inc/gallery-design.php:345
 msgid "Next image"
 msgstr "Επόμενη εικόνα"
 
@@ -507,39 +498,39 @@ msgstr "Επόμενη εικόνα"
 msgid "%1$s of %2$s"
 msgstr "%1$s από %2$s"
 
-#: inc/gallery-design.php:201
+#: inc/gallery-design.php:268
 msgid "Product images"
 msgstr "Εικόνες προϊόντος"
 
 #. translators: %d image number
-#: inc/gallery-design.php:204
+#: inc/gallery-design.php:271
 #, php-format
 msgid "Go to image %d"
 msgstr "Μετάβαση στην εικόνα %d"
 
 #. translators: %d image number
-#: inc/gallery-design.php:285 inc/premium-shop.php:949
+#: inc/gallery-design.php:352 inc/premium-shop.php:949
 #, php-format
 msgid "Show image %d"
 msgstr "Εμφάνιση εικόνας %d"
 
-#: inc/gallery-design.php:316 inc/widgets/class-weekly-sales.php:29
+#: inc/gallery-design.php:383 inc/widgets/class-weekly-sales.php:29
 msgid "Description"
 msgstr "Περιγραφή"
 
-#: inc/gallery-design.php:319 inc/gallery-design.php:357
+#: inc/gallery-design.php:386 inc/gallery-design.php:424
 msgid "Care instructions"
 msgstr "Οδηγίες φροντίδας"
 
-#: inc/gallery-design.php:354
+#: inc/gallery-design.php:421
 msgid "Decrease quantity"
 msgstr "Μείωση ποσότητας"
 
-#: inc/gallery-design.php:355
+#: inc/gallery-design.php:422
 msgid "Increase quantity"
 msgstr "Αύξηση ποσότητας"
 
-#: inc/gallery-design.php:357
+#: inc/gallery-design.php:424
 msgid "Optional care text shown in the Gallery product design."
 msgstr "Προαιρετικό κείμενο φροντίδας στο Gallery product design."
 
@@ -1178,6 +1169,54 @@ msgstr "Προβολή PDF"
 #: inc/size-guide.php:491
 msgid "Open PDF"
 msgstr "Άνοιγμα PDF"
+
+#: inc/social.php:17
+msgid "Instagram"
+msgstr "Instagram"
+
+#: inc/social.php:18
+msgid "Facebook"
+msgstr "Facebook"
+
+#: inc/social.php:19
+msgid "TikTok"
+msgstr "TikTok"
+
+#: inc/social.php:20
+msgid "Pinterest"
+msgstr "Pinterest"
+
+#: inc/social.php:21
+msgid "YouTube"
+msgstr "YouTube"
+
+#: inc/social.php:22
+msgid "X (Twitter)"
+msgstr "X (Twitter)"
+
+#: inc/social.php:35 inc/social.php:176
+msgid "Social media"
+msgstr "Social media"
+
+#: inc/social.php:36
+msgid ""
+"Add profile URLs to show icons in the header topbar and footer. Leave a "
+"field empty to hide that network."
+msgstr ""
+"Πρόσθεσε URLs προφίλ για εικονίδια στο topbar του header και στο footer. "
+"Άφησε κενό πεδίο για απόκρυψη δικτύου."
+
+#: inc/social.php:52
+msgid "Show social icons in header topbar"
+msgstr "Εμφάνιση social στο topbar του header"
+
+#: inc/social.php:53
+msgid "Desktop only. On mobile, icons stay in the menu drawer."
+msgstr "Μόνο desktop. Στο mobile τα εικονίδια μένουν στο μενού."
+
+#: inc/social.php:69
+msgid "Show social icons in footer"
+msgstr "Εμφάνιση social στο footer"
 
 #: inc/swatches.php:182 inc/swatches.php:213
 msgid "Display as color swatches"
@@ -1994,6 +2033,12 @@ msgstr "Κάρτα προϊόντος wishlist"
 msgid "Choose which product card style the wishlist grid uses."
 msgstr "Επίλεξε ποιο στυλ κάρτας χρησιμοποιεί το πλέγμα wishlist."
 
+#. translators: %s: lowest variation price. Uses WooCommerce string for i18n.
+#: inc/woocommerce.php:177
+#, php-format
+msgid "From %s"
+msgstr "Από %s"
+
 #. translators: %1$s: year, %2$s: site name
 #: inc/wpml.php:108
 #, php-format
@@ -2033,18 +2078,18 @@ msgstr "Φαίνεται ότι δεν μπορούμε να βρούμε αυτ
 msgid "Pages:"
 msgstr "Σελίδες:"
 
-#: template-parts/footer/site-footer.php:76
+#: template-parts/footer/site-footer.php:83
 msgid "Back to top"
 msgstr "Επιστροφή επάνω"
 
-#: template-parts/header/editorial-header.php:14
-#: template-parts/header/site-header.php:64
-#: template-parts/header/site-header.php:98
+#: template-parts/header/editorial-header.php:12
+#: template-parts/header/site-header.php:57
+#: template-parts/header/site-header.php:91
 msgid "Primary"
 msgstr "Κύριο"
 
-#: template-parts/header/editorial-header.php:17
-#: template-parts/header/site-header.php:85
+#: template-parts/header/editorial-header.php:15
+#: template-parts/header/site-header.php:78
 msgid "My account"
 msgstr "Ο λογαριασμός μου"
 
@@ -2052,14 +2097,14 @@ msgstr "Ο λογαριασμός μου"
 msgid "Mobile"
 msgstr "Mobile"
 
-#: template-parts/header/site-header.php:25
-msgid "Announcement"
-msgstr "Ανακοίνωση"
-
-#: template-parts/header/site-header.php:36
+#: template-parts/header/site-header.php:29
 msgid "Menu"
 msgstr "Μενού"
 
-#: template-parts/header/site-header.php:48
+#: template-parts/header/site-header.php:41
 msgid "Primary Left"
 msgstr "Κύριο αριστερά"
+
+#: template-parts/header/topbar.php:25
+msgid "Top bar"
+msgstr "Top bar"

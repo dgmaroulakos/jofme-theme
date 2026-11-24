@@ -6,9 +6,9 @@
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: Jofme 1.7.60\n"
+"Project-Id-Version: Jofme 1.7.65\n"
 "Report-Msgid-Bugs-To: https://github.com/dgmaroulakos/jofme-theme\n"
-"POT-Creation-Date: 2026-11-23 15:24+0000\n"
+"POT-Creation-Date: 2026-11-24 11:13+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -16,7 +16,6 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
 
 #: 404.php:14
 msgid "Page not found"
@@ -31,15 +30,6 @@ msgstr ""
 #: 404.php:22 inc/wishlist.php:524
 msgid "Continue shopping"
 msgstr ""
-
-#. translators: 1: comment count, 2: post title
-#: comments.php:24
-#, php-format
-msgctxt "comments title"
-msgid "%1$s thought on &ldquo;%2$s&rdquo;"
-msgid_plural "%1$s thoughts on &ldquo;%2$s&rdquo;"
-msgstr[0] ""
-msgstr[1] ""
 
 #: comments.php:46
 msgid "Comments are closed."
@@ -315,7 +305,7 @@ msgstr ""
 msgid "Horizontal padding (%)"
 msgstr ""
 
-#: inc/customizer.php:496 template-parts/footer/site-footer.php:59
+#: inc/customizer.php:496 template-parts/footer/site-footer.php:66
 msgid "Footer"
 msgstr ""
 
@@ -353,7 +343,7 @@ msgstr ""
 msgid "Jofme"
 msgstr ""
 
-#: inc/enqueue.php:55 template-parts/header/editorial-header.php:11
+#: inc/enqueue.php:55 template-parts/header/editorial-header.php:9
 msgid "Open menu"
 msgstr ""
 
@@ -361,8 +351,8 @@ msgstr ""
 msgid "Close menu"
 msgstr ""
 
-#: inc/enqueue.php:57 template-parts/header/editorial-header.php:24
-#: template-parts/header/site-header.php:80
+#: inc/enqueue.php:57 template-parts/header/editorial-header.php:22
+#: template-parts/header/site-header.php:73
 msgid "Search"
 msgstr ""
 
@@ -485,11 +475,11 @@ msgstr ""
 msgid "Close"
 msgstr ""
 
-#: inc/gallery-design.php:90 inc/gallery-design.php:254
+#: inc/gallery-design.php:90 inc/gallery-design.php:321
 msgid "Previous image"
 msgstr ""
 
-#: inc/gallery-design.php:91 inc/gallery-design.php:278
+#: inc/gallery-design.php:91 inc/gallery-design.php:345
 msgid "Next image"
 msgstr ""
 
@@ -499,39 +489,39 @@ msgstr ""
 msgid "%1$s of %2$s"
 msgstr ""
 
-#: inc/gallery-design.php:201
+#: inc/gallery-design.php:268
 msgid "Product images"
 msgstr ""
 
 #. translators: %d image number
-#: inc/gallery-design.php:204
+#: inc/gallery-design.php:271
 #, php-format
 msgid "Go to image %d"
 msgstr ""
 
 #. translators: %d image number
-#: inc/gallery-design.php:285 inc/premium-shop.php:949
+#: inc/gallery-design.php:352 inc/premium-shop.php:949
 #, php-format
 msgid "Show image %d"
 msgstr ""
 
-#: inc/gallery-design.php:316 inc/widgets/class-weekly-sales.php:29
+#: inc/gallery-design.php:383 inc/widgets/class-weekly-sales.php:29
 msgid "Description"
 msgstr ""
 
-#: inc/gallery-design.php:319 inc/gallery-design.php:357
+#: inc/gallery-design.php:386 inc/gallery-design.php:424
 msgid "Care instructions"
 msgstr ""
 
-#: inc/gallery-design.php:354
+#: inc/gallery-design.php:421
 msgid "Decrease quantity"
 msgstr ""
 
-#: inc/gallery-design.php:355
+#: inc/gallery-design.php:422
 msgid "Increase quantity"
 msgstr ""
 
-#: inc/gallery-design.php:357
+#: inc/gallery-design.php:424
 msgid "Optional care text shown in the Gallery product design."
 msgstr ""
 
@@ -1134,6 +1124,52 @@ msgstr ""
 
 #: inc/size-guide.php:491
 msgid "Open PDF"
+msgstr ""
+
+#: inc/social.php:17
+msgid "Instagram"
+msgstr ""
+
+#: inc/social.php:18
+msgid "Facebook"
+msgstr ""
+
+#: inc/social.php:19
+msgid "TikTok"
+msgstr ""
+
+#: inc/social.php:20
+msgid "Pinterest"
+msgstr ""
+
+#: inc/social.php:21
+msgid "YouTube"
+msgstr ""
+
+#: inc/social.php:22
+msgid "X (Twitter)"
+msgstr ""
+
+#: inc/social.php:35 inc/social.php:176
+msgid "Social media"
+msgstr ""
+
+#: inc/social.php:36
+msgid ""
+"Add profile URLs to show icons in the header topbar and footer. Leave a "
+"field empty to hide that network."
+msgstr ""
+
+#: inc/social.php:52
+msgid "Show social icons in header topbar"
+msgstr ""
+
+#: inc/social.php:53
+msgid "Desktop only. On mobile, icons stay in the menu drawer."
+msgstr ""
+
+#: inc/social.php:69
+msgid "Show social icons in footer"
 msgstr ""
 
 #: inc/swatches.php:182 inc/swatches.php:213
@@ -1904,6 +1940,12 @@ msgstr ""
 msgid "Choose which product card style the wishlist grid uses."
 msgstr ""
 
+#. translators: %s: lowest variation price. Uses WooCommerce string for i18n.
+#: inc/woocommerce.php:177
+#, php-format
+msgid "From %s"
+msgstr ""
+
 #. translators: %1$s: year, %2$s: site name
 #: inc/wpml.php:108
 #, php-format
@@ -1942,18 +1984,18 @@ msgstr ""
 msgid "Pages:"
 msgstr ""
 
-#: template-parts/footer/site-footer.php:76
+#: template-parts/footer/site-footer.php:83
 msgid "Back to top"
 msgstr ""
 
-#: template-parts/header/editorial-header.php:14
-#: template-parts/header/site-header.php:64
-#: template-parts/header/site-header.php:98
+#: template-parts/header/editorial-header.php:12
+#: template-parts/header/site-header.php:57
+#: template-parts/header/site-header.php:91
 msgid "Primary"
 msgstr ""
 
-#: template-parts/header/editorial-header.php:17
-#: template-parts/header/site-header.php:85
+#: template-parts/header/editorial-header.php:15
+#: template-parts/header/site-header.php:78
 msgid "My account"
 msgstr ""
 
@@ -1961,14 +2003,14 @@ msgstr ""
 msgid "Mobile"
 msgstr ""
 
-#: template-parts/header/site-header.php:25
-msgid "Announcement"
-msgstr ""
-
-#: template-parts/header/site-header.php:36
+#: template-parts/header/site-header.php:29
 msgid "Menu"
 msgstr ""
 
-#: template-parts/header/site-header.php:48
+#: template-parts/header/site-header.php:41
 msgid "Primary Left"
+msgstr ""
+
+#: template-parts/header/topbar.php:25
+msgid "Top bar"
 msgstr ""

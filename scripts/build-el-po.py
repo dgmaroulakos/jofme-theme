@@ -465,6 +465,19 @@ TR: dict[str, str] = {
 	"Announcement": "Ανακοίνωση",
 	"Menu": "Μενού",
 	"Primary Left": "Κύριο αριστερά",
+	"Social media": "Social media",
+	"Add profile URLs to show icons in the header topbar and footer. Leave a field empty to hide that network.": "Πρόσθεσε URLs προφίλ για εικονίδια στο topbar του header και στο footer. Άφησε κενό πεδίο για απόκρυψη δικτύου.",
+	"Show social icons in header topbar": "Εμφάνιση social στο topbar του header",
+	"Desktop only. On mobile, icons stay in the menu drawer.": "Μόνο desktop. Στο mobile τα εικονίδια μένουν στο μενού.",
+	"Show social icons in footer": "Εμφάνιση social στο footer",
+	"Instagram": "Instagram",
+	"Facebook": "Facebook",
+	"TikTok": "TikTok",
+	"Pinterest": "Pinterest",
+	"YouTube": "YouTube",
+	"X (Twitter)": "X (Twitter)",
+	"Top bar": "Top bar",
+	"From %s": "Από %s",
 }
 
 
@@ -488,10 +501,10 @@ def main() -> int:
 	pot = polib.pofile(str(POT))
 	po = polib.POFile()
 	po.metadata = {
-		"Project-Id-Version": "Jofme 1.7.60",
+		"Project-Id-Version": "Jofme 1.7.65",
 		"Report-Msgid-Bugs-To": "https://github.com/dgmaroulakos/jofme-theme",
 		"POT-Creation-Date": pot.metadata.get("POT-Creation-Date", ""),
-		"PO-Revision-Date": "2026-11-23 17:20+0200",
+		"PO-Revision-Date": "2026-11-24 13:15+0200",
 		"Last-Translator": "Jofme",
 		"Language-Team": "Greek",
 		"Language": "el",
