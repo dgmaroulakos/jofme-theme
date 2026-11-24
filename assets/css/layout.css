@@ -11,7 +11,8 @@ body.jofme-header-width-wide{--jofme-header-width:1600px}
 body.jofme-header-width-narrow{--jofme-header-width:960px}
 body.jofme-header-width-full{--jofme-header-width:100%}
 .site-header .jofme-container,
-.jofme-announcement .jofme-container{
+.jofme-announcement .jofme-container,
+.jofme-topbar .jofme-container{
  width:min(100% - 2.5rem,var(--jofme-header-width,var(--jofme-layout-width,var(--jofme-container,1320px))))
 }
 body.jofme-layout-settings .jofme-layout>.content-area,body.jofme-layout-settings .jofme-layout>.widget-area{min-width:0}
