@@ -52,6 +52,8 @@ body.jofme-product-gallery.woocommerce div.product .product_title{font-family:va
 .jofme-product-title--mobile{display:none}
 .jofme-product-details__description[open] summary{font-weight:500}
 body.jofme-product-gallery .jofme-product-category{font-size:11px;text-transform:uppercase;text-decoration:underline;text-underline-offset:3px}
+body.jofme-product-gallery .jofme-product-sku{font-size:12px;letter-spacing:.04em;color:var(--jofme-color-text-muted,#6b6560);margin:0 0 1.25rem}
+body.jofme-product-gallery .jofme-product-sku .sku_wrapper{display:inline}
 body.jofme-product-gallery.woocommerce div.product p.price{font-size:14px;margin-bottom:2rem}
 body.jofme-product-gallery.woocommerce div.product form.cart{margin:2rem 0 0;display:flex;flex-wrap:wrap;gap:12px}
 body.jofme-product-gallery.woocommerce div.product form.variations_form{display:block}

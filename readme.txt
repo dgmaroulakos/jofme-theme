@@ -33,6 +33,7 @@ strings / wpml-config.xml.
 
 = 1.7.66 =
 * Footer socials: add "Follow us" / «Ακολούθησέ μας» title above the icons.
+* Product page: show SKU in the gallery summary (updates on variation select).
 
 = 1.7.65 =
 * Greek translation: ship languages/jofme-el.po + jofme-el.mo (and el.po/.mo) covering all theme strings.
