@@ -292,6 +292,25 @@ p {
 	align-items: center;
 }
 
+/* Reset UA button chrome (white bg / border) on header icon toggles. */
+.jofme-menu-toggle,
+.jofme-search-toggle {
+	appearance: none;
+	-webkit-appearance: none;
+	background: transparent;
+	border: 0;
+	border-radius: 0;
+	box-shadow: none;
+	padding: 0.35rem;
+	margin: 0;
+	cursor: pointer;
+	color: inherit;
+	justify-content: center;
+	align-self: center;
+	line-height: 0;
+	font: inherit;
+}
+
 .jofme-social__list {
 	list-style: none;
 	margin: 0;
