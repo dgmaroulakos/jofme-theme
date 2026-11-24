@@ -33,7 +33,7 @@ function jofme_social_customize( $manager ) {
 		'jofme_social',
 		array(
 			'title'       => __( 'Social media', 'jofme' ),
-			'description' => __( 'Add profile URLs to show icons in the header and footer. Leave a field empty to hide that network.', 'jofme' ),
+			'description' => __( 'Add profile URLs to show icons in the header topbar and footer. Leave a field empty to hide that network.', 'jofme' ),
 			'panel'       => 'jofme_options',
 			'priority'    => 35,
 		)
@@ -49,9 +49,10 @@ function jofme_social_customize( $manager ) {
 	$manager->add_control(
 		'jofme_social_in_header',
 		array(
-			'label'   => __( 'Show social icons in header', 'jofme' ),
-			'section' => 'jofme_social',
-			'type'    => 'checkbox',
+			'label'       => __( 'Show social icons in header topbar', 'jofme' ),
+			'description' => __( 'Desktop only. On mobile, icons stay in the menu drawer.', 'jofme' ),
+			'section'     => 'jofme_social',
+			'type'        => 'checkbox',
 		)
 	);
 
