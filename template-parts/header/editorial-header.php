@@ -13,6 +13,11 @@ if ( $announcement ) : ?>
   </div>
   <nav id="site-navigation" class="main-navigation" aria-label="<?php esc_attr_e( 'Primary', 'jofme' ); ?>"><?php wp_nav_menu( array( 'theme_location' => 'primary', 'menu_id' => 'primary-menu', 'container' => false, 'fallback_cb' => false ) ); ?></nav>
   <div class="site-header__end">
+   <?php
+   if ( function_exists( 'jofme_social_nav' ) ) {
+    jofme_social_nav( 'header' );
+   }
+   ?>
    <?php if ( class_exists( 'WooCommerce' ) ) : ?>
     <a class="jofme-account-link" href="<?php echo esc_url( wc_get_page_permalink( 'myaccount' ) ); ?>" aria-label="<?php esc_attr_e( 'My account', 'jofme' ); ?>"><svg width="23" height="23" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.3" aria-hidden="true"><circle cx="12" cy="7" r="4"/><path d="M3 22a9 9 0 0 1 18 0"/></svg></a>
     <?php

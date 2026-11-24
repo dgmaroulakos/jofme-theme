@@ -3,7 +3,7 @@ Contributors: jofme
 Requires at least: 6.4
 Tested up to: 6.8
 Requires PHP: 7.4
-Stable tag: 1.7.61
+Stable tag: 1.7.62
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -30,6 +30,9 @@ strings / wpml-config.xml.
 * WPML or Polylang
 
 == Changelog ==
+
+= 1.7.62 =
+* Header & footer: Social media icons from Customizer (Instagram, Facebook, TikTok, Pinterest, YouTube, X).
 
 = 1.7.61 =
 * Variable gallery: show parent/featured images until a variation is selected; show variation photos on select; restore parent gallery on clear.
