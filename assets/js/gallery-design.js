@@ -239,6 +239,45 @@
   return images;
  }
 
+ function skuNodes() {
+  return Array.from(
+   document.querySelectorAll('.jofme-product-sku .sku, .product_meta .sku')
+  ).filter((el) => el && el.nodeType === 1);
+ }
+
+ function stashParentSku(node) {
+  if (!node || !node.dataset) return;
+  if (node.dataset.jofmeParentSku === undefined || node.dataset.jofmeParentSku === '') {
+   node.dataset.jofmeParentSku = (node.textContent || '').trim();
+  }
+ }
+
+ function syncVariationSku(variation) {
+  const nodes = skuNodes();
+  if (!nodes.length) return;
+  nodes.forEach((node) => {
+   stashParentSku(node);
+   if (variation && variation.sku) {
+    node.textContent = String(variation.sku);
+   } else {
+    const parent = node.dataset.jofmeParentSku;
+    node.textContent = parent !== undefined && parent !== '' ? parent : '';
+   }
+  });
+ }
+
+ function bindVariationSku() {
+  if (!$ || typeof $.fn !== 'object') return;
+  const form = document.querySelector('form.variations_form');
+  if (!form) return;
+  form.dataset = form.dataset || {};
+  if (form.dataset.jofmeSkuSync === '1') return;
+  form.dataset.jofmeSkuSync = '1';
+  skuNodes().forEach(stashParentSku);
+  $(form).on('found_variation.jofmeSku', (_, variation) => syncVariationSku(variation));
+  $(form).on('reset_data.jofmeSku hide_variation.jofmeSku', () => syncVariationSku(null));
+ }
+
  function findIndexForImage(slides, image) {
   if (!image || !Array.isArray(slides)) return -1;
   const candidates = [image.full_src, image.src]
@@ -658,8 +697,14 @@
    if (items[visible[0]]) setCurrentDot(gallery, items[visible[0]].id);
   }
 
-  $(form).on('found_variation', (_, variation) => showVariationStackedGallery(variation));
-  $(form).on('reset_data hide_variation', showParentStackedGallery);
+  $(form).on('found_variation', (_, variation) => {
+   syncVariationSku(variation);
+   showVariationStackedGallery(variation);
+  });
+  $(form).on('reset_data hide_variation', () => {
+   syncVariationSku(null);
+   showParentStackedGallery();
+  });
  }
 
  function bindCarouselGallery(gallery) {
@@ -879,10 +924,17 @@
    show(visible[0]);
   }
 
-  $(form).on('found_variation', (_, variation) => showVariationCarouselGallery(variation));
-  $(form).on('reset_data hide_variation', showParentCarouselGallery);
+  $(form).on('found_variation', (_, variation) => {
+   syncVariationSku(variation);
+   showVariationCarouselGallery(variation);
+  });
+  $(form).on('reset_data hide_variation', () => {
+   syncVariationSku(null);
+   showParentCarouselGallery();
+  });
  }
 
  document.querySelectorAll('.jofme-stacked-gallery').forEach(bindStackedGallery);
  document.querySelectorAll('.jofme-carousel-gallery').forEach(bindCarouselGallery);
+ bindVariationSku();
 })();

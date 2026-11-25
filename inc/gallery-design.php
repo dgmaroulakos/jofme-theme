@@ -144,8 +144,11 @@ function jofme_available_variation_gallery( $data, $product, $variation ) {
 				}
 			}
 		} elseif ( is_array( $extra ) ) {
-			foreach ( $extra as $id ) {
-				$id = absint( $id );
+			foreach ( $extra as $entry ) {
+				if ( is_array( $entry ) ) {
+					$entry = isset( $entry['id'] ) ? $entry['id'] : ( isset( $entry['ID'] ) ? $entry['ID'] : 0 );
+				}
+				$id = absint( $entry );
 				if ( $id && ! in_array( $id, $ids, true ) ) {
 					$ids[] = $id;
 				}
@@ -170,7 +173,11 @@ function jofme_available_variation_gallery( $data, $product, $variation ) {
 		);
 	}
 
+	// Always expose the gallery set (even a single featured image) for the JS switcher.
 	$data['jofme_gallery'] = $images;
+	if ( ! empty( $images[0] ) && empty( $data['image_id'] ) ) {
+		$data['image_id'] = (int) $images[0]['id'];
+	}
 	return $data;
 }
 add_filter( 'woocommerce_available_variation', 'jofme_available_variation_gallery', 20, 3 );
@@ -391,7 +398,9 @@ function jofme_gallery_summary_category() {
 
 /**
  * SKU on the gallery product summary (full product_meta is removed).
- * Uses WooCommerce .sku markup so variation select updates the value.
+ *
+ * Keep the WooCommerce `.product_meta .sku` structure so core variation JS
+ * can update the value; theme JS also syncs `.jofme-product-sku .sku`.
  */
 function jofme_gallery_product_sku() {
 	global $product;
@@ -407,8 +416,10 @@ function jofme_gallery_product_sku() {
 		return;
 	}
 
-	echo '<div class="jofme-product-sku">';
-	echo '<span class="sku_wrapper">' . esc_html__( 'SKU:', 'woocommerce' ) . ' <span class="sku">' . esc_html( $sku ? $sku : __( 'N/A', 'woocommerce' ) ) . '</span></span>';
+	$display = $sku ? $sku : __( 'N/A', 'woocommerce' );
+
+	echo '<div class="product_meta jofme-product-sku">';
+	echo '<span class="sku_wrapper">' . esc_html__( 'SKU:', 'woocommerce' ) . ' <span class="sku" data-jofme-parent-sku="' . esc_attr( $display ) . '">' . esc_html( $display ) . '</span></span>';
 	echo '</div>';
 }
 
