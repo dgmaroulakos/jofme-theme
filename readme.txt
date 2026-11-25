@@ -3,7 +3,7 @@ Contributors: jofme
 Requires at least: 6.4
 Tested up to: 6.8
 Requires PHP: 7.4
-Stable tag: 1.7.71
+Stable tag: 1.7.72
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -30,6 +30,10 @@ strings / wpml-config.xml.
 * WPML or Polylang
 
 == Changelog ==
+
+= 1.7.72 =
+* Product carousel: uncropped thumbnails (contain, left-aligned), larger thumbs (112px / 88px mobile), wider gallery column.
+* Product carousel functionality: nav arrows paint above the zoom link, keyboard left/right, safer thumb/swipe stepping across variation galleries.
 
 = 1.7.71 =
 * Image swatches: render term images with <img>, stop wiping Swatch display on programmatic attribute updates, show uploaded term images even when type is Color, harden attachment URL fallbacks.
