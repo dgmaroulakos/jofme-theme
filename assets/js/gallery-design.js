@@ -160,14 +160,20 @@
  }
 
  function bindLightboxLinks(gallery) {
-  gallery.querySelectorAll('.jofme-gallery-zoom-link').forEach((link) => {
-   link.addEventListener('click', (event) => {
-    event.preventDefault();
-    const sources = collectLightboxSources(gallery);
-    const index = Number(link.dataset.lightboxIndex);
-    const start = Number.isFinite(index) ? index : Math.max(0, sources.findIndex((item) => item.src === link.href));
-    openLightbox(sources, start < 0 ? 0 : start);
-   });
+  if (!gallery || gallery.dataset.jofmeLightbox === '1') return;
+  if (typeof gallery.addEventListener !== 'function') return;
+  gallery.dataset.jofmeLightbox = '1';
+  gallery.addEventListener('click', (event) => {
+   const link = event.target.closest('.jofme-gallery-zoom-link');
+   if (!link || !gallery.contains(link)) return;
+   event.preventDefault();
+   const sources = collectLightboxSources(gallery);
+   const href = link.getAttribute('href') || '';
+   const start = Math.max(
+    0,
+    sources.findIndex((item) => item.src === href || (href && item.src.endsWith(href)) || (href && href.endsWith(item.src)))
+   );
+   openLightbox(sources, start);
   });
  }
 
@@ -218,6 +224,11 @@
   if (variation && Array.isArray(variation.jofme_gallery)) {
    variation.jofme_gallery.forEach(pushImage);
   }
+  ['variation_gallery_images', 'variation_gallery', 'gallery_images'].forEach((key) => {
+   if (variation && Array.isArray(variation[key])) {
+    variation[key].forEach(pushImage);
+   }
+  });
   if (variation && variation.image) {
    pushImage(
     Object.assign({}, variation.image, {
@@ -228,27 +239,192 @@
   return images;
  }
 
+ function findIndexForImage(slides, image) {
+  if (!image || !Array.isArray(slides)) return -1;
+  const candidates = [image.full_src, image.src]
+   .map(normalizeImageUrl)
+   .filter(Boolean);
+  const attachmentId = image.id ? String(image.id) : '';
+  return slides.findIndex((slide) => {
+   if (!slide || typeof slide.querySelector !== 'function') return false;
+   const img = slide.querySelector('img');
+   if (attachmentId && img && img.getAttribute('data-attachment_id') === attachmentId) {
+    return true;
+   }
+   const urls = slideImageUrls(slide);
+   return urls.some((url) => candidates.some((candidate) => url === candidate || url.endsWith(candidate) || candidate.endsWith(url)));
+  });
+ }
+
  function findSlideIndexesForImages(slides, images) {
   const indexes = [];
-  images.forEach((image) => {
-   const candidates = [image.full_src, image.src]
-    .map(normalizeImageUrl)
-    .filter(Boolean);
-   const attachmentId = image.id ? String(image.id) : '';
-   const matched = slides.findIndex((slide) => {
-    if (!slide || typeof slide.querySelector !== 'function') return false;
-    const img = slide.querySelector('img');
-    if (attachmentId && img && img.getAttribute('data-attachment_id') === attachmentId) {
-     return true;
-    }
-    const urls = slideImageUrls(slide);
-    return urls.some((url) => candidates.some((candidate) => url === candidate || url.endsWith(candidate) || candidate.endsWith(url)));
-   });
+  (images || []).forEach((image) => {
+   const matched = findIndexForImage(slides, image);
    if (matched >= 0 && indexes.indexOf(matched) === -1) {
     indexes.push(matched);
    }
   });
   return indexes;
+ }
+
+ function removeVariationTempNodes(gallery) {
+  if (!gallery || typeof gallery.querySelectorAll !== 'function') return;
+  gallery.querySelectorAll('[data-jofme-variation-temp="1"]').forEach((el) => {
+   if (el && typeof el.remove === 'function') el.remove();
+  });
+ }
+
+ function canBuildDomNodes() {
+  return !!(document && typeof document.createElement === 'function');
+ }
+
+ function createZoomLink(image, index) {
+  if (!canBuildDomNodes()) return null;
+  const full = image.full_src || image.src || '';
+  const link = document.createElement('a');
+  link.className = 'jofme-gallery-zoom-link';
+  link.href = full;
+  link.dataset = link.dataset || {};
+  link.dataset.lightboxIndex = String(index);
+  const img = document.createElement('img');
+  img.src = full;
+  img.alt = image.alt || '';
+  img.decoding = 'async';
+  img.loading = 'lazy';
+  if (typeof img.setAttribute === 'function') {
+   if (image.id) img.setAttribute('data-attachment_id', String(image.id));
+   if (image.width) img.setAttribute('width', String(image.width));
+   if (image.height) img.setAttribute('height', String(image.height));
+  }
+  if (typeof link.appendChild === 'function') link.appendChild(img);
+  return link;
+ }
+
+ function createCarouselSlide(image, index) {
+  if (!canBuildDomNodes()) return null;
+  const figure = document.createElement('figure');
+  figure.className = 'jofme-carousel-gallery__slide';
+  figure.dataset = figure.dataset || {};
+  figure.dataset.index = String(index);
+  figure.dataset.jofmeVariationTemp = '1';
+  if (typeof figure.setAttribute === 'function') figure.setAttribute('hidden', '');
+  const zoom = createZoomLink(image, index);
+  if (zoom && typeof figure.appendChild === 'function') figure.appendChild(zoom);
+  return figure;
+ }
+
+ function createCarouselThumb(image, index) {
+  if (!canBuildDomNodes()) return null;
+  const button = document.createElement('button');
+  button.type = 'button';
+  button.className = 'jofme-carousel-gallery__thumb';
+  button.dataset = button.dataset || {};
+  button.dataset.index = String(index);
+  button.dataset.jofmeVariationTemp = '1';
+  if (typeof button.setAttribute === 'function') {
+   button.setAttribute('role', 'listitem');
+   button.setAttribute('aria-label', (i18n.image || 'Product image') + ' ' + String(index + 1));
+  }
+  const img = document.createElement('img');
+  img.src = image.src || image.full_src || '';
+  img.alt = '';
+  if (image.id && typeof img.setAttribute === 'function') {
+   img.setAttribute('data-attachment_id', String(image.id));
+  }
+  if (typeof button.appendChild === 'function') button.appendChild(img);
+  return button;
+ }
+
+ function ensureCarouselThumbs(gallery) {
+  if (!gallery || typeof gallery.querySelector !== 'function') return null;
+  let wrap = gallery.querySelector('.jofme-carousel-gallery__thumbs');
+  if (wrap) return wrap;
+  if (!canBuildDomNodes() || typeof gallery.appendChild !== 'function') return null;
+  wrap = document.createElement('div');
+  wrap.className = 'jofme-carousel-gallery__thumbs';
+  if (typeof wrap.setAttribute === 'function') wrap.setAttribute('role', 'list');
+  gallery.appendChild(wrap);
+  return wrap;
+ }
+
+ function ensureCarouselNav(gallery) {
+  if (!gallery || typeof gallery.querySelector !== 'function' || !canBuildDomNodes()) return;
+  const viewport = gallery.querySelector('.jofme-carousel-gallery__viewport');
+  if (!viewport) return;
+  if (!gallery.querySelector('.jofme-carousel-gallery__nav--prev') && typeof viewport.insertBefore === 'function') {
+   const prev = document.createElement('button');
+   prev.type = 'button';
+   prev.className = 'jofme-carousel-gallery__nav jofme-carousel-gallery__nav--prev';
+   prev.dataset = prev.dataset || {};
+   prev.dataset.dir = '-1';
+   if (typeof prev.setAttribute === 'function') prev.setAttribute('aria-label', i18n.prev || 'Previous image');
+   prev.textContent = '‹';
+   viewport.insertBefore(prev, viewport.firstChild);
+  }
+  if (!gallery.querySelector('.jofme-carousel-gallery__nav--next') && typeof viewport.appendChild === 'function') {
+   const next = document.createElement('button');
+   next.type = 'button';
+   next.className = 'jofme-carousel-gallery__nav jofme-carousel-gallery__nav--next';
+   next.dataset = next.dataset || {};
+   next.dataset.dir = '1';
+   if (typeof next.setAttribute === 'function') next.setAttribute('aria-label', i18n.next || 'Next image');
+   next.textContent = '›';
+   viewport.appendChild(next);
+  }
+ }
+
+ function createStackedItem(image, index) {
+  if (!canBuildDomNodes()) return null;
+  const itemId = 'jofme-gallery-variation-' + String(image.id || index + 1) + '-' + String(Date.now());
+  const figure = document.createElement('figure');
+  figure.className = 'jofme-stacked-gallery__item';
+  figure.id = itemId;
+  figure.dataset = figure.dataset || {};
+  figure.dataset.index = String(index);
+  figure.dataset.jofmeVariationTemp = '1';
+  const zoom = createZoomLink(image, index);
+  if (zoom && typeof figure.appendChild === 'function') figure.appendChild(zoom);
+  return figure;
+ }
+
+ function createStackedDot(itemId, index) {
+  if (!canBuildDomNodes()) return null;
+  const button = document.createElement('button');
+  button.type = 'button';
+  button.className = 'jofme-stacked-gallery__dot';
+  button.dataset = button.dataset || {};
+  button.dataset.target = itemId;
+  button.dataset.jofmeVariationTemp = '1';
+  if (typeof button.setAttribute === 'function') {
+   button.setAttribute('aria-label', (i18n.image || 'Product image') + ' ' + String(index + 1));
+  }
+  return button;
+ }
+
+ function ensureStackedRail(gallery) {
+  if (!gallery || typeof gallery.querySelector !== 'function') return null;
+  let rail = gallery.querySelector('.jofme-stacked-gallery__rail');
+  if (rail) {
+   return (typeof rail.querySelector === 'function' && rail.querySelector('.jofme-stacked-gallery__dots')) || rail;
+  }
+  if (!canBuildDomNodes()) return null;
+  if (typeof gallery.insertBefore !== 'function' && typeof gallery.appendChild !== 'function') return null;
+  rail = document.createElement('div');
+  rail.className = 'jofme-stacked-gallery__rail';
+  rail.dataset = rail.dataset || {};
+  rail.dataset.jofmeVariationTemp = '1';
+  const nav = document.createElement('nav');
+  nav.className = 'jofme-stacked-gallery__dots';
+  if (typeof nav.setAttribute === 'function') {
+   nav.setAttribute('aria-label', i18n.image || 'Product images');
+  }
+  if (typeof rail.appendChild === 'function') rail.appendChild(nav);
+  if (typeof gallery.insertBefore === 'function') {
+   gallery.insertBefore(rail, gallery.firstChild);
+  } else {
+   gallery.appendChild(rail);
+  }
+  return nav;
  }
 
  function stashPrimaryImage(primary) {
@@ -329,31 +505,63 @@
   if (!gallery || gallery.dataset.jofmeStacked === '1') return;
   gallery.dataset.jofmeStacked = '1';
 
-  const items = Array.from(gallery.querySelectorAll('.jofme-stacked-gallery__item'));
-  const dots = Array.from(gallery.querySelectorAll('.jofme-stacked-gallery__dot'));
+  let items = Array.from(gallery.querySelectorAll('.jofme-stacked-gallery__item'));
+  let dots = Array.from(gallery.querySelectorAll('.jofme-stacked-gallery__dot'));
   if (!items.length) return;
 
   const primary = gallery.querySelector('.jofme-stacked-gallery__item[data-primary] img');
   stashPrimaryImage(primary);
 
-  dots.forEach((dot) => {
-   dot.addEventListener('click', () => {
-    const target = document.getElementById(dot.dataset.target);
-    if (!target || (target.classList && target.classList.contains('jofme-gallery-item--suppressed'))) return;
-    scrollToElement(target);
-    setCurrentDot(gallery, target.id);
+  function refreshStackedLists() {
+   items = Array.from(gallery.querySelectorAll('.jofme-stacked-gallery__item'));
+   dots = Array.from(gallery.querySelectorAll('.jofme-stacked-gallery__dot'));
+   items.forEach((item, i) => {
+    if (!item) return;
+    item.dataset = item.dataset || {};
+    item.dataset.index = String(i);
+    if (typeof item.querySelector !== 'function') return;
+    const link = item.querySelector('.jofme-gallery-zoom-link');
+    if (link) {
+     link.dataset = link.dataset || {};
+     link.dataset.lightboxIndex = String(i);
+    }
    });
+  }
+
+  function activateStackedDot(dot) {
+   if (!dot) return;
+   if (dot.classList && dot.classList.contains('jofme-gallery-item--suppressed')) return;
+   const target = document.getElementById(dot.dataset.target);
+   if (!target || (target.classList && target.classList.contains('jofme-gallery-item--suppressed'))) return;
+   scrollToElement(target);
+   setCurrentDot(gallery, target.id);
+  }
+
+  dots.forEach((dot) => {
+   if (!dot || typeof dot.addEventListener !== 'function') return;
+   dot.addEventListener('click', () => activateStackedDot(dot));
   });
+
+  if (typeof gallery.addEventListener === 'function') {
+   gallery.addEventListener('click', (event) => {
+    if (!event || !event.target || typeof event.target.closest !== 'function') return;
+    const dot = event.target.closest('.jofme-stacked-gallery__dot');
+    if (!dot || (typeof gallery.contains === 'function' && !gallery.contains(dot))) return;
+    activateStackedDot(dot);
+   });
+  }
 
   bindLightboxLinks(gallery);
 
-  if (typeof window.IntersectionObserver === 'function' && items.length > 1) {
-   const ratios = new Map();
-   const observer = new window.IntersectionObserver(
+  let stackedObserver = null;
+  const ratios = new Map();
+  if (typeof window.IntersectionObserver === 'function') {
+   stackedObserver = new window.IntersectionObserver(
     (entries) => {
      entries.forEach((entry) => {
       ratios.set(entry.target.id, entry.intersectionRatio);
      });
+     if (!items.length) return;
      let bestId = items[0].id;
      let bestRatio = -1;
      ratios.forEach((ratio, id) => {
@@ -374,7 +582,7 @@
      rootMargin: '-20% 0px -35% 0px',
     }
    );
-   items.forEach((item) => observer.observe(item));
+   items.forEach((item) => stackedObserver.observe(item));
   }
 
   if (!$) return;
@@ -383,6 +591,8 @@
   if (!form || !primary) return;
 
   function showParentStackedGallery() {
+   removeVariationTempNodes(gallery);
+   refreshStackedLists();
    clearSuppressedItems(items);
    clearSuppressedItems(dots);
    restorePrimaryImage(primary);
@@ -392,16 +602,46 @@
   }
 
   function showVariationStackedGallery(variation) {
+   removeVariationTempNodes(gallery);
+   refreshStackedLists();
+   restorePrimaryImage(primary);
+
    const images = variationGalleryImages(variation);
    if (!images.length) return;
 
-   const matched = findSlideIndexesForImages(items, images);
-   let visible = matched;
-   if (matched.length) {
-    restorePrimaryImage(primary);
-   } else {
+   const visible = [];
+   images.forEach((image) => {
+    let idx = findIndexForImage(items, image);
+    if (idx < 0 && typeof gallery.appendChild === 'function') {
+     const item = createStackedItem(image, items.length);
+     if (item) {
+      gallery.appendChild(item);
+      const dotsNav = ensureStackedRail(gallery);
+      const dot = createStackedDot(item.id, items.length);
+      if (dotsNav && typeof dotsNav.appendChild === 'function' && dot) {
+       dotsNav.appendChild(dot);
+       if (typeof dot.addEventListener === 'function') {
+        dot.addEventListener('click', () => activateStackedDot(dot));
+       }
+      }
+      if (stackedObserver && typeof stackedObserver.observe === 'function') {
+       stackedObserver.observe(item);
+      }
+      refreshStackedLists();
+      idx = items.length - 1;
+     }
+    }
+    if (idx >= 0 && visible.indexOf(idx) === -1) visible.push(idx);
+   });
+
+   if (!visible.length) {
     applyImageToPrimary(primary, images[0]);
-    visible = [0];
+    setSuppressedItems(items, [0]);
+    setSuppressedItems(dots, [0]);
+    setGalleryModeClass(gallery, true, false);
+    scrollToElement(items[0]);
+    if (items[0]) setCurrentDot(gallery, items[0].id);
+    return;
    }
 
    setSuppressedItems(items, visible);
@@ -425,8 +665,8 @@
   if (!gallery || gallery.dataset.jofmeCarousel === '1') return;
   gallery.dataset.jofmeCarousel = '1';
 
-  const slides = Array.from(gallery.querySelectorAll('.jofme-carousel-gallery__slide'));
-  const thumbs = Array.from(gallery.querySelectorAll('.jofme-carousel-gallery__thumb'));
+  let slides = Array.from(gallery.querySelectorAll('.jofme-carousel-gallery__slide'));
+  let thumbs = Array.from(gallery.querySelectorAll('.jofme-carousel-gallery__thumb'));
   if (!slides.length) return;
 
   let index = Math.max(0, slides.findIndex((slide) => slide.classList.contains('is-active')));
@@ -434,6 +674,27 @@
 
   const primary = gallery.querySelector('.jofme-carousel-gallery__slide[data-primary] img');
   stashPrimaryImage(primary);
+
+  function refreshCarouselLists() {
+   slides = Array.from(gallery.querySelectorAll('.jofme-carousel-gallery__slide'));
+   thumbs = Array.from(gallery.querySelectorAll('.jofme-carousel-gallery__thumb'));
+   slides.forEach((slide, i) => {
+    if (!slide) return;
+    slide.dataset = slide.dataset || {};
+    slide.dataset.index = String(i);
+    if (typeof slide.querySelector !== 'function') return;
+    const link = slide.querySelector('.jofme-gallery-zoom-link');
+    if (link) {
+     link.dataset = link.dataset || {};
+     link.dataset.lightboxIndex = String(i);
+    }
+   });
+   thumbs.forEach((thumb, i) => {
+    if (!thumb) return;
+    thumb.dataset = thumb.dataset || {};
+    thumb.dataset.index = String(i);
+   });
+  }
 
   function visibleSlideIndexes() {
    const indexes = [];
@@ -486,55 +747,58 @@
    }
   }
 
-  gallery.addEventListener('click', (event) => {
-   const nav = event.target.closest('.jofme-carousel-gallery__nav');
-   if (nav && gallery.contains(nav)) {
-    event.preventDefault();
-    event.stopPropagation();
-    const visible = visibleSlideIndexes();
-    const position = Math.max(0, visible.indexOf(index));
-    const nextPos = (position + Number(nav.dataset.dir || 0) + visible.length) % visible.length;
-    show(visible[nextPos]);
-    return;
-   }
-   const thumb = event.target.closest('.jofme-carousel-gallery__thumb');
-   if (thumb && gallery.contains(thumb)) {
-    if (thumb.classList && thumb.classList.contains('jofme-gallery-item--suppressed')) return;
-    event.preventDefault();
-    event.stopPropagation();
-    show(Number(thumb.dataset.index || 0));
-   }
-  });
+  if (typeof gallery.addEventListener === 'function') {
+   gallery.addEventListener('click', (event) => {
+    if (!event || !event.target || typeof event.target.closest !== 'function') return;
+    const nav = event.target.closest('.jofme-carousel-gallery__nav');
+    if (nav && (!gallery.contains || gallery.contains(nav))) {
+     event.preventDefault();
+     event.stopPropagation();
+     const visible = visibleSlideIndexes();
+     const position = Math.max(0, visible.indexOf(index));
+     const nextPos = (position + Number(nav.dataset.dir || 0) + visible.length) % visible.length;
+     show(visible[nextPos]);
+     return;
+    }
+    const thumb = event.target.closest('.jofme-carousel-gallery__thumb');
+    if (thumb && (!gallery.contains || gallery.contains(thumb))) {
+     if (thumb.classList && thumb.classList.contains('jofme-gallery-item--suppressed')) return;
+     event.preventDefault();
+     event.stopPropagation();
+     show(Number(thumb.dataset.index || 0));
+    }
+   });
 
-  let touchX = null;
-  let touchY = null;
-  gallery.addEventListener(
-   'touchstart',
-   (event) => {
-    if (!event.changedTouches || !event.changedTouches[0]) return;
-    touchX = event.changedTouches[0].clientX;
-    touchY = event.changedTouches[0].clientY;
-   },
-   { passive: true }
-  );
-  gallery.addEventListener(
-   'touchend',
-   (event) => {
-    if (touchX === null || !event.changedTouches || !event.changedTouches[0]) return;
-    const point = event.changedTouches[0];
-    const deltaX = point.clientX - touchX;
-    const deltaY = point.clientY - (touchY || point.clientY);
-    touchX = null;
-    touchY = null;
-    if (Math.abs(deltaX) < 40 || Math.abs(deltaX) < Math.abs(deltaY)) return;
-    if (event.target.closest('.jofme-carousel-gallery__thumb, .jofme-carousel-gallery__nav')) return;
-    const visible = visibleSlideIndexes();
-    const position = Math.max(0, visible.indexOf(index));
-    const nextPos = (position + (deltaX < 0 ? 1 : -1) + visible.length) % visible.length;
-    show(visible[nextPos]);
-   },
-   { passive: true }
-  );
+   let touchX = null;
+   let touchY = null;
+   gallery.addEventListener(
+    'touchstart',
+    (event) => {
+     if (!event.changedTouches || !event.changedTouches[0]) return;
+     touchX = event.changedTouches[0].clientX;
+     touchY = event.changedTouches[0].clientY;
+    },
+    { passive: true }
+   );
+   gallery.addEventListener(
+    'touchend',
+    (event) => {
+     if (touchX === null || !event.changedTouches || !event.changedTouches[0]) return;
+     const point = event.changedTouches[0];
+     const deltaX = point.clientX - touchX;
+     const deltaY = point.clientY - (touchY || point.clientY);
+     touchX = null;
+     touchY = null;
+     if (Math.abs(deltaX) < 40 || Math.abs(deltaX) < Math.abs(deltaY)) return;
+     if (event.target.closest && event.target.closest('.jofme-carousel-gallery__thumb, .jofme-carousel-gallery__nav')) return;
+     const visible = visibleSlideIndexes();
+     const position = Math.max(0, visible.indexOf(index));
+     const nextPos = (position + (deltaX < 0 ? 1 : -1) + visible.length) % visible.length;
+     show(visible[nextPos]);
+    },
+    { passive: true }
+   );
+  }
 
   bindLightboxLinks(gallery);
   show(index);
@@ -544,6 +808,8 @@
   if (!form || !primary) return;
 
   function showParentCarouselGallery() {
+   removeVariationTempNodes(gallery);
+   refreshCarouselLists();
    clearSuppressedItems(slides);
    clearSuppressedItems(thumbs);
    restorePrimaryImage(primary);
@@ -552,24 +818,47 @@
   }
 
   function showVariationCarouselGallery(variation) {
+   removeVariationTempNodes(gallery);
+   refreshCarouselLists();
+   restorePrimaryImage(primary);
+
    const images = variationGalleryImages(variation);
    if (!images.length) return;
 
-   const matched = findSlideIndexesForImages(slides, images);
-   if (matched.length) {
-    restorePrimaryImage(primary);
-    setSuppressedItems(slides, matched);
-    setSuppressedItems(thumbs, matched);
-    setGalleryModeClass(gallery, true, matched.length > 1);
-    show(matched[0]);
+   const visible = [];
+   const track = gallery.querySelector && gallery.querySelector('.jofme-carousel-gallery__track');
+   images.forEach((image) => {
+    let idx = findIndexForImage(slides, image);
+    if (idx < 0 && track && typeof track.appendChild === 'function') {
+     ensureCarouselNav(gallery);
+     const thumbWrap = ensureCarouselThumbs(gallery);
+     const slide = createCarouselSlide(image, slides.length);
+     if (slide) {
+      track.appendChild(slide);
+      const thumb = createCarouselThumb(image, slides.length);
+      if (thumbWrap && typeof thumbWrap.appendChild === 'function' && thumb) {
+       thumbWrap.appendChild(thumb);
+      }
+      refreshCarouselLists();
+      idx = slides.length - 1;
+     }
+    }
+    if (idx >= 0 && visible.indexOf(idx) === -1) visible.push(idx);
+   });
+
+   if (!visible.length) {
+    applyImageToPrimary(primary, images[0]);
+    setSuppressedItems(slides, [0]);
+    setSuppressedItems(thumbs, [0]);
+    setGalleryModeClass(gallery, true, false);
+    show(0);
     return;
    }
 
-   applyImageToPrimary(primary, images[0]);
-   setSuppressedItems(slides, [0]);
-   setSuppressedItems(thumbs, [0]);
-   setGalleryModeClass(gallery, true, false);
-   show(0);
+   setSuppressedItems(slides, visible);
+   setSuppressedItems(thumbs, visible);
+   setGalleryModeClass(gallery, true, visible.length > 1);
+   show(visible[0]);
   }
 
   $(form).on('found_variation', (_, variation) => showVariationCarouselGallery(variation));

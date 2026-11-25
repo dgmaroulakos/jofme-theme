@@ -126,18 +126,29 @@ function jofme_available_variation_gallery( $data, $product, $variation ) {
 		}
 	}
 
-	$extra = get_post_meta( $variation->get_id(), '_wc_additional_variation_images', true );
-	if ( is_string( $extra ) && '' !== $extra ) {
-		foreach ( array_filter( array_map( 'absint', explode( ',', $extra ) ) ) as $id ) {
-			if ( $id && ! in_array( $id, $ids, true ) ) {
-				$ids[] = $id;
+	$meta_keys = array(
+		'_wc_additional_variation_images',
+		'woo_variation_gallery_images',
+		'_woo_variation_gallery_images',
+		'rtwpvg_images',
+		'_product_image_gallery',
+	);
+	foreach ( $meta_keys as $meta_key ) {
+		$extra = get_post_meta( $variation->get_id(), $meta_key, true );
+		if ( is_string( $extra ) && '' !== $extra ) {
+			$decoded = json_decode( $extra, true );
+			$parts   = is_array( $decoded ) ? $decoded : explode( ',', $extra );
+			foreach ( array_filter( array_map( 'absint', $parts ) ) as $id ) {
+				if ( $id && ! in_array( $id, $ids, true ) ) {
+					$ids[] = $id;
+				}
 			}
-		}
-	} elseif ( is_array( $extra ) ) {
-		foreach ( $extra as $id ) {
-			$id = absint( $id );
-			if ( $id && ! in_array( $id, $ids, true ) ) {
-				$ids[] = $id;
+		} elseif ( is_array( $extra ) ) {
+			foreach ( $extra as $id ) {
+				$id = absint( $id );
+				if ( $id && ! in_array( $id, $ids, true ) ) {
+					$ids[] = $id;
+				}
 			}
 		}
 	}
