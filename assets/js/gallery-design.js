@@ -329,48 +329,6 @@
 
  const galleryVariationControllers = [];
 
- function getSelectedAttributes(form) {
-  const chosen = {};
-  if (!form || typeof form.querySelectorAll !== 'function') return chosen;
-  form.querySelectorAll('select[name^="attribute_"]').forEach((sel) => {
-   if (sel && sel.name && sel.value) {
-    chosen[sel.name] = sel.value;
-   }
-  });
-  return chosen;
- }
-
- function variationMatchesSelection(variation, chosen) {
-  if (!variation || !variation.attributes || !chosen) return false;
-  const keys = Object.keys(chosen);
-  if (!keys.length) return false;
-  return keys.every((key) => {
-   const val = variation.attributes[key];
-   return val === '' || val === undefined || val === null || val === chosen[key];
-  });
- }
-
- /**
-  * Best variation for the current attribute selection (supports color-only preview
-  * before size/other attributes are chosen).
-  */
- function findVariationForSelection(form) {
-  if (!$ || !form) return null;
-  const variations = $(form).data('product_variations');
-  if (!Array.isArray(variations)) return null;
-  const chosen = getSelectedAttributes(form);
-  if (!Object.keys(chosen).length) return null;
-  const matches = variations.filter(
-   (variation) =>
-    variation &&
-    variation.variation_is_visible !== false &&
-    variationMatchesSelection(variation, chosen)
-  );
-  if (!matches.length) return null;
-  const withImages = matches.find((variation) => variationGalleryImages(variation).length > 0);
-  return withImages || matches[0];
- }
-
  function applyVariationToGalleries(variation) {
   galleryVariationControllers.forEach((controller) => {
    if (controller && typeof controller.showVariation === 'function') {
@@ -387,6 +345,12 @@
   });
  }
 
+ /**
+  * Simple gallery sync:
+  * - Page load / clear → parent product photos
+  * - found_variation with photos → that variation’s photos
+  * - found_variation without photos → keep parent photos (SKU still updates)
+  */
  function bindVariationGalleryBridge() {
   if (!$ || typeof $.fn !== 'object') return;
   if (document.body && document.body.dataset && document.body.dataset.jofmeVarGallery === '1') return;
@@ -396,7 +360,11 @@
 
   function onFound(_, variation) {
    syncVariationSku(variation);
-   applyVariationToGalleries(variation);
+   if (variationGalleryImages(variation).length) {
+    applyVariationToGalleries(variation);
+   } else {
+    resetVariationGalleries();
+   }
   }
 
   function onReset() {
@@ -404,25 +372,9 @@
    resetVariationGalleries();
   }
 
-  function onCheck() {
-   const form = this;
-   const chosen = getSelectedAttributes(form);
-   if (!Object.keys(chosen).length) return;
-   const preview = findVariationForSelection(form);
-   if (!preview) return;
-   // found_variation also fires on a full match; applying twice is safe.
-   syncVariationSku(preview);
-   applyVariationToGalleries(preview);
-  }
-
   if (document.body) {
    $(document.body).on('found_variation.jofmeGallery', 'form.variations_form', onFound);
    $(document.body).on('reset_data.jofmeGallery hide_variation.jofmeGallery', 'form.variations_form', onReset);
-   $(document.body).on(
-    'check_variations.jofmeGallery woocommerce_variation_has_changed.jofmeGallery',
-    'form.variations_form',
-    onCheck
-   );
   }
 
   // Direct form binds (tests + environments without delegated bubbling).
@@ -432,7 +384,6 @@
    form.dataset.jofmeVarGalleryForm = '1';
    $(form).on('found_variation.jofmeGallery', onFound);
    $(form).on('reset_data.jofmeGallery hide_variation.jofmeGallery', onReset);
-   $(form).on('check_variations.jofmeGallery woocommerce_variation_has_changed.jofmeGallery', onCheck);
   });
  }
 
@@ -778,14 +729,15 @@
   }
 
   function showVariationStackedGallery(variation) {
+   const images = variationGalleryImages(variation);
+   if (!images.length) {
+    showParentStackedGallery();
+    return;
+   }
+
    removeVariationTempNodes(gallery);
    refreshStackedLists();
    restorePrimaryImage(primary);
-
-   const images = variationGalleryImages(variation);
-   if (!images.length) return;
-
-   // Always paint the first variation image on the primary so color changes are visible.
    applyImageToPrimary(primary, images[0]);
 
    const visible = [];
@@ -1013,14 +965,15 @@
   }
 
   function showVariationCarouselGallery(variation) {
+   const images = variationGalleryImages(variation);
+   if (!images.length) {
+    showParentCarouselGallery();
+    return;
+   }
+
    removeVariationTempNodes(gallery);
    refreshCarouselLists();
    restorePrimaryImage(primary);
-
-   const images = variationGalleryImages(variation);
-   if (!images.length) return;
-
-   // Always paint the first variation image on the primary so color changes are visible.
    applyImageToPrimary(primary, images[0]);
 
    const visible = [];
