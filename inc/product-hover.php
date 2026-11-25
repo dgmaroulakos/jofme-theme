@@ -33,7 +33,7 @@ function jofme_hover_customize( $manager ) {
  $manager->add_setting( 'jofme_archive_scroll_products', array( 'default' => true, 'sanitize_callback' => 'wp_validate_boolean' ) );
  $manager->add_control( 'jofme_archive_scroll_products', array(
   'label'       => __( 'Smooth scroll to breadcrumbs on page load', 'jofme' ),
-  'description' => __( 'On shop, category, and product pages, gently scroll so the breadcrumbs sit just below the header after load.', 'jofme' ),
+  'description' => __( 'On shop and product pages, gently scroll so the breadcrumbs sit just below the header after load. Category archives are not scrolled.', 'jofme' ),
   'section'     => 'jofme_shop',
   'type'        => 'checkbox',
  ) );
