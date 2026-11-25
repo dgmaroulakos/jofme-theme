@@ -30,6 +30,8 @@ assert.match(js, /check_variations\.jofmeGallery/);
 assert.match(js, /applyImageToPrimary\(primary, images\[0\]\)/);
 assert.match(js, /found_variation/);
 assert.match(js, /is-variation-gallery/);
+assert.match(js, /function ensureDataset/);
+assert.doesNotMatch(js, /[A-Za-z_][\w]*\.dataset\s*=\s*[A-Za-z_][\w]*\.dataset\s*\|\|/);
 assert.match(php, /jofme_gallery/);
 assert.match(css, /\.jofme-gallery-item--suppressed/);
 assert.match(workflow, /variation-gallery\.cjs/);
