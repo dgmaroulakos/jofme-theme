@@ -1,3 +1,7 @@
 .jofme-swatch-picker{display:flex;align-items:center;gap:.75rem;max-width:280px}
 .jofme-swatch-picker input[type=color]{width:42px;height:36px;padding:0;border:1px solid #8c8f94;background:#fff;cursor:pointer}
 .jofme-swatch-picker input[type=text]{flex:1;min-width:0}
+.jofme-swatch-image-field{max-width:320px}
+.jofme-swatch-image-preview{margin:0 0 10px}
+.jofme-swatch-image-preview[hidden]{display:none}
+.jofme-swatch-image-preview img{display:block;width:64px;height:64px;object-fit:cover;border:1px solid #c3c4c7;border-radius:4px;background:#fff}

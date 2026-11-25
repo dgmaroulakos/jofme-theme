@@ -485,6 +485,21 @@ TR: dict[str, str] = {
 	"On shop and category pages, gently scroll to the product grid after the page loads.": "Σε κατάστημα και κατηγορία, ομαλό scroll στο πλέγμα προϊόντων μετά το φόρτωμα.",
 	"SKU:": "Κωδικός:",
 	"N/A": "Μ/Δ",
+	"None (dropdown / text)": "Κανένα (dropdown / κείμενο)",
+	"Color swatches": "Swatches χρώματος",
+	"Image swatches": "Swatches εικόνας",
+	"Swatch display": "Εμφάνιση swatch",
+	"Show color or image swatches on product cards, catalog filters, and the product page. Configure each term under Configure terms.": "Εμφάνισε swatches χρώματος ή εικόνας σε κάρτες, φίλτρα και σελίδα προϊόντος. Ρύθμισε κάθε όρο στο Configure terms.",
+	"Used when this attribute is set to Color swatches. Leave blank to use a default from the term slug.": "Χρησιμοποιείται όταν το attribute είναι σε Color swatches. Άφησέ το κενό για προεπιλογή από το slug.",
+	"Choose image": "Επιλογή εικόνας",
+	"Remove": "Αφαίρεση",
+	"Used when this attribute is set to Image swatches.": "Χρησιμοποιείται όταν το attribute είναι σε Image swatches.",
+	"Swatch image": "Εικόνα swatch",
+	"Choose swatch image": "Επιλογή εικόνας swatch",
+	"Use as swatch": "Χρήση ως swatch",
+	"Display as color swatches": "Εμφάνιση ως color swatches",
+	"Show term colors on product cards, catalog filters, and the product page. Set each term color under Configure terms.": "Εμφάνιση χρωμάτων όρων σε κάρτες, φίλτρα και σελίδα προϊόντος. Όρισε χρώμα σε κάθε όρο στο Configure terms.",
+	"Used on product cards, catalog filters, and variation swatches. Leave blank to use a default color from the term slug, or a text label when none matches.": "Χρησιμοποιείται σε κάρτες, φίλτρα και variation swatches. Άφησέ το κενό για προεπιλογή από το slug ή κείμενο όταν δεν ταιριάζει.",
 }
 
 
@@ -508,10 +523,10 @@ def main() -> int:
 	pot = polib.pofile(str(POT))
 	po = polib.POFile()
 	po.metadata = {
-		"Project-Id-Version": "Jofme 1.7.67",
+		"Project-Id-Version": "Jofme 1.7.68",
 		"Report-Msgid-Bugs-To": "https://github.com/dgmaroulakos/jofme-theme",
 		"POT-Creation-Date": pot.metadata.get("POT-Creation-Date", ""),
-		"PO-Revision-Date": "2026-11-24 17:35+0200",
+		"PO-Revision-Date": "2026-11-25 13:40+0200",
 		"Last-Translator": "Jofme",
 		"Language-Team": "Greek",
 		"Language": "el",

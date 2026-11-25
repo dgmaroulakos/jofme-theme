@@ -74,6 +74,19 @@ function get_term_meta( $term_id, $key, $single = false ) {
 	global $jofme_term_meta;
 	return $jofme_term_meta[ $term_id ][ $key ] ?? '';
 }
+function absint( $value ) {
+	return abs( (int) $value );
+}
+function wp_get_attachment_image_url( $id, $size = 'thumbnail' ) {
+	return $id ? 'https://example.com/swatch-' . (int) $id . '.jpg' : false;
+}
+function selected( $selected, $current, $echo = true ) {
+	$out = ( (string) $selected === (string) $current ) ? ' selected="selected"' : '';
+	if ( $echo ) {
+		echo $out;
+	}
+	return $out;
+}
 function taxonomy_exists( $taxonomy ) {
 	return 0 === strpos( (string) $taxonomy, 'pa_' );
 }
@@ -102,10 +115,17 @@ function verify( $expected, $actual, $label ) {
 require dirname( __DIR__ ) . '/inc/swatches.php';
 
 verify( true, jofme_is_swatch_attribute( 'pa_color' ), 'color slug heuristic' );
+verify( 'color', jofme_attribute_swatch_type( 'pa_color' ), 'color heuristic type' );
 verify( false, jofme_is_swatch_attribute( 'pa_size' ), 'size is not a swatch by default' );
+verify( 'image', jofme_attribute_swatch_type( 'pa_pattern' ), 'image slug heuristic' );
 
 $jofme_options['jofme_attribute_swatch_9'] = 'yes';
 verify( true, jofme_is_swatch_attribute( 'pa_material' ), 'explicit attribute flag enables swatches' );
+verify( 'color', jofme_attribute_swatch_type( 'pa_material' ), 'legacy yes maps to color' );
+
+$jofme_options['jofme_attribute_swatch_7'] = 'image';
+verify( 'image', jofme_attribute_swatch_type( 'pa_size' ), 'explicit image type' );
+verify( true, jofme_is_swatch_attribute( 'pa_size' ), 'image type counts as swatch' );
 
 $jofme_options['jofme_attribute_swatch_3'] = 'no';
 verify( false, jofme_is_swatch_attribute( 'pa_color' ), 'explicit no disables color heuristic' );
@@ -131,6 +151,27 @@ verify( true, false !== strpos( $html, '--swatch:#c6a15b' ), 'swatch css variabl
 verify( true, false !== strpos( $html, 'aria-pressed="true"' ), 'selected state' );
 verify( true, false !== strpos( $html, 'screen-reader-text' ), 'accessible label' );
 
+$img_html = jofme_swatch_html(
+	array(
+		'tag'   => 'button',
+		'name'  => 'Marble',
+		'image' => 'https://example.com/marble.jpg',
+		'value' => 'marble',
+	)
+);
+verify( true, false !== strpos( $img_html, 'is-image' ), 'image class' );
+verify( true, false !== strpos( $img_html, '--swatch-image:url(' ), 'image css variable' );
+verify( true, false !== strpos( $img_html, 'jofme-swatch__image' ), 'image visual span' );
+
+$jofme_term_meta[30] = array( 'jofme_swatch_image' => 99 );
+$img_term = (object) array( 'term_id' => 30, 'slug' => 'marble', 'name' => 'Marble' );
+verify( 99, jofme_term_swatch_image_id( $img_term ), 'saved term image id' );
+verify( 'https://example.com/swatch-99.jpg', jofme_term_swatch_image_url( $img_term ), 'term image url' );
+$jofme_options['jofme_attribute_swatch_7'] = 'image';
+$visuals = jofme_term_swatch_visuals( 'pa_size', $img_term );
+verify( 'https://example.com/swatch-99.jpg', $visuals['image'], 'visuals use image for image type' );
+verify( '', $visuals['color'], 'visuals skip color for image type' );
+
 $variation = jofme_variation_swatches_html(
 	'<select name="attribute_pa_material"><option value="linen">Linen</option></select>',
 	array(
@@ -142,6 +183,7 @@ $variation = jofme_variation_swatches_html(
 verify( true, false !== strpos( $variation, 'jofme-variation-swatches' ), 'variation wrapper' );
 verify( true, false !== strpos( $variation, '<select' ), 'native select preserved' );
 
+$jofme_options['jofme_attribute_swatch_7'] = 'no';
 $plain = jofme_variation_swatches_html(
 	'<select name="attribute_pa_size"><option value="m">M</option></select>',
 	array(

@@ -1,6 +1,6 @@
 <?php
 /**
- * Attribute color swatches for cards, filters and product pages.
+ * Attribute swatches (color + image) for cards, filters and product pages.
  *
  * @package Jofme
  */
@@ -57,28 +57,48 @@ function jofme_get_attribute_object( $attribute ) {
 }
 
 /**
- * Whether an attribute should render as color swatches.
+ * Swatch display type for an attribute: color, image, or empty (off).
  *
- * Explicit Products → Attributes setting wins; otherwise slug heuristics keep
- * existing color/finish/metal attributes working.
+ * Explicit Products → Attributes setting wins. Legacy option value "yes"
+ * maps to color. Slug heuristics keep color/finish/metal working.
+ *
+ * @param string $attribute Taxonomy or attribute name.
+ * @return string color|image|'' 
+ */
+function jofme_attribute_swatch_type( $attribute ) {
+	$tax = jofme_get_attribute_object( $attribute );
+	if ( $tax ) {
+		$flag = get_option( 'jofme_attribute_swatch_' . (int) $tax->attribute_id, '' );
+		if ( in_array( $flag, array( 'color', 'image' ), true ) ) {
+			return $flag;
+		}
+		if ( 'yes' === $flag ) {
+			return 'color';
+		}
+		if ( 'no' === $flag ) {
+			return '';
+		}
+	}
+
+	$name = $tax ? $tax->attribute_name : (string) $attribute;
+	if ( preg_match( '/image|photo|εικον|pattern|print|texture/u', $name ) ) {
+		return 'image';
+	}
+	if ( preg_match( '/color|colour|χρωμ|finish|metal/u', $name ) ) {
+		return 'color';
+	}
+
+	return '';
+}
+
+/**
+ * Whether an attribute should render as swatches (color or image).
  *
  * @param string $attribute Taxonomy or attribute name.
  * @return bool
  */
 function jofme_is_swatch_attribute( $attribute ) {
-	$tax = jofme_get_attribute_object( $attribute );
-	if ( $tax ) {
-		$flag = get_option( 'jofme_attribute_swatch_' . (int) $tax->attribute_id, '' );
-		if ( 'yes' === $flag ) {
-			return true;
-		}
-		if ( 'no' === $flag ) {
-			return false;
-		}
-	}
-
-	$name = $tax ? $tax->attribute_name : (string) $attribute;
-	return (bool) preg_match( '/color|colour|χρωμ|finish|metal/u', $name );
+	return '' !== jofme_attribute_swatch_type( $attribute );
 }
 
 /**
@@ -106,12 +126,72 @@ function jofme_term_swatch_color( $term ) {
 }
 
 /**
- * Markup for one color swatch control.
+ * Attachment ID for a term image swatch.
+ *
+ * @param WP_Term|object $term Term.
+ * @return int
+ */
+function jofme_term_swatch_image_id( $term ) {
+	if ( ! $term || empty( $term->term_id ) ) {
+		return 0;
+	}
+
+	return absint( get_term_meta( (int) $term->term_id, 'jofme_swatch_image', true ) );
+}
+
+/**
+ * Image URL for a term image swatch.
+ *
+ * @param WP_Term|object $term Term.
+ * @param string         $size Image size.
+ * @return string
+ */
+function jofme_term_swatch_image_url( $term, $size = 'thumbnail' ) {
+	$id = jofme_term_swatch_image_id( $term );
+	if ( ! $id || ! function_exists( 'wp_get_attachment_image_url' ) ) {
+		return '';
+	}
+
+	$url = wp_get_attachment_image_url( $id, $size );
+	return $url ? $url : '';
+}
+
+/**
+ * Color / image args for a term based on attribute swatch type.
+ *
+ * @param string         $attribute Taxonomy or attribute name.
+ * @param WP_Term|object $term      Term.
+ * @return array{color:string,image:string}
+ */
+function jofme_term_swatch_visuals( $attribute, $term ) {
+	$type = jofme_attribute_swatch_type( $attribute );
+	if ( 'image' === $type ) {
+		return array(
+			'color' => '',
+			'image' => jofme_term_swatch_image_url( $term ),
+		);
+	}
+	if ( 'color' === $type ) {
+		return array(
+			'color' => jofme_term_swatch_color( $term ),
+			'image' => '',
+		);
+	}
+
+	return array(
+		'color' => '',
+		'image' => '',
+	);
+}
+
+/**
+ * Markup for one swatch control (color, image, or text).
  *
  * @param array $args {
  *     @type string $tag       HTML tag: a|button|label.
  *     @type string $name      Term label.
  *     @type string $color     Hex color.
+ *     @type string $image     Image URL for image swatches.
  *     @type string $url       Optional href for anchors.
  *     @type string $value     Optional data-value / radio value.
  *     @type bool   $selected  Selected state.
@@ -127,6 +207,7 @@ function jofme_swatch_html( $args ) {
 			'tag'      => 'button',
 			'name'     => '',
 			'color'    => '',
+			'image'    => '',
 			'url'      => '',
 			'value'    => '',
 			'selected' => false,
@@ -136,31 +217,38 @@ function jofme_swatch_html( $args ) {
 	);
 
 	$classes = array( 'jofme-swatch' );
-	if ( $args['color'] ) {
+	$style   = '';
+	if ( $args['image'] ) {
+		$classes[] = 'is-image';
+		$style     = '--swatch-image:url(\'' . esc_url( $args['image'] ) . '\')';
+	} elseif ( $args['color'] ) {
 		$classes[] = 'is-color';
+		$style     = '--swatch:' . esc_attr( $args['color'] );
 	}
 	if ( $args['selected'] ) {
 		$classes[] = 'is-selected';
 	}
 
 	$attrs = 'class="' . esc_attr( implode( ' ', $classes ) ) . '" title="' . esc_attr( $args['name'] ) . '"';
-	if ( $args['color'] ) {
-		$attrs .= ' style="--swatch:' . esc_attr( $args['color'] ) . '"';
+	if ( $style ) {
+		$attrs .= ' style="' . $style . '"';
 	}
 	if ( '' !== $args['value'] ) {
 		$attrs .= ' data-value="' . esc_attr( $args['value'] ) . '"';
 	}
 
-	$label = $args['color']
-		? '<span class="screen-reader-text">' . esc_html( $args['name'] ) . '</span>'
-		: '<span>' . esc_html( $args['name'] ) . '</span>';
+	$visual = $args['image']
+		? '<span class="jofme-swatch__image" aria-hidden="true"></span><span class="screen-reader-text">' . esc_html( $args['name'] ) . '</span>'
+		: ( $args['color']
+			? '<span class="screen-reader-text">' . esc_html( $args['name'] ) . '</span>'
+			: '<span>' . esc_html( $args['name'] ) . '</span>' );
 
 	if ( 'a' === $args['tag'] ) {
-		return '<a ' . $attrs . ' href="' . esc_url( $args['url'] ) . '">' . $label . '</a>';
+		return '<a ' . $attrs . ' href="' . esc_url( $args['url'] ) . '">' . $visual . '</a>';
 	}
 
 	if ( 'label' === $args['tag'] ) {
-		return '<label ' . $attrs . '>' . $args['input'] . $label . '</label>';
+		return '<label ' . $attrs . '>' . $args['input'] . $visual . '</label>';
 	}
 
 	$attrs .= ' type="button" aria-pressed="' . ( $args['selected'] ? 'true' : 'false' ) . '"';
@@ -168,20 +256,53 @@ function jofme_swatch_html( $args ) {
 		$attrs .= ' disabled';
 	}
 
-	return '<button ' . $attrs . '>' . $label . '</button>';
+	return '<button ' . $attrs . '>' . $visual . '</button>';
 }
 
 /**
- * Attribute admin: enable color swatches for this attribute.
+ * Swatch type choices for attribute admin.
+ *
+ * @return array<string,string>
+ */
+function jofme_attribute_swatch_type_choices() {
+	return array(
+		'no'    => __( 'None (dropdown / text)', 'jofme' ),
+		'color' => __( 'Color swatches', 'jofme' ),
+		'image' => __( 'Image swatches', 'jofme' ),
+	);
+}
+
+/**
+ * Normalize stored attribute swatch option to color|image|no|''.
+ *
+ * @param string $value Raw option.
+ * @return string
+ */
+function jofme_normalize_attribute_swatch_option( $value ) {
+	$value = (string) $value;
+	if ( in_array( $value, array( 'color', 'image', 'no' ), true ) ) {
+		return $value;
+	}
+	if ( 'yes' === $value ) {
+		return 'color';
+	}
+	return $value;
+}
+
+/**
+ * Attribute admin: choose swatch type for this attribute.
  */
 function jofme_attribute_swatch_add_field() {
+	$choices = jofme_attribute_swatch_type_choices();
 	?>
 	<div class="form-field">
-		<label for="jofme_attribute_swatch">
-			<input name="jofme_attribute_swatch" id="jofme_attribute_swatch" type="checkbox" value="1">
-			<?php esc_html_e( 'Display as color swatches', 'jofme' ); ?>
-		</label>
-		<p><?php esc_html_e( 'Show term colors on product cards, catalog filters, and the product page. Set each term color under Configure terms.', 'jofme' ); ?></p>
+		<label for="jofme_attribute_swatch_type"><?php esc_html_e( 'Swatch display', 'jofme' ); ?></label>
+		<select name="jofme_attribute_swatch_type" id="jofme_attribute_swatch_type">
+			<?php foreach ( $choices as $value => $label ) : ?>
+				<option value="<?php echo esc_attr( $value ); ?>" <?php selected( $value, 'no' ); ?>><?php echo esc_html( $label ); ?></option>
+			<?php endforeach; ?>
+		</select>
+		<p><?php esc_html_e( 'Show color or image swatches on product cards, catalog filters, and the product page. Configure each term under Configure terms.', 'jofme' ); ?></p>
 	</div>
 	<?php
 }
@@ -192,27 +313,38 @@ add_action( 'woocommerce_after_add_attribute_fields', 'jofme_attribute_swatch_ad
  */
 function jofme_attribute_swatch_edit_field() {
 	$id      = isset( $_GET['edit'] ) ? absint( $_GET['edit'] ) : 0; // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only admin screen id.
-	$value   = $id ? get_option( 'jofme_attribute_swatch_' . $id, '' ) : '';
-	$checked = ( 'yes' === $value );
+	$raw     = $id ? get_option( 'jofme_attribute_swatch_' . $id, '' ) : '';
+	$current = jofme_normalize_attribute_swatch_option( $raw );
 
-	// No saved preference yet: pre-check attributes that already match the color slug heuristic.
-	if ( '' === $value && $id ) {
+	// No saved preference yet: pre-select from slug heuristic.
+	if ( '' === $raw && $id ) {
 		$attr = function_exists( 'wc_get_attribute' ) ? wc_get_attribute( $id ) : null;
 		if ( $attr && ! empty( $attr->slug ) ) {
-			$checked = (bool) preg_match( '/color|colour|χρωμ|finish|metal/u', $attr->slug );
+			$current = jofme_attribute_swatch_type( $attr->slug );
+			if ( '' === $current ) {
+				$current = 'no';
+			}
+		} else {
+			$current = 'no';
 		}
 	}
+	if ( '' === $current ) {
+		$current = 'no';
+	}
+
+	$choices = jofme_attribute_swatch_type_choices();
 	?>
 	<tr class="form-field">
 		<th scope="row">
-			<label for="jofme_attribute_swatch"><?php esc_html_e( 'Color swatches', 'jofme' ); ?></label>
+			<label for="jofme_attribute_swatch_type"><?php esc_html_e( 'Swatch display', 'jofme' ); ?></label>
 		</th>
 		<td>
-			<label for="jofme_attribute_swatch">
-				<input name="jofme_attribute_swatch" id="jofme_attribute_swatch" type="checkbox" value="1" <?php checked( $checked ); ?>>
-				<?php esc_html_e( 'Display as color swatches', 'jofme' ); ?>
-			</label>
-			<p class="description"><?php esc_html_e( 'Show term colors on product cards, catalog filters, and the product page. Set each term color under Configure terms.', 'jofme' ); ?></p>
+			<select name="jofme_attribute_swatch_type" id="jofme_attribute_swatch_type">
+				<?php foreach ( $choices as $value => $label ) : ?>
+					<option value="<?php echo esc_attr( $value ); ?>" <?php selected( $current, $value ); ?>><?php echo esc_html( $label ); ?></option>
+				<?php endforeach; ?>
+			</select>
+			<p class="description"><?php esc_html_e( 'Show color or image swatches on product cards, catalog filters, and the product page. Configure each term under Configure terms.', 'jofme' ); ?></p>
 		</td>
 	</tr>
 	<?php
@@ -230,8 +362,16 @@ function jofme_save_attribute_swatch( $id ) {
 		return;
 	}
 
-	$enabled = isset( $_POST['jofme_attribute_swatch'] ) ? 'yes' : 'no'; // phpcs:ignore WordPress.Security.NonceVerification.Missing -- WC attribute form nonce already verified.
-	update_option( 'jofme_attribute_swatch_' . $id, $enabled, false );
+	// phpcs:ignore WordPress.Security.NonceVerification.Missing -- WC attribute form nonce already verified.
+	$raw = isset( $_POST['jofme_attribute_swatch_type'] ) ? sanitize_key( wp_unslash( $_POST['jofme_attribute_swatch_type'] ) ) : 'no';
+	// Legacy checkbox fallback if an older form posts the old field.
+	if ( ! isset( $_POST['jofme_attribute_swatch_type'] ) && isset( $_POST['jofme_attribute_swatch'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing
+		$raw = 'color';
+	}
+	if ( ! in_array( $raw, array( 'color', 'image', 'no' ), true ) ) {
+		$raw = 'no';
+	}
+	update_option( 'jofme_attribute_swatch_' . $id, $raw, false );
 }
 add_action( 'woocommerce_attribute_added', 'jofme_save_attribute_swatch', 10, 1 );
 add_action( 'woocommerce_attribute_updated', 'jofme_save_attribute_swatch', 10, 1 );
@@ -247,48 +387,73 @@ function jofme_delete_attribute_swatch( $id ) {
 add_action( 'woocommerce_attribute_deleted', 'jofme_delete_attribute_swatch', 10, 1 );
 
 /**
- * Term color field markup (add + edit screens).
+ * Term swatch field markup — color + image (add + edit screens).
  *
  * @param WP_Term|string $term Term on edit, taxonomy name on add.
  */
 function jofme_swatch_term_field( $term = null ) {
-	$is_edit = $term instanceof WP_Term;
-	$value   = $is_edit ? (string) get_term_meta( $term->term_id, 'jofme_swatch_color', true ) : '';
-	$picker  = sanitize_hex_color( $value ) ? $value : '#c6a15b';
-	$nonce   = wp_nonce_field( 'jofme_save_swatch', 'jofme_swatch_nonce', true, false );
+	$is_edit  = $term instanceof WP_Term;
+	$value    = $is_edit ? (string) get_term_meta( $term->term_id, 'jofme_swatch_color', true ) : '';
+	$image_id = $is_edit ? absint( get_term_meta( $term->term_id, 'jofme_swatch_image', true ) ) : 0;
+	$picker   = sanitize_hex_color( $value ) ? $value : '#c6a15b';
+	$nonce    = wp_nonce_field( 'jofme_save_swatch', 'jofme_swatch_nonce', true, false );
+	$preview  = $image_id && function_exists( 'wp_get_attachment_image_url' ) ? wp_get_attachment_image_url( $image_id, 'thumbnail' ) : '';
 
-	$input  = $nonce;
-	$input .= '<div class="jofme-swatch-picker">';
-	$input .= '<input type="color" data-swatch-picker value="' . esc_attr( $picker ) . '" aria-label="' . esc_attr__( 'Choose swatch color', 'jofme' ) . '">';
-	$input .= '<input id="jofme-swatch-color" name="jofme_swatch_color" type="text" data-swatch-hex placeholder="#c6a15b" pattern="^#([A-Fa-f0-9]{6})$" value="' . esc_attr( $value ) . '">';
-	$input .= '</div>';
-	$input .= '<p>' . esc_html__( 'Used on product cards, catalog filters, and variation swatches. Leave blank to use a default color from the term slug, or a text label when none matches.', 'jofme' ) . '</p>';
+	$color  = $nonce;
+	$color .= '<div class="jofme-swatch-picker">';
+	$color .= '<input type="color" data-swatch-picker value="' . esc_attr( $picker ) . '" aria-label="' . esc_attr__( 'Choose swatch color', 'jofme' ) . '">';
+	$color .= '<input id="jofme-swatch-color" name="jofme_swatch_color" type="text" data-swatch-hex placeholder="#c6a15b" pattern="^#([A-Fa-f0-9]{6})$" value="' . esc_attr( $value ) . '">';
+	$color .= '</div>';
+	$color .= '<p>' . esc_html__( 'Used when this attribute is set to Color swatches. Leave blank to use a default from the term slug.', 'jofme' ) . '</p>';
+
+	$image  = '<div class="jofme-swatch-image-field">';
+	$image .= '<input type="hidden" id="jofme-swatch-image" name="jofme_swatch_image" value="' . absint( $image_id ) . '">';
+	$image .= '<div class="jofme-swatch-image-preview"' . ( $preview ? '' : ' hidden' ) . '><img' . ( $preview ? ' src="' . esc_url( $preview ) . '"' : '' ) . ' alt=""></div>';
+	$image .= '<p><button type="button" class="button jofme-swatch-image-select">' . esc_html__( 'Choose image', 'jofme' ) . '</button> ';
+	$image .= '<button type="button" class="button jofme-swatch-image-remove">' . esc_html__( 'Remove', 'jofme' ) . '</button></p>';
+	$image .= '<p>' . esc_html__( 'Used when this attribute is set to Image swatches.', 'jofme' ) . '</p>';
+	$image .= '</div>';
 
 	if ( $is_edit ) {
-		echo '<tr class="form-field"><th><label for="jofme-swatch-color">' . esc_html__( 'Swatch color', 'jofme' ) . '</label></th><td>' . $input . '</td></tr>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- assembled with escaped parts above.
+		echo '<tr class="form-field"><th><label for="jofme-swatch-color">' . esc_html__( 'Swatch color', 'jofme' ) . '</label></th><td>' . $color . '</td></tr>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- assembled with escaped parts above.
+		echo '<tr class="form-field"><th><label for="jofme-swatch-image">' . esc_html__( 'Swatch image', 'jofme' ) . '</label></th><td>' . $image . '</td></tr>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 	} else {
-		echo '<div class="form-field"><label for="jofme-swatch-color">' . esc_html__( 'Swatch color', 'jofme' ) . '</label>' . $input . '</div>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+		echo '<div class="form-field"><label for="jofme-swatch-color">' . esc_html__( 'Swatch color', 'jofme' ) . '</label>' . $color . '</div>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+		echo '<div class="form-field"><label for="jofme-swatch-image">' . esc_html__( 'Swatch image', 'jofme' ) . '</label>' . $image . '</div>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 	}
 }
 
 /**
- * Save term swatch color.
+ * Save term swatch color + image.
  *
  * @param int $term_id Term ID.
  */
 function jofme_save_swatch( $term_id ) {
 	if (
 		! current_user_can( 'manage_product_terms' )
-		|| ! isset( $_POST['jofme_swatch_nonce'], $_POST['jofme_swatch_color'] )
+		|| ! isset( $_POST['jofme_swatch_nonce'] )
 		|| ! is_scalar( $_POST['jofme_swatch_nonce'] )
-		|| ! is_scalar( $_POST['jofme_swatch_color'] )
 		|| ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['jofme_swatch_nonce'] ) ), 'jofme_save_swatch' )
 	) {
 		return;
 	}
 
-	$color = sanitize_hex_color( wp_unslash( $_POST['jofme_swatch_color'] ) );
-	update_term_meta( $term_id, 'jofme_swatch_color', $color ? $color : '' );
+	if ( isset( $_POST['jofme_swatch_color'] ) && is_scalar( $_POST['jofme_swatch_color'] ) ) {
+		$color = sanitize_hex_color( wp_unslash( $_POST['jofme_swatch_color'] ) );
+		update_term_meta( $term_id, 'jofme_swatch_color', $color ? $color : '' );
+	}
+
+	if ( isset( $_POST['jofme_swatch_image'] ) && is_scalar( $_POST['jofme_swatch_image'] ) ) {
+		$image_id = absint( wp_unslash( $_POST['jofme_swatch_image'] ) );
+		if ( $image_id && function_exists( 'wp_attachment_is_image' ) && ! wp_attachment_is_image( $image_id ) ) {
+			$image_id = 0;
+		}
+		if ( $image_id ) {
+			update_term_meta( $term_id, 'jofme_swatch_image', $image_id );
+		} else {
+			delete_term_meta( $term_id, 'jofme_swatch_image' );
+		}
+	}
 }
 
 /**
@@ -306,7 +471,7 @@ function jofme_register_swatch_fields() {
 add_action( 'init', 'jofme_register_swatch_fields', 20 );
 
 /**
- * Admin assets for the color picker sync.
+ * Admin assets for color picker + image media frame.
  *
  * @param string $hook Current admin page.
  */
@@ -324,8 +489,17 @@ function jofme_swatch_admin_assets( $hook ) {
 		return;
 	}
 
+	wp_enqueue_media();
 	wp_enqueue_style( 'jofme-swatches-admin', JOFME_URI . '/assets/css/swatches-admin.css', array(), JOFME_VERSION );
 	wp_enqueue_script( 'jofme-swatches-admin', JOFME_URI . '/assets/js/swatches-admin.js', array(), JOFME_VERSION, true );
+	wp_localize_script(
+		'jofme-swatches-admin',
+		'jofmeSwatch',
+		array(
+			'title'  => __( 'Choose swatch image', 'jofme' ),
+			'button' => __( 'Use as swatch', 'jofme' ),
+		)
+	);
 }
 add_action( 'admin_enqueue_scripts', 'jofme_swatch_admin_assets' );
 
@@ -450,7 +624,7 @@ function jofme_loop_product_link_with_filters( $link, $product ) {
 add_filter( 'woocommerce_loop_product_link', 'jofme_loop_product_link_with_filters', 20, 2 );
 
 /**
- * Color swatch markup for a product card (same as archive).
+ * Swatch markup for a product card (same as archive).
  *
  * @param WC_Product|null $product Product.
  * @return string
@@ -481,11 +655,13 @@ function jofme_product_card_swatches_html( $product = null ) {
 		foreach ( $terms as $term ) {
 			$url      = add_query_arg( 'attribute_' . $taxonomy, $term->slug, get_permalink( $product->get_id() ) );
 			$selected = isset( $active[ $taxonomy ] ) && $active[ $taxonomy ] === $term->slug;
+			$visuals  = jofme_term_swatch_visuals( $taxonomy, $term );
 			$html    .= jofme_swatch_html(
 				array(
 					'tag'      => 'a',
 					'name'     => $term->name,
-					'color'    => jofme_term_swatch_color( $term ),
+					'color'    => $visuals['color'],
+					'image'    => $visuals['image'],
 					'url'      => $url,
 					'value'    => $term->slug,
 					'selected' => $selected,
@@ -553,14 +729,15 @@ function jofme_filter_swatches( $taxonomy, $key, $label ) {
 	echo '<span>' . esc_html__( 'All', 'jofme' ) . '</span></label>';
 
 	foreach ( $terms as $term ) {
-		$id    = 'jofme-filter-' . sanitize_html_class( $key . '-' . $term->slug );
-		$color = jofme_term_swatch_color( $term );
-		$input = '<input id="' . esc_attr( $id ) . '" type="radio" name="' . esc_attr( $key ) . '" value="' . esc_attr( $term->slug ) . '" ' . checked( $current, $term->slug, false ) . '>';
+		$id      = 'jofme-filter-' . sanitize_html_class( $key . '-' . $term->slug );
+		$visuals = jofme_term_swatch_visuals( $taxonomy, $term );
+		$input   = '<input id="' . esc_attr( $id ) . '" type="radio" name="' . esc_attr( $key ) . '" value="' . esc_attr( $term->slug ) . '" ' . checked( $current, $term->slug, false ) . '>';
 		echo jofme_swatch_html( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 			array(
 				'tag'      => 'label',
 				'name'     => $term->name,
-				'color'    => $color,
+				'color'    => $visuals['color'],
+				'image'    => $visuals['image'],
 				'value'    => $term->slug,
 				'selected' => ( $current === $term->slug ),
 				'input'    => $input,
@@ -597,16 +774,17 @@ function jofme_variation_swatches_html( $html, $args ) {
 	}
 
 	foreach ( $options as $option ) {
-		$term = get_term_by( 'slug', $option, $attribute );
-		$name = $term instanceof WP_Term ? $term->name : (string) $option;
-		$color = $term instanceof WP_Term ? jofme_term_swatch_color( $term ) : '';
+		$term        = get_term_by( 'slug', $option, $attribute );
+		$name        = $term instanceof WP_Term ? $term->name : (string) $option;
+		$visuals     = $term instanceof WP_Term ? jofme_term_swatch_visuals( $attribute, $term ) : array( 'color' => '', 'image' => '' );
 		$is_selected = ( sanitize_title( $selected ) === sanitize_title( $option ) );
 
 		$swatches .= jofme_swatch_html(
 			array(
 				'tag'      => 'button',
 				'name'     => $name,
-				'color'    => $color,
+				'color'    => $visuals['color'],
+				'image'    => $visuals['image'],
 				'value'    => $option,
 				'selected' => $is_selected,
 			)
