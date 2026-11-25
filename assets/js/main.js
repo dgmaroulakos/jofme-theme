@@ -414,21 +414,27 @@
 		});
 	}
 
-	/* Shop / category / product: smooth-scroll to breadcrumbs on entry. */
+	/* Shop / product: smooth-scroll to breadcrumbs on entry (not category archives). */
 	function isProductArchive() {
 		return (
 			body.classList.contains('woocommerce') &&
 			(body.classList.contains('post-type-archive-product') ||
-				body.classList.contains('tax-product_cat') ||
 				body.classList.contains('tax-product_tag') ||
 				body.classList.contains('woocommerce-shop'))
 		);
+	}
+	function isProductCategoryArchive() {
+		return body.classList.contains('tax-product_cat');
 	}
 	function isSingleProduct() {
 		return body.classList.contains('single-product');
 	}
 	function scrollEntryToBreadcrumbs() {
 		if (!scrollConfig.archiveProducts) {
+			return;
+		}
+		// Category archives keep the natural top-of-page position (cover / heading).
+		if (isProductCategoryArchive()) {
 			return;
 		}
 		if (!isProductArchive() && !isSingleProduct()) {
