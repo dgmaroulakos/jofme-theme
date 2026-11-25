@@ -160,7 +160,7 @@ $img_html = jofme_swatch_html(
 	)
 );
 verify( true, false !== strpos( $img_html, 'is-image' ), 'image class' );
-verify( true, false !== strpos( $img_html, '--swatch-image:url(' ), 'image css variable' );
+verify( true, false !== strpos( $img_html, '<img src="https://example.com/marble.jpg"' ), 'image img tag' );
 verify( true, false !== strpos( $img_html, 'jofme-swatch__image' ), 'image visual span' );
 
 $jofme_term_meta[30] = array( 'jofme_swatch_image' => 99 );
@@ -171,6 +171,12 @@ $jofme_options['jofme_attribute_swatch_7'] = 'image';
 $visuals = jofme_term_swatch_visuals( 'pa_size', $img_term );
 verify( 'https://example.com/swatch-99.jpg', $visuals['image'], 'visuals use image for image type' );
 verify( '', $visuals['color'], 'visuals skip color for image type' );
+
+// Color-type attribute still surfaces a term image when one is uploaded.
+$jofme_options['jofme_attribute_swatch_3'] = 'color';
+$color_with_image = jofme_term_swatch_visuals( 'pa_color', $img_term );
+verify( 'https://example.com/swatch-99.jpg', $color_with_image['image'], 'color type prefers term image' );
+verify( '', $color_with_image['color'], 'color type skips hex when image present' );
 
 $variation = jofme_variation_swatches_html(
 	'<select name="attribute_pa_material"><option value="linen">Linen</option></select>',

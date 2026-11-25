@@ -8,6 +8,8 @@ const cards = fs.readFileSync(path.join(root, 'assets/css/product-cards.css'), '
 const premium = fs.readFileSync(path.join(root, 'inc/premium-shop.php'), 'utf8');
 
 assert.match(swatches, /\.jofme-swatch\.is-color\{[^}]*width:\s*30px[^}]*height:\s*30px/s);
+assert.match(swatches, /\.jofme-swatch\.is-image\{[^}]*width:\s*30px[^}]*height:\s*30px/s);
+assert.match(swatches, /\.jofme-swatch__image img\{[^}]*object-fit:\s*cover/s);
 assert.match(swatches, /\.jofme-filter-swatches \.jofme-swatch\.is-color\{width:\s*30px;height:\s*30px\}/);
 assert.match(
 	cards,
