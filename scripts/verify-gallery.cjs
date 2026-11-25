@@ -42,13 +42,22 @@ const gallery = {
   },
 };
 const handlers = {};
-const form = { querySelector() { return null; } };
+const form = { dataset: {}, querySelector() { return null; }, querySelectorAll() { return []; } };
+const body = { dataset: {} };
 const context = {
   window: {
     jQuery(target) {
       return {
-        on(events, fn) {
-          String(events).split(/\s+/).forEach((event) => { handlers[event] = fn; });
+        on(events, selectorOrFn, maybeFn) {
+          const fn = typeof selectorOrFn === 'function' ? selectorOrFn : maybeFn;
+          if (typeof fn !== 'function') return;
+          String(events).split(/\s+/).forEach((event) => {
+            handlers[event] = fn;
+            handlers[event.split('.')[0]] = fn;
+          });
+        },
+        data() {
+          return null;
         },
       };
     },
@@ -59,6 +68,7 @@ const context = {
     },
   },
   document: {
+    body,
     addEventListener() {},
     querySelector(sel) {
       if (sel === 'form.variations_form') return form;
@@ -66,6 +76,7 @@ const context = {
     },
     querySelectorAll(sel) {
       if (sel === '.jofme-stacked-gallery') return [gallery];
+      if (sel === 'form.variations_form') return [form];
       return [];
     },
     getElementById(id) {
@@ -84,6 +95,7 @@ assert.equal(items[1].scrolled, true);
 assert.equal(dots[1].attrs['aria-current'], 'true');
 assert.equal(dots[0].attrs['aria-current'], undefined);
 
+assert.equal(typeof handlers.found_variation, 'function');
 handlers.found_variation(null, { image: { src: '/b.jpg', srcset: 'b 1x', sizes: '50vw', full_src: '/b-full.jpg' } });
 assert.equal(primary.attrs.src, '/b-full.jpg');
 assert.equal(link.attrs.href, '/b-full.jpg');
