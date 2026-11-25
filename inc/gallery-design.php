@@ -58,6 +58,21 @@ add_action( 'customize_register', 'jofme_gallery_design_customize', 30 );
 function jofme_is_gallery_product() { return is_product() && 'gallery' === get_theme_mod( 'jofme_product_page_layout', 'classic' ); }
 
 /**
+ * Gallery product pages start with no variation selected so the parent
+ * product photos show until the customer picks a variation.
+ *
+ * @param array $attributes Default attributes.
+ * @return array
+ */
+function jofme_gallery_clear_default_attributes( $attributes ) {
+	if ( jofme_is_gallery_product() ) {
+		return array();
+	}
+	return is_array( $attributes ) ? $attributes : array();
+}
+add_filter( 'woocommerce_product_get_default_attributes', 'jofme_gallery_clear_default_attributes', 20 );
+
+/**
  * Gallery image display mode for the Gallery product design.
  *
  * @return string stacked|carousel

@@ -24,6 +24,24 @@
   return window.matchMedia('(prefers-reduced-motion: reduce)').matches;
  }
 
+ function ensureDataset(el) {
+  if (!el) return {};
+  if (el.dataset) return el.dataset;
+  // Test mocks may omit dataset; real HTMLElements expose a getter-only DOMStringMap.
+  const store = {};
+  try {
+   Object.defineProperty(el, 'dataset', {
+    configurable: true,
+    enumerable: true,
+    value: store,
+    writable: true,
+   });
+  } catch (_) {
+   /* ignore */
+  }
+  return el.dataset || store;
+ }
+
  function scrollToElement(target) {
   if (!target) return;
   if (typeof window.jofmeScrollTo === 'function') {
@@ -277,7 +295,7 @@
   if (!$ || typeof $.fn !== 'object') return;
   const form = document.querySelector('form.variations_form');
   if (!form) return;
-  form.dataset = form.dataset || {};
+  ensureDataset(form);
   if (form.dataset.jofmeSkuSync === '1') return;
   form.dataset.jofmeSkuSync = '1';
   skuNodes().forEach(stashParentSku);
@@ -311,48 +329,6 @@
 
  const galleryVariationControllers = [];
 
- function getSelectedAttributes(form) {
-  const chosen = {};
-  if (!form || typeof form.querySelectorAll !== 'function') return chosen;
-  form.querySelectorAll('select[name^="attribute_"]').forEach((sel) => {
-   if (sel && sel.name && sel.value) {
-    chosen[sel.name] = sel.value;
-   }
-  });
-  return chosen;
- }
-
- function variationMatchesSelection(variation, chosen) {
-  if (!variation || !variation.attributes || !chosen) return false;
-  const keys = Object.keys(chosen);
-  if (!keys.length) return false;
-  return keys.every((key) => {
-   const val = variation.attributes[key];
-   return val === '' || val === undefined || val === null || val === chosen[key];
-  });
- }
-
- /**
-  * Best variation for the current attribute selection (supports color-only preview
-  * before size/other attributes are chosen).
-  */
- function findVariationForSelection(form) {
-  if (!$ || !form) return null;
-  const variations = $(form).data('product_variations');
-  if (!Array.isArray(variations)) return null;
-  const chosen = getSelectedAttributes(form);
-  if (!Object.keys(chosen).length) return null;
-  const matches = variations.filter(
-   (variation) =>
-    variation &&
-    variation.variation_is_visible !== false &&
-    variationMatchesSelection(variation, chosen)
-  );
-  if (!matches.length) return null;
-  const withImages = matches.find((variation) => variationGalleryImages(variation).length > 0);
-  return withImages || matches[0];
- }
-
  function applyVariationToGalleries(variation) {
   galleryVariationControllers.forEach((controller) => {
    if (controller && typeof controller.showVariation === 'function') {
@@ -369,6 +345,12 @@
   });
  }
 
+ /**
+  * Simple gallery sync:
+  * - Page load / clear → parent product photos
+  * - found_variation with photos → that variation’s photos
+  * - found_variation without photos → keep parent photos (SKU still updates)
+  */
  function bindVariationGalleryBridge() {
   if (!$ || typeof $.fn !== 'object') return;
   if (document.body && document.body.dataset && document.body.dataset.jofmeVarGallery === '1') return;
@@ -378,7 +360,11 @@
 
   function onFound(_, variation) {
    syncVariationSku(variation);
-   applyVariationToGalleries(variation);
+   if (variationGalleryImages(variation).length) {
+    applyVariationToGalleries(variation);
+   } else {
+    resetVariationGalleries();
+   }
   }
 
   function onReset() {
@@ -386,35 +372,18 @@
    resetVariationGalleries();
   }
 
-  function onCheck() {
-   const form = this;
-   const chosen = getSelectedAttributes(form);
-   if (!Object.keys(chosen).length) return;
-   const preview = findVariationForSelection(form);
-   if (!preview) return;
-   // found_variation also fires on a full match; applying twice is safe.
-   syncVariationSku(preview);
-   applyVariationToGalleries(preview);
-  }
-
   if (document.body) {
    $(document.body).on('found_variation.jofmeGallery', 'form.variations_form', onFound);
    $(document.body).on('reset_data.jofmeGallery hide_variation.jofmeGallery', 'form.variations_form', onReset);
-   $(document.body).on(
-    'check_variations.jofmeGallery woocommerce_variation_has_changed.jofmeGallery',
-    'form.variations_form',
-    onCheck
-   );
   }
 
   // Direct form binds (tests + environments without delegated bubbling).
   document.querySelectorAll('form.variations_form').forEach((form) => {
-   form.dataset = form.dataset || {};
+   ensureDataset(form);
    if (form.dataset.jofmeVarGalleryForm === '1') return;
    form.dataset.jofmeVarGalleryForm = '1';
    $(form).on('found_variation.jofmeGallery', onFound);
    $(form).on('reset_data.jofmeGallery hide_variation.jofmeGallery', onReset);
-   $(form).on('check_variations.jofmeGallery woocommerce_variation_has_changed.jofmeGallery', onCheck);
   });
  }
 
@@ -446,7 +415,7 @@
   const link = document.createElement('a');
   link.className = 'jofme-gallery-zoom-link';
   link.href = full;
-  link.dataset = link.dataset || {};
+  ensureDataset(link);
   link.dataset.lightboxIndex = String(index);
   const img = document.createElement('img');
   img.src = full;
@@ -466,7 +435,7 @@
   if (!canBuildDomNodes()) return null;
   const figure = document.createElement('figure');
   figure.className = 'jofme-carousel-gallery__slide';
-  figure.dataset = figure.dataset || {};
+  ensureDataset(figure);
   figure.dataset.index = String(index);
   figure.dataset.jofmeVariationTemp = '1';
   if (typeof figure.setAttribute === 'function') figure.setAttribute('hidden', '');
@@ -480,7 +449,7 @@
   const button = document.createElement('button');
   button.type = 'button';
   button.className = 'jofme-carousel-gallery__thumb';
-  button.dataset = button.dataset || {};
+  ensureDataset(button);
   button.dataset.index = String(index);
   button.dataset.jofmeVariationTemp = '1';
   if (typeof button.setAttribute === 'function') {
@@ -518,7 +487,7 @@
    const prev = document.createElement('button');
    prev.type = 'button';
    prev.className = 'jofme-carousel-gallery__nav jofme-carousel-gallery__nav--prev';
-   prev.dataset = prev.dataset || {};
+   ensureDataset(prev);
    prev.dataset.dir = '-1';
    if (typeof prev.setAttribute === 'function') prev.setAttribute('aria-label', i18n.prev || 'Previous image');
    prev.textContent = '‹';
@@ -528,7 +497,7 @@
    const next = document.createElement('button');
    next.type = 'button';
    next.className = 'jofme-carousel-gallery__nav jofme-carousel-gallery__nav--next';
-   next.dataset = next.dataset || {};
+   ensureDataset(next);
    next.dataset.dir = '1';
    if (typeof next.setAttribute === 'function') next.setAttribute('aria-label', i18n.next || 'Next image');
    next.textContent = '›';
@@ -542,7 +511,7 @@
   const figure = document.createElement('figure');
   figure.className = 'jofme-stacked-gallery__item';
   figure.id = itemId;
-  figure.dataset = figure.dataset || {};
+  ensureDataset(figure);
   figure.dataset.index = String(index);
   figure.dataset.jofmeVariationTemp = '1';
   const zoom = createZoomLink(image, index);
@@ -555,7 +524,7 @@
   const button = document.createElement('button');
   button.type = 'button';
   button.className = 'jofme-stacked-gallery__dot';
-  button.dataset = button.dataset || {};
+  ensureDataset(button);
   button.dataset.target = itemId;
   button.dataset.jofmeVariationTemp = '1';
   if (typeof button.setAttribute === 'function') {
@@ -574,7 +543,7 @@
   if (typeof gallery.insertBefore !== 'function' && typeof gallery.appendChild !== 'function') return null;
   rail = document.createElement('div');
   rail.className = 'jofme-stacked-gallery__rail';
-  rail.dataset = rail.dataset || {};
+  ensureDataset(rail);
   rail.dataset.jofmeVariationTemp = '1';
   const nav = document.createElement('nav');
   nav.className = 'jofme-stacked-gallery__dots';
@@ -680,12 +649,12 @@
    dots = Array.from(gallery.querySelectorAll('.jofme-stacked-gallery__dot'));
    items.forEach((item, i) => {
     if (!item) return;
-    item.dataset = item.dataset || {};
+    ensureDataset(item);
     item.dataset.index = String(i);
     if (typeof item.querySelector !== 'function') return;
     const link = item.querySelector('.jofme-gallery-zoom-link');
     if (link) {
-     link.dataset = link.dataset || {};
+     ensureDataset(link);
      link.dataset.lightboxIndex = String(i);
     }
    });
@@ -760,14 +729,15 @@
   }
 
   function showVariationStackedGallery(variation) {
+   const images = variationGalleryImages(variation);
+   if (!images.length) {
+    showParentStackedGallery();
+    return;
+   }
+
    removeVariationTempNodes(gallery);
    refreshStackedLists();
    restorePrimaryImage(primary);
-
-   const images = variationGalleryImages(variation);
-   if (!images.length) return;
-
-   // Always paint the first variation image on the primary so color changes are visible.
    applyImageToPrimary(primary, images[0]);
 
    const visible = [];
@@ -844,18 +814,18 @@
    thumbs = Array.from(gallery.querySelectorAll('.jofme-carousel-gallery__thumb'));
    slides.forEach((slide, i) => {
     if (!slide) return;
-    slide.dataset = slide.dataset || {};
+    ensureDataset(slide);
     slide.dataset.index = String(i);
     if (typeof slide.querySelector !== 'function') return;
     const link = slide.querySelector('.jofme-gallery-zoom-link');
     if (link) {
-     link.dataset = link.dataset || {};
+     ensureDataset(link);
      link.dataset.lightboxIndex = String(i);
     }
    });
    thumbs.forEach((thumb, i) => {
     if (!thumb) return;
-    thumb.dataset = thumb.dataset || {};
+    ensureDataset(thumb);
     thumb.dataset.index = String(i);
    });
   }
@@ -995,14 +965,15 @@
   }
 
   function showVariationCarouselGallery(variation) {
+   const images = variationGalleryImages(variation);
+   if (!images.length) {
+    showParentCarouselGallery();
+    return;
+   }
+
    removeVariationTempNodes(gallery);
    refreshCarouselLists();
    restorePrimaryImage(primary);
-
-   const images = variationGalleryImages(variation);
-   if (!images.length) return;
-
-   // Always paint the first variation image on the primary so color changes are visible.
    applyImageToPrimary(primary, images[0]);
 
    const visible = [];

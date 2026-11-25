@@ -21,6 +21,8 @@ assert.match(css, /\.jofme-product-sku/);
 assert.match(js, /syncVariationSku/);
 assert.match(js, /bindVariationSku/);
 assert.match(js, /found_variation\.jofmeSku/);
+assert.match(js, /ensureDataset\(form\)/);
+assert.doesNotMatch(js, /form\.dataset\s*=\s*form\.dataset\s*\|\|/);
 assert.match(workflow, /product-sku\.cjs/);
 
 console.log('PASS: product page SKU on gallery summary + variation sync');

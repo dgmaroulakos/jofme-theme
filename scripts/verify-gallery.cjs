@@ -42,8 +42,24 @@ const gallery = {
   },
 };
 const handlers = {};
-const form = { dataset: {}, querySelector() { return null; }, querySelectorAll() { return []; } };
-const body = { dataset: {} };
+// Simulate real HTMLElement.dataset: getter-only DOMStringMap (assigning throws).
+const formStore = {};
+const form = {
+  querySelector() { return null; },
+  querySelectorAll() { return []; },
+};
+Object.defineProperty(form, 'dataset', {
+  configurable: false,
+  enumerable: true,
+  get() { return formStore; },
+});
+const bodyStore = {};
+const body = {};
+Object.defineProperty(body, 'dataset', {
+  configurable: false,
+  enumerable: true,
+  get() { return bodyStore; },
+});
 const context = {
   window: {
     jQuery(target) {

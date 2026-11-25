@@ -3,7 +3,7 @@ Contributors: jofme
 Requires at least: 6.4
 Tested up to: 6.8
 Requires PHP: 7.4
-Stable tag: 1.7.74
+Stable tag: 1.7.75
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -30,6 +30,10 @@ strings / wpml-config.xml.
 * WPML or Polylang
 
 == Changelog ==
+
+= 1.7.75 =
+* Product gallery: stop reassigning element.dataset (getter-only in browsers) so SKU sync and variation gallery bridge can initialize.
+* Product gallery: simpler variation photos — parent gallery on load (no default selection); show a variation’s photos only after that variation is chosen (and only if it has images); restore parent on clear.
 
 = 1.7.74 =
 * Product gallery: update photos as soon as a color (or any attribute) is selected, even before a full variation match; stricter image matching and always paint the variation primary image.
