@@ -373,6 +373,8 @@ function jofme_catalog_filters() {
  }
 
  echo '<div class="jofme-filters jofme-filters--sidebar" data-jofme-ajax-filters="1">';
+ // Selected chips first (term names), then the accordion form.
+ jofme_render_active_filters();
  echo '<form method="get" action="' . esc_url( $action ) . '" class="jofme-filters__form" data-jofme-ajax-filters-form="1">';
  echo '<div class="jofme-filter-fields">';
 
@@ -408,29 +410,7 @@ function jofme_catalog_filters() {
  echo '</div>';
  echo '<div class="jofme-filter-actions"><button type="submit">' . esc_html__( 'Apply filters', 'jofme' ) . '</button><a href="' . esc_url( $action ) . '">' . esc_html__( 'Clear filters', 'jofme' ) . '</a></div>';
  echo '</form>';
-
- echo '<div class="jofme-active-filters">';
- foreach ( array_keys( $_GET ) as $key ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- public catalog query args.
-  if ( ! is_string( $key ) ) {
-   continue;
-  }
-  $is_filter = ( 0 === strpos( $key, 'filter_' ) || in_array( $key, array( 'min_price', 'max_price', 'jofme_collection' ), true ) );
-  if ( ! $is_filter ) {
-   continue;
-  }
-  $raw = jofme_filter_value( $key );
-  if ( '' === $raw ) {
-   continue;
-  }
-  if ( in_array( $key, array( 'min_price', 'max_price' ), true ) ) {
-   echo '<a href="' . esc_url( remove_query_arg( array( $key, 'paged', 'product-page' ) ) ) . '">' . esc_html( $raw ) . ' × <span class="screen-reader-text">' . esc_html__( 'Remove filter', 'jofme' ) . '</span></a>';
-   continue;
-  }
-  foreach ( jofme_filter_selected_slugs( $key ) as $slug ) {
-   echo '<a href="' . esc_url( jofme_filter_remove_url( $key, $slug ) ) . '">' . esc_html( $slug ) . ' × <span class="screen-reader-text">' . esc_html__( 'Remove filter', 'jofme' ) . '</span></a>';
-  }
- }
- echo '</div></div>';
+ echo '</div>';
 }
 add_action( 'jofme_shop_sidebar_filters', 'jofme_catalog_filters' );
 
@@ -600,6 +580,91 @@ function jofme_catalog_filter_term_count( $term, $object_ids = null ) {
   return 0;
  }
  return count( array_intersect( array_map( 'intval', $objects ), array_map( 'intval', $object_ids ) ) );
+}
+
+/**
+ * Taxonomy name for a catalog filter query key.
+ *
+ * @param string $key Query arg (filter_color, jofme_collection, …).
+ * @return string Empty when the key is not a term filter.
+ */
+function jofme_filter_key_taxonomy( $key ) {
+	if ( ! is_string( $key ) || '' === $key ) {
+		return '';
+	}
+	if ( 'jofme_collection' === $key ) {
+		return 'product_tag';
+	}
+	if ( 0 === strpos( $key, 'filter_' ) ) {
+		$name = substr( $key, 7 );
+		if ( '' === $name ) {
+			return '';
+		}
+		return function_exists( 'wc_attribute_taxonomy_name' )
+			? wc_attribute_taxonomy_name( $name )
+			: 'pa_' . sanitize_title( $name );
+	}
+	return '';
+}
+
+/**
+ * Display label for a selected filter value (term name, not slug).
+ *
+ * @param string $key   Query arg.
+ * @param string $value Term slug or raw price value.
+ * @return string
+ */
+function jofme_filter_selected_label( $key, $value ) {
+	$value = is_scalar( $value ) ? (string) $value : '';
+	if ( '' === $value ) {
+		return '';
+	}
+	if ( in_array( $key, array( 'min_price', 'max_price' ), true ) ) {
+		return $value;
+	}
+	$taxonomy = jofme_filter_key_taxonomy( $key );
+	if ( $taxonomy && taxonomy_exists( $taxonomy ) ) {
+		$term = get_term_by( 'slug', sanitize_title( $value ), $taxonomy );
+		if ( $term && ! is_wp_error( $term ) && isset( $term->name ) && '' !== (string) $term->name ) {
+			return (string) $term->name;
+		}
+	}
+	return $value;
+}
+
+/**
+ * Render active filter chips above the filter form (term names + remove links).
+ */
+function jofme_render_active_filters() {
+	$has_chip = false;
+	ob_start();
+	foreach ( array_keys( $_GET ) as $key ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- public catalog query args.
+		if ( ! is_string( $key ) ) {
+			continue;
+		}
+		$is_filter = ( 0 === strpos( $key, 'filter_' ) || in_array( $key, array( 'min_price', 'max_price', 'jofme_collection' ), true ) );
+		if ( ! $is_filter ) {
+			continue;
+		}
+		$raw = jofme_filter_value( $key );
+		if ( '' === $raw ) {
+			continue;
+		}
+		if ( in_array( $key, array( 'min_price', 'max_price' ), true ) ) {
+			$has_chip = true;
+			echo '<a href="' . esc_url( remove_query_arg( array( $key, 'paged', 'product-page' ) ) ) . '">' . esc_html( jofme_filter_selected_label( $key, $raw ) ) . ' × <span class="screen-reader-text">' . esc_html__( 'Remove filter', 'jofme' ) . '</span></a>';
+			continue;
+		}
+		foreach ( jofme_filter_selected_slugs( $key ) as $slug ) {
+			$has_chip = true;
+			echo '<a href="' . esc_url( jofme_filter_remove_url( $key, $slug ) ) . '">' . esc_html( jofme_filter_selected_label( $key, $slug ) ) . ' × <span class="screen-reader-text">' . esc_html__( 'Remove filter', 'jofme' ) . '</span></a>';
+		}
+	}
+	$chips = ob_get_clean();
+	if ( ! $has_chip || '' === $chips ) {
+		return;
+	}
+	echo '<div class="jofme-active-filters">' . $chips . '</div>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- chips escaped above.
 }
 
 /**
