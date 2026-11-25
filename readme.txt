@@ -32,7 +32,8 @@ strings / wpml-config.xml.
 == Changelog ==
 
 = 1.7.72 =
-* Product carousel: uncropped thumbnails (contain, left-aligned), larger thumbs (112px / 88px mobile), and a wider gallery column so product photos read larger.
+* Product carousel: uncropped thumbnails (contain, left-aligned), larger thumbs (112px / 88px mobile), wider gallery column.
+* Product carousel functionality: nav arrows paint above the zoom link, keyboard left/right, safer thumb/swipe stepping across variation galleries.
 
 = 1.7.71 =
 * Image swatches: render term images with <img>, stop wiping Swatch display on programmatic attribute updates, show uploaded term images even when type is Color, harden attachment URL fallbacks.

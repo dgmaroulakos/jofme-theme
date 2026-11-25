@@ -328,9 +328,6 @@ function jofme_carousel_product_gallery() {
 
  $multi = count( $ids ) > 1;
  echo '<div class="jofme-carousel-gallery__viewport">';
- if ( $multi ) {
-  echo '<button type="button" class="jofme-carousel-gallery__nav jofme-carousel-gallery__nav--prev" data-dir="-1" aria-label="' . esc_attr__( 'Previous image', 'jofme' ) . '">‹</button>';
- }
  echo '<div class="jofme-carousel-gallery__track">';
  foreach ( $ids as $index => $attachment_id ) {
   $full = wp_get_attachment_image_src( $attachment_id, 'full' );
@@ -352,12 +349,14 @@ function jofme_carousel_product_gallery() {
   echo '</figure>';
  }
  echo '</div>';
+ // Both arrows after the track so they paint above the full-bleed zoom link.
  if ( $multi ) {
+  echo '<button type="button" class="jofme-carousel-gallery__nav jofme-carousel-gallery__nav--prev" data-dir="-1" aria-label="' . esc_attr__( 'Previous image', 'jofme' ) . '">‹</button>';
   echo '<button type="button" class="jofme-carousel-gallery__nav jofme-carousel-gallery__nav--next" data-dir="1" aria-label="' . esc_attr__( 'Next image', 'jofme' ) . '">›</button>';
  }
  echo '</div>';
 
-  if ( $multi ) {
+ if ( $multi ) {
   echo '<div class="jofme-carousel-gallery__thumbs" role="list">';
   foreach ( $ids as $index => $attachment_id ) {
    echo '<button type="button" class="jofme-carousel-gallery__thumb' . ( 0 === $index ? ' is-active' : '' ) . '" role="listitem" data-index="' . absint( $index ) . '" aria-label="' . esc_attr( sprintf( /* translators: %d image number */ __( 'Show image %d', 'jofme' ), $index + 1 ) ) . '"' . ( 0 === $index ? ' aria-current="true"' : '' ) . '>';

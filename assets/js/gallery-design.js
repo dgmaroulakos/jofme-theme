@@ -350,8 +350,9 @@
  function ensureCarouselNav(gallery) {
   if (!gallery || typeof gallery.querySelector !== 'function' || !canBuildDomNodes()) return;
   const viewport = gallery.querySelector('.jofme-carousel-gallery__viewport');
-  if (!viewport) return;
-  if (!gallery.querySelector('.jofme-carousel-gallery__nav--prev') && typeof viewport.insertBefore === 'function') {
+  if (!viewport || typeof viewport.appendChild !== 'function') return;
+  // Append both after the track so they stack above the zoom link.
+  if (!gallery.querySelector('.jofme-carousel-gallery__nav--prev')) {
    const prev = document.createElement('button');
    prev.type = 'button';
    prev.className = 'jofme-carousel-gallery__nav jofme-carousel-gallery__nav--prev';
@@ -359,9 +360,9 @@
    prev.dataset.dir = '-1';
    if (typeof prev.setAttribute === 'function') prev.setAttribute('aria-label', i18n.prev || 'Previous image');
    prev.textContent = '‹';
-   viewport.insertBefore(prev, viewport.firstChild);
+   viewport.appendChild(prev);
   }
-  if (!gallery.querySelector('.jofme-carousel-gallery__nav--next') && typeof viewport.appendChild === 'function') {
+  if (!gallery.querySelector('.jofme-carousel-gallery__nav--next')) {
    const next = document.createElement('button');
    next.type = 'button';
    next.className = 'jofme-carousel-gallery__nav jofme-carousel-gallery__nav--next';
@@ -747,6 +748,14 @@
    }
   }
 
+  function stepCarousel(dir) {
+   const visible = visibleSlideIndexes();
+   if (visible.length < 2) return;
+   const position = Math.max(0, visible.indexOf(index));
+   const nextPos = (position + Number(dir || 0) + visible.length) % visible.length;
+   show(visible[nextPos]);
+  }
+
   if (typeof gallery.addEventListener === 'function') {
    gallery.addEventListener('click', (event) => {
     if (!event || !event.target || typeof event.target.closest !== 'function') return;
@@ -754,10 +763,7 @@
     if (nav && (!gallery.contains || gallery.contains(nav))) {
      event.preventDefault();
      event.stopPropagation();
-     const visible = visibleSlideIndexes();
-     const position = Math.max(0, visible.indexOf(index));
-     const nextPos = (position + Number(nav.dataset.dir || 0) + visible.length) % visible.length;
-     show(visible[nextPos]);
+     stepCarousel(Number(nav.dataset.dir || 0));
      return;
     }
     const thumb = event.target.closest('.jofme-carousel-gallery__thumb');
@@ -765,7 +771,22 @@
      if (thumb.classList && thumb.classList.contains('jofme-gallery-item--suppressed')) return;
      event.preventDefault();
      event.stopPropagation();
-     show(Number(thumb.dataset.index || 0));
+     const target = Number(thumb.dataset.index || 0);
+     if (visibleSlideIndexes().indexOf(target) >= 0) {
+      show(target);
+     }
+    }
+   });
+
+   gallery.setAttribute('tabindex', '0');
+   gallery.addEventListener('keydown', (event) => {
+    if (!event) return;
+    if (event.key === 'ArrowLeft') {
+     event.preventDefault();
+     stepCarousel(-1);
+    } else if (event.key === 'ArrowRight') {
+     event.preventDefault();
+     stepCarousel(1);
     }
    });
 
@@ -791,10 +812,7 @@
      touchY = null;
      if (Math.abs(deltaX) < 40 || Math.abs(deltaX) < Math.abs(deltaY)) return;
      if (event.target.closest && event.target.closest('.jofme-carousel-gallery__thumb, .jofme-carousel-gallery__nav')) return;
-     const visible = visibleSlideIndexes();
-     const position = Math.max(0, visible.indexOf(index));
-     const nextPos = (position + (deltaX < 0 ? 1 : -1) + visible.length) % visible.length;
-     show(visible[nextPos]);
+     stepCarousel(deltaX < 0 ? 1 : -1);
     },
     { passive: true }
    );
