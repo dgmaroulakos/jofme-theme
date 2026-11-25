@@ -148,32 +148,58 @@ function jofme_term_swatch_image_id( $term ) {
  */
 function jofme_term_swatch_image_url( $term, $size = 'thumbnail' ) {
 	$id = jofme_term_swatch_image_id( $term );
-	if ( ! $id || ! function_exists( 'wp_get_attachment_image_url' ) ) {
+	if ( ! $id ) {
 		return '';
 	}
 
-	$url = wp_get_attachment_image_url( $id, $size );
+	$url = '';
+	if ( function_exists( 'wp_get_attachment_image_url' ) ) {
+		$url = wp_get_attachment_image_url( $id, $size );
+		if ( ! $url && 'thumbnail' !== $size ) {
+			$url = wp_get_attachment_image_url( $id, 'thumbnail' );
+		}
+		if ( ! $url ) {
+			$url = wp_get_attachment_image_url( $id, 'full' );
+		}
+	}
+	if ( ! $url && function_exists( 'wp_get_attachment_url' ) ) {
+		$url = wp_get_attachment_url( $id );
+	}
+
 	return $url ? $url : '';
 }
 
 /**
  * Color / image args for a term based on attribute swatch type.
  *
+ * Image type uses the term image (falls back to color if missing).
+ * Color type prefers a term image when one is set, otherwise the hex color —
+ * so uploading a term image always surfaces on the storefront.
+ *
  * @param string         $attribute Taxonomy or attribute name.
  * @param WP_Term|object $term      Term.
  * @return array{color:string,image:string}
  */
 function jofme_term_swatch_visuals( $attribute, $term ) {
-	$type = jofme_attribute_swatch_type( $attribute );
+	$type  = jofme_attribute_swatch_type( $attribute );
+	$image = jofme_term_swatch_image_url( $term );
+	$color = jofme_term_swatch_color( $term );
+
 	if ( 'image' === $type ) {
 		return array(
-			'color' => '',
-			'image' => jofme_term_swatch_image_url( $term ),
+			'color' => $image ? '' : $color,
+			'image' => $image,
 		);
 	}
 	if ( 'color' === $type ) {
+		if ( $image ) {
+			return array(
+				'color' => '',
+				'image' => $image,
+			);
+		}
 		return array(
-			'color' => jofme_term_swatch_color( $term ),
+			'color' => $color,
 			'image' => '',
 		);
 	}
@@ -220,7 +246,6 @@ function jofme_swatch_html( $args ) {
 	$style   = '';
 	if ( $args['image'] ) {
 		$classes[] = 'is-image';
-		$style     = '--swatch-image:url(\'' . esc_url( $args['image'] ) . '\')';
 	} elseif ( $args['color'] ) {
 		$classes[] = 'is-color';
 		$style     = '--swatch:' . esc_attr( $args['color'] );
@@ -231,14 +256,14 @@ function jofme_swatch_html( $args ) {
 
 	$attrs = 'class="' . esc_attr( implode( ' ', $classes ) ) . '" title="' . esc_attr( $args['name'] ) . '"';
 	if ( $style ) {
-		$attrs .= ' style="' . $style . '"';
+		$attrs .= ' style="' . esc_attr( $style ) . '"';
 	}
 	if ( '' !== $args['value'] ) {
 		$attrs .= ' data-value="' . esc_attr( $args['value'] ) . '"';
 	}
 
 	$visual = $args['image']
-		? '<span class="jofme-swatch__image" aria-hidden="true"></span><span class="screen-reader-text">' . esc_html( $args['name'] ) . '</span>'
+		? '<span class="jofme-swatch__image" aria-hidden="true"><img src="' . esc_url( $args['image'] ) . '" alt="" loading="lazy" decoding="async"></span><span class="screen-reader-text">' . esc_html( $args['name'] ) . '</span>'
 		: ( $args['color']
 			? '<span class="screen-reader-text">' . esc_html( $args['name'] ) . '</span>'
 			: '<span>' . esc_html( $args['name'] ) . '</span>' );
@@ -362,11 +387,18 @@ function jofme_save_attribute_swatch( $id ) {
 		return;
 	}
 
+	// Only persist when the attribute admin form posted our field — never wipe
+	// the option on programmatic wc_update_attribute() calls.
 	// phpcs:ignore WordPress.Security.NonceVerification.Missing -- WC attribute form nonce already verified.
-	$raw = isset( $_POST['jofme_attribute_swatch_type'] ) ? sanitize_key( wp_unslash( $_POST['jofme_attribute_swatch_type'] ) ) : 'no';
+	if ( ! isset( $_POST['jofme_attribute_swatch_type'] ) && ! isset( $_POST['jofme_attribute_swatch'] ) ) {
+		return;
+	}
+
+	// phpcs:ignore WordPress.Security.NonceVerification.Missing -- WC attribute form nonce already verified.
+	$raw = isset( $_POST['jofme_attribute_swatch_type'] ) ? sanitize_key( wp_unslash( $_POST['jofme_attribute_swatch_type'] ) ) : '';
 	// Legacy checkbox fallback if an older form posts the old field.
-	if ( ! isset( $_POST['jofme_attribute_swatch_type'] ) && isset( $_POST['jofme_attribute_swatch'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing
-		$raw = 'color';
+	if ( '' === $raw && isset( $_POST['jofme_attribute_swatch'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing
+		$raw = ! empty( $_POST['jofme_attribute_swatch'] ) ? 'color' : 'no'; // phpcs:ignore WordPress.Security.NonceVerification.Missing
 	}
 	if ( ! in_array( $raw, array( 'color', 'image', 'no' ), true ) ) {
 		$raw = 'no';
@@ -445,7 +477,9 @@ function jofme_save_swatch( $term_id ) {
 
 	if ( isset( $_POST['jofme_swatch_image'] ) && is_scalar( $_POST['jofme_swatch_image'] ) ) {
 		$image_id = absint( wp_unslash( $_POST['jofme_swatch_image'] ) );
-		if ( $image_id && function_exists( 'wp_attachment_is_image' ) && ! wp_attachment_is_image( $image_id ) ) {
+		// Accept any attachment that resolves to a URL (incl. webp). Only reject
+		// when the ID is clearly not an attachment.
+		if ( $image_id && function_exists( 'get_post_type' ) && 'attachment' !== get_post_type( $image_id ) ) {
 			$image_id = 0;
 		}
 		if ( $image_id ) {
@@ -491,7 +525,13 @@ function jofme_swatch_admin_assets( $hook ) {
 
 	wp_enqueue_media();
 	wp_enqueue_style( 'jofme-swatches-admin', JOFME_URI . '/assets/css/swatches-admin.css', array(), JOFME_VERSION );
-	wp_enqueue_script( 'jofme-swatches-admin', JOFME_URI . '/assets/js/swatches-admin.js', array(), JOFME_VERSION, true );
+	wp_enqueue_script(
+		'jofme-swatches-admin',
+		JOFME_URI . '/assets/js/swatches-admin.js',
+		array( 'jquery', 'media-editor', 'media-views' ),
+		JOFME_VERSION,
+		true
+	);
 	wp_localize_script(
 		'jofme-swatches-admin',
 		'jofmeSwatch',
