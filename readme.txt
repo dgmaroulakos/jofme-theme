@@ -3,7 +3,7 @@ Contributors: jofme
 Requires at least: 6.4
 Tested up to: 6.8
 Requires PHP: 7.4
-Stable tag: 1.7.67
+Stable tag: 1.7.69
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -30,6 +30,9 @@ strings / wpml-config.xml.
 * WPML or Polylang
 
 == Changelog ==
+
+= 1.7.69 =
+* Product gallery: show all variation images (not only the featured one) by injecting unmatched slides/thumbs into carousel and stacked views; clear temps on reset.
 
 = 1.7.67 =
 * Shop/category/product: on page load, smooth-scroll to breadcrumbs (just below the header) instead of the product grid.

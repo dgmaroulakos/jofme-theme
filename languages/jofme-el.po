@@ -1,7 +1,7 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Jofme 1.7.67\n"
+"Project-Id-Version: Jofme 1.7.69\n"
 "Report-Msgid-Bugs-To: https://github.com/dgmaroulakos/jofme-theme\n"
 "POT-Creation-Date: 2026-11-24 15:34+0000\n"
 "PO-Revision-Date: 2026-11-24 17:35+0200\n"
