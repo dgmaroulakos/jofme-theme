@@ -6,9 +6,9 @@
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: Jofme 1.7.69\n"
+"Project-Id-Version: Jofme 1.7.70\n"
 "Report-Msgid-Bugs-To: https://github.com/dgmaroulakos/jofme-theme\n"
-"POT-Creation-Date: 2026-11-24 15:34+0000\n"
+"POT-Creation-Date: 2026-11-25 11:38+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1184,35 +1184,67 @@ msgstr ""
 msgid "Follow us"
 msgstr ""
 
-#: inc/swatches.php:182 inc/swatches.php:213
-msgid "Display as color swatches"
+#: inc/swatches.php:269
+msgid "None (dropdown / text)"
 msgstr ""
 
-#: inc/swatches.php:184 inc/swatches.php:215
-msgid ""
-"Show term colors on product cards, catalog filters, and the product page. "
-"Set each term color under Configure terms."
-msgstr ""
-
-#: inc/swatches.php:208
+#: inc/swatches.php:270
 msgid "Color swatches"
 msgstr ""
 
-#: inc/swatches.php:262
+#: inc/swatches.php:271
+msgid "Image swatches"
+msgstr ""
+
+#: inc/swatches.php:299 inc/swatches.php:339
+msgid "Swatch display"
+msgstr ""
+
+#: inc/swatches.php:305 inc/swatches.php:347
+msgid ""
+"Show color or image swatches on product cards, catalog filters, and the "
+"product page. Configure each term under Configure terms."
+msgstr ""
+
+#: inc/swatches.php:404
 msgid "Choose swatch color"
 msgstr ""
 
-#: inc/swatches.php:265
+#: inc/swatches.php:407
 msgid ""
-"Used on product cards, catalog filters, and variation swatches. Leave blank "
-"to use a default color from the term slug, or a text label when none matches."
+"Used when this attribute is set to Color swatches. Leave blank to use a "
+"default from the term slug."
 msgstr ""
 
-#: inc/swatches.php:268 inc/swatches.php:270
+#: inc/swatches.php:412
+msgid "Choose image"
+msgstr ""
+
+#: inc/swatches.php:413
+msgid "Remove"
+msgstr ""
+
+#: inc/swatches.php:414
+msgid "Used when this attribute is set to Image swatches."
+msgstr ""
+
+#: inc/swatches.php:418 inc/swatches.php:421
 msgid "Swatch color"
 msgstr ""
 
-#: inc/swatches.php:553 inc/widgets/class-bestsellers-tabs.php:165
+#: inc/swatches.php:419 inc/swatches.php:422
+msgid "Swatch image"
+msgstr ""
+
+#: inc/swatches.php:499
+msgid "Choose swatch image"
+msgstr ""
+
+#: inc/swatches.php:500
+msgid "Use as swatch"
+msgstr ""
+
+#: inc/swatches.php:729 inc/widgets/class-bestsellers-tabs.php:165
 #: inc/widgets/class-bestsellers-tabs.php:638
 msgid "All"
 msgstr ""
