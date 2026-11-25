@@ -357,11 +357,17 @@ function jofme_carousel_product_gallery() {
  }
  echo '</div>';
 
- if ( $multi ) {
+  if ( $multi ) {
   echo '<div class="jofme-carousel-gallery__thumbs" role="list">';
   foreach ( $ids as $index => $attachment_id ) {
    echo '<button type="button" class="jofme-carousel-gallery__thumb' . ( 0 === $index ? ' is-active' : '' ) . '" role="listitem" data-index="' . absint( $index ) . '" aria-label="' . esc_attr( sprintf( /* translators: %d image number */ __( 'Show image %d', 'jofme' ), $index + 1 ) ) . '"' . ( 0 === $index ? ' aria-current="true"' : '' ) . '>';
-   echo wp_get_attachment_image( $attachment_id, 'woocommerce_gallery_thumbnail', false, array( 'alt' => '' ) );
+   jofme_gallery_uncropped_image(
+    $attachment_id,
+    array(
+     'alt'     => '',
+     'loading' => 'lazy',
+    )
+   );
    echo '</button>';
   }
   echo '</div>';

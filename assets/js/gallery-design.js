@@ -326,7 +326,7 @@
    button.setAttribute('aria-label', (i18n.image || 'Product image') + ' ' + String(index + 1));
   }
   const img = document.createElement('img');
-  img.src = image.src || image.full_src || '';
+  img.src = image.full_src || image.src || '';
   img.alt = '';
   if (image.id && typeof img.setAttribute === 'function') {
    img.setAttribute('data-attachment_id', String(image.id));
