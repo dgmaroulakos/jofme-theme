@@ -187,6 +187,13 @@
   }
  }
 
+ /** Basename without WP -150x150 style size suffix, for safer matching. */
+ function normalizeImageBasename(url) {
+  const path = normalizeImageUrl(url);
+  const base = path.split('/').pop() || '';
+  return base.replace(/-\d+x\d+(?=\.[a-z0-9]+$)/i, '');
+ }
+
  function slideImageUrls(slide) {
   const urls = [];
   if (!slide || typeof slide.querySelector !== 'function') return urls;
@@ -283,6 +290,9 @@
   const candidates = [image.full_src, image.src]
    .map(normalizeImageUrl)
    .filter(Boolean);
+  const candidateBases = [image.full_src, image.src]
+   .map(normalizeImageBasename)
+   .filter(Boolean);
   const attachmentId = image.id ? String(image.id) : '';
   return slides.findIndex((slide) => {
    if (!slide || typeof slide.querySelector !== 'function') return false;
@@ -291,7 +301,120 @@
     return true;
    }
    const urls = slideImageUrls(slide);
-   return urls.some((url) => candidates.some((candidate) => url === candidate || url.endsWith(candidate) || candidate.endsWith(url)));
+   if (urls.some((url) => candidates.some((candidate) => url === candidate))) {
+    return true;
+   }
+   const bases = urls.map((url) => normalizeImageBasename(url)).filter(Boolean);
+   return bases.some((base) => candidateBases.some((candidate) => base === candidate));
+  });
+ }
+
+ const galleryVariationControllers = [];
+
+ function getSelectedAttributes(form) {
+  const chosen = {};
+  if (!form || typeof form.querySelectorAll !== 'function') return chosen;
+  form.querySelectorAll('select[name^="attribute_"]').forEach((sel) => {
+   if (sel && sel.name && sel.value) {
+    chosen[sel.name] = sel.value;
+   }
+  });
+  return chosen;
+ }
+
+ function variationMatchesSelection(variation, chosen) {
+  if (!variation || !variation.attributes || !chosen) return false;
+  const keys = Object.keys(chosen);
+  if (!keys.length) return false;
+  return keys.every((key) => {
+   const val = variation.attributes[key];
+   return val === '' || val === undefined || val === null || val === chosen[key];
+  });
+ }
+
+ /**
+  * Best variation for the current attribute selection (supports color-only preview
+  * before size/other attributes are chosen).
+  */
+ function findVariationForSelection(form) {
+  if (!$ || !form) return null;
+  const variations = $(form).data('product_variations');
+  if (!Array.isArray(variations)) return null;
+  const chosen = getSelectedAttributes(form);
+  if (!Object.keys(chosen).length) return null;
+  const matches = variations.filter(
+   (variation) =>
+    variation &&
+    variation.variation_is_visible !== false &&
+    variationMatchesSelection(variation, chosen)
+  );
+  if (!matches.length) return null;
+  const withImages = matches.find((variation) => variationGalleryImages(variation).length > 0);
+  return withImages || matches[0];
+ }
+
+ function applyVariationToGalleries(variation) {
+  galleryVariationControllers.forEach((controller) => {
+   if (controller && typeof controller.showVariation === 'function') {
+    controller.showVariation(variation);
+   }
+  });
+ }
+
+ function resetVariationGalleries() {
+  galleryVariationControllers.forEach((controller) => {
+   if (controller && typeof controller.showParent === 'function') {
+    controller.showParent();
+   }
+  });
+ }
+
+ function bindVariationGalleryBridge() {
+  if (!$ || typeof $.fn !== 'object') return;
+  if (document.body && document.body.dataset && document.body.dataset.jofmeVarGallery === '1') return;
+  if (document.body && document.body.dataset) {
+   document.body.dataset.jofmeVarGallery = '1';
+  }
+
+  function onFound(_, variation) {
+   syncVariationSku(variation);
+   applyVariationToGalleries(variation);
+  }
+
+  function onReset() {
+   syncVariationSku(null);
+   resetVariationGalleries();
+  }
+
+  function onCheck() {
+   const form = this;
+   const chosen = getSelectedAttributes(form);
+   if (!Object.keys(chosen).length) return;
+   const preview = findVariationForSelection(form);
+   if (!preview) return;
+   // found_variation also fires on a full match; applying twice is safe.
+   syncVariationSku(preview);
+   applyVariationToGalleries(preview);
+  }
+
+  if (document.body) {
+   $(document.body).on('found_variation.jofmeGallery', 'form.variations_form', onFound);
+   $(document.body).on('reset_data.jofmeGallery hide_variation.jofmeGallery', 'form.variations_form', onReset);
+   $(document.body).on(
+    'check_variations.jofmeGallery woocommerce_variation_has_changed.jofmeGallery',
+    'form.variations_form',
+    onCheck
+   );
+  }
+
+  // Direct form binds (tests + environments without delegated bubbling).
+  document.querySelectorAll('form.variations_form').forEach((form) => {
+   form.dataset = form.dataset || {};
+   if (form.dataset.jofmeVarGalleryForm === '1') return;
+   form.dataset.jofmeVarGalleryForm = '1';
+   $(form).on('found_variation.jofmeGallery', onFound);
+   $(form).on('reset_data.jofmeGallery hide_variation.jofmeGallery', onReset);
+   $(form).on('check_variations.jofmeGallery woocommerce_variation_has_changed.jofmeGallery', onCheck);
   });
  }
 
@@ -625,11 +748,6 @@
    items.forEach((item) => stackedObserver.observe(item));
   }
 
-  if (!$) return;
-
-  const form = document.querySelector('form.variations_form');
-  if (!form || !primary) return;
-
   function showParentStackedGallery() {
    removeVariationTempNodes(gallery);
    refreshStackedLists();
@@ -648,6 +766,9 @@
 
    const images = variationGalleryImages(variation);
    if (!images.length) return;
+
+   // Always paint the first variation image on the primary so color changes are visible.
+   applyImageToPrimary(primary, images[0]);
 
    const visible = [];
    images.forEach((image) => {
@@ -675,7 +796,6 @@
    });
 
    if (!visible.length) {
-    applyImageToPrimary(primary, images[0]);
     setSuppressedItems(items, [0]);
     setSuppressedItems(dots, [0]);
     setGalleryModeClass(gallery, true, false);
@@ -697,14 +817,12 @@
    if (items[visible[0]]) setCurrentDot(gallery, items[visible[0]].id);
   }
 
-  $(form).on('found_variation', (_, variation) => {
-   syncVariationSku(variation);
-   showVariationStackedGallery(variation);
-  });
-  $(form).on('reset_data hide_variation', () => {
-   syncVariationSku(null);
-   showParentStackedGallery();
-  });
+  if (primary) {
+   galleryVariationControllers.push({
+    showVariation: showVariationStackedGallery,
+    showParent: showParentStackedGallery,
+   });
+  }
  }
 
  function bindCarouselGallery(gallery) {
@@ -866,10 +984,6 @@
   bindLightboxLinks(gallery);
   show(index);
 
-  if (!$) return;
-  const form = document.querySelector('form.variations_form');
-  if (!form || !primary) return;
-
   function showParentCarouselGallery() {
    removeVariationTempNodes(gallery);
    refreshCarouselLists();
@@ -887,6 +1001,9 @@
 
    const images = variationGalleryImages(variation);
    if (!images.length) return;
+
+   // Always paint the first variation image on the primary so color changes are visible.
+   applyImageToPrimary(primary, images[0]);
 
    const visible = [];
    const track = gallery.querySelector && gallery.querySelector('.jofme-carousel-gallery__track');
@@ -910,7 +1027,6 @@
    });
 
    if (!visible.length) {
-    applyImageToPrimary(primary, images[0]);
     setSuppressedItems(slides, [0]);
     setSuppressedItems(thumbs, [0]);
     setGalleryModeClass(gallery, true, false);
@@ -924,17 +1040,16 @@
    show(visible[0]);
   }
 
-  $(form).on('found_variation', (_, variation) => {
-   syncVariationSku(variation);
-   showVariationCarouselGallery(variation);
-  });
-  $(form).on('reset_data hide_variation', () => {
-   syncVariationSku(null);
-   showParentCarouselGallery();
-  });
+  if (primary) {
+   galleryVariationControllers.push({
+    showVariation: showVariationCarouselGallery,
+    showParent: showParentCarouselGallery,
+   });
+  }
  }
 
  document.querySelectorAll('.jofme-stacked-gallery').forEach(bindStackedGallery);
  document.querySelectorAll('.jofme-carousel-gallery').forEach(bindCarouselGallery);
  bindVariationSku();
+ bindVariationGalleryBridge();
 })();

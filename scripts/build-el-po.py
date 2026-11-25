@@ -523,7 +523,7 @@ def main() -> int:
 	pot = polib.pofile(str(POT))
 	po = polib.POFile()
 	po.metadata = {
-		"Project-Id-Version": "Jofme 1.7.73",
+		"Project-Id-Version": "Jofme 1.7.74",
 		"Report-Msgid-Bugs-To": "https://github.com/dgmaroulakos/jofme-theme",
 		"POT-Creation-Date": pot.metadata.get("POT-Creation-Date", ""),
 		"PO-Revision-Date": "2026-11-25 13:40+0200",
