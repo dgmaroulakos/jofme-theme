@@ -29,6 +29,7 @@ function jofme_wpml_register_strings() {
 		'jofme_upsells_heading'        => 'Upsells heading',
 		'jofme_related_heading'        => 'Related products heading',
 		'jofme_styling_help_text'      => 'Styling help text',
+		'jofme_styling_help_mens_text' => 'Styling help text (men\'s collection)',
 	);
 
 	if ( function_exists( 'icl_register_string' ) ) {

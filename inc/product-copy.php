@@ -28,8 +28,55 @@ function jofme_product_copy_defaults() {
 		'jofme_upsells_heading'        => 'Ταιριάζει τέλεια με…',
 		'jofme_related_heading'        => 'Μπορεί να σου αρέσουν',
 		'jofme_styling_help_text'      => 'Δεν είσαι σίγουρη εάν σου πάει; Ρώτησέ μας',
+		'jofme_styling_help_mens_text' => 'Δεν είσαι σίγουρος εάν σου πάει; Ρώτησέ μας',
 		'jofme_styling_help_url'       => '',
 	);
+}
+
+/**
+ * Whether a product belongs to the men's collection attribute.
+ *
+ * Matches pa_collection terms such as "Ανδρική Collection" / men-collection.
+ *
+ * @param WC_Product|null $product Product.
+ * @return bool
+ */
+function jofme_product_is_mens_collection( $product = null ) {
+	if ( ! $product && isset( $GLOBALS['product'] ) ) {
+		$product = $GLOBALS['product'];
+	}
+	if ( ! $product || ! is_a( $product, 'WC_Product' ) ) {
+		return false;
+	}
+
+	$taxonomy = 'pa_collection';
+	if ( ! taxonomy_exists( $taxonomy ) ) {
+		return false;
+	}
+
+	$terms = get_the_terms( $product->get_id(), $taxonomy );
+	if ( empty( $terms ) || is_wp_error( $terms ) ) {
+		return false;
+	}
+
+	foreach ( $terms as $term ) {
+		$slug = isset( $term->slug ) ? (string) $term->slug : '';
+		$name = isset( $term->name ) ? (string) $term->name : '';
+		$hay  = function_exists( 'mb_strtolower' )
+			? mb_strtolower( $slug . ' ' . $name, 'UTF-8' )
+			: strtolower( $slug . ' ' . $name );
+		if (
+			false !== strpos( $hay, 'men-collection' )
+			|| false !== strpos( $hay, 'andrik' )
+			|| false !== strpos( $hay, 'ανδρικ' )
+			|| false !== strpos( $hay, 'mens' )
+			|| preg_match( '/\bmen\b/', $hay )
+		) {
+			return true;
+		}
+	}
+
+	return false;
 }
 
 /**
@@ -49,7 +96,8 @@ function jofme_get_product_copy( $key ) {
 		'restock_notify' => array( 'jofme_restock_notify_text', 'Restock notify text', 'jofme_restock_notify_text' ),
 		'upsells'        => array( 'jofme_upsells_heading', 'Upsells heading', 'jofme_upsells_heading' ),
 		'related'        => array( 'jofme_related_heading', 'Related products heading', 'jofme_related_heading' ),
-		'styling_help'   => array( 'jofme_styling_help_text', 'Styling help text', 'jofme_styling_help_text' ),
+		'styling_help'      => array( 'jofme_styling_help_text', 'Styling help text', 'jofme_styling_help_text' ),
+		'styling_help_mens' => array( 'jofme_styling_help_mens_text', 'Styling help text (men\'s collection)', 'jofme_styling_help_mens_text' ),
 	);
 
 	if ( ! isset( $map[ $key ] ) ) {
@@ -119,7 +167,8 @@ function jofme_product_copy_customize( $manager ) {
 		'jofme_restock_notify_text' => array( __( 'Restock notify button', 'jofme' ), 'text' ),
 		'jofme_upsells_heading'     => array( __( 'Upsells / pairs-well heading', 'jofme' ), 'text' ),
 		'jofme_related_heading'     => array( __( 'Related products heading', 'jofme' ), 'text' ),
-		'jofme_styling_help_text'   => array( __( 'Styling help text', 'jofme' ), 'text' ),
+		'jofme_styling_help_text'      => array( __( 'Styling help text', 'jofme' ), 'text' ),
+		'jofme_styling_help_mens_text' => array( __( 'Styling help text (men\'s collection)', 'jofme' ), 'text' ),
 	);
 
 	foreach ( $fields as $id => $config ) {
@@ -314,14 +363,27 @@ add_action( 'woocommerce_after_add_to_cart_form', 'jofme_render_free_shipping_li
 
 /**
  * Styling help → Instagram DM CTA.
+ *
+ * Men's collection products (pa_collection) use the masculine copy.
  */
 function jofme_render_styling_help() {
 	if ( ! is_product() ) {
 		return;
 	}
-	$url  = jofme_styling_help_url();
-	$text = jofme_get_product_copy( 'styling_help' );
-	if ( ! $url || ! $text ) {
+	$url = jofme_styling_help_url();
+	if ( ! $url ) {
+		return;
+	}
+
+	global $product;
+	$text = '';
+	if ( jofme_product_is_mens_collection( $product ) ) {
+		$text = jofme_get_product_copy( 'styling_help_mens' );
+	}
+	if ( ! $text ) {
+		$text = jofme_get_product_copy( 'styling_help' );
+	}
+	if ( ! $text ) {
 		return;
 	}
 	printf(
