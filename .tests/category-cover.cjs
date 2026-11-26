@@ -12,6 +12,7 @@ assert.match(php, /function jofme_category_cover_id/);
 assert.match(archive, /jofme_catalog_has_cover/);
 assert.match(archive, /\$has_cover/);
 assert.match(css, /\.jofme-catalog-heading--cover/);
+assert.match(css, /min-height:\s*clamp\(260px,\s*32vw,\s*650px\)/);
 assert.match(css, /var\(--jofme-layout-width,\s*var\(--jofme-container\)\)/);
 assert.match(css, /\.jofme-catalog-heading--cover \.jofme-catalog-heading__content \.term-description\{max-width:100%\}/);
 assert.doesNotMatch(css, /\.jofme-catalog-heading--cover[^{]*\{[^}]*padding:\s*clamp/s);

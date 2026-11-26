@@ -33,6 +33,7 @@ strings / wpml-config.xml.
 
 = 1.7.79 =
 * Product copy: men's collection (pa_collection) uses masculine styling-help text — «Δεν είσαι σίγουρος εάν σου πάει; Ρώτησέ μας».
+* Category cover: taller hero (min-height up to 650px).
 
 = 1.7.78 =
 * Add to cart: prevent double quantity when AJAX posts the full form (Form_Handler + wc-ajax both fired).
