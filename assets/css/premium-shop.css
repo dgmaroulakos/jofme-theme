@@ -134,7 +134,7 @@
 .jofme-catalog-heading--cover{
  position:relative;overflow:hidden;display:flex;align-items:center;
  width:100%;max-width:none;margin:0 0 1.5rem;
- min-height:clamp(260px,32vw,460px);
+ min-height:clamp(260px,32vw,650px);
  padding-block:clamp(2.5rem,6vw,5.5rem);padding-inline:0;
  background:#2a2623;color:#fff
 }
