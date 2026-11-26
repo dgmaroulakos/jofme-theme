@@ -3,7 +3,7 @@ Contributors: jofme
 Requires at least: 6.4
 Tested up to: 6.8
 Requires PHP: 7.4
-Stable tag: 1.7.77
+Stable tag: 1.7.78
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -30,6 +30,9 @@ strings / wpml-config.xml.
 * WPML or Polylang
 
 == Changelog ==
+
+= 1.7.78 =
+* Add to cart: prevent double quantity when AJAX posts the full form (Form_Handler + wc-ajax both fired).
 
 = 1.7.77 =
 * Category archives: remove auto smooth-scroll to breadcrumbs on page load (keep natural top position).

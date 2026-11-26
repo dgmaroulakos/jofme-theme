@@ -141,6 +141,26 @@ function jofme_cart_link_fragment( $fragments ) {
 add_filter( 'woocommerce_add_to_cart_fragments', 'jofme_cart_link_fragment' );
 
 /**
+ * Prevent double add-to-cart on ?wc-ajax=add_to_cart requests.
+ *
+ * Full form serializations include the hidden `add-to-cart` field. WooCommerce
+ * then adds once in WC_Form_Handler::add_to_cart_action (wp_loaded:20) and
+ * again in WC_AJAX::add_to_cart (template_redirect) — qty becomes 2.
+ *
+ * Strip `add-to-cart` before the form handler runs so only the AJAX endpoint adds.
+ */
+function jofme_prevent_duplicate_ajax_add_to_cart() {
+	// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- public wc-ajax endpoint flag.
+	$ajax = isset( $_GET['wc-ajax'] ) ? sanitize_text_field( wp_unslash( $_GET['wc-ajax'] ) ) : '';
+	if ( 'add_to_cart' !== $ajax ) {
+		return;
+	}
+	// phpcs:ignore WordPress.Security.NonceVerification.Missing, WordPress.Security.NonceVerification.Recommended
+	unset( $_REQUEST['add-to-cart'], $_POST['add-to-cart'] );
+}
+add_action( 'wp_loaded', 'jofme_prevent_duplicate_ajax_add_to_cart', 5 );
+
+/**
  * Body class for WooCommerce pages.
  *
  * @param array $classes Classes.
