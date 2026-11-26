@@ -571,6 +571,8 @@
    if (!data.get('product_id') && data.get('add-to-cart')) {
     data.set('product_id', data.get('add-to-cart'));
    }
+   // Drop add-to-cart so WC_Form_Handler does not also add on the same request.
+   data.delete('add-to-cart');
    if (!data.get('quantity')) {
     data.set('quantity', '1');
    }

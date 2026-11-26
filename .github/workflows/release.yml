@@ -70,6 +70,7 @@ jobs:
           node .tests/header-icon-buttons.cjs
           node .tests/variable-price-from.cjs
           node .tests/product-sku.cjs
+          node .tests/ajax-add-to-cart.cjs
           node .tests/languages-el.cjs
           node .tests/responsive-titles-icons.cjs
           node .tests/bestsellers-carousel.cjs
