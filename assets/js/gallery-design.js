@@ -221,7 +221,7 @@
   if (img) {
    if (img.getAttribute('src')) urls.push(img.getAttribute('src'));
    if (img.currentSrc) urls.push(img.currentSrc);
-   if (img.dataset && img.dataset.originalSrc) urls.push(img.dataset.originalSrc);
+   // Do not include dataset.originalSrc — that is the parent stash, not the live image.
   }
   return urls.map(normalizeImageUrl).filter(Boolean);
  }
@@ -564,6 +564,10 @@
   primary.dataset.originalSrc = primary.getAttribute('src') || '';
   primary.dataset.originalSrcset = primary.getAttribute('srcset') || '';
   primary.dataset.originalSizes = primary.getAttribute('sizes') || '';
+  if (typeof primary.getAttribute === 'function') {
+   const attachment = primary.getAttribute('data-attachment_id') || '';
+   if (attachment) primary.dataset.originalAttachmentId = attachment;
+  }
   const link = primary.closest('a');
   if (link) {
    primary.dataset.originalHref = link.getAttribute('href') || '';
@@ -583,6 +587,9 @@
   } else {
    primary.removeAttribute('sizes');
   }
+  if (primary.dataset.originalAttachmentId) {
+   primary.setAttribute('data-attachment_id', primary.dataset.originalAttachmentId);
+  }
   const link = primary.closest('a');
   if (link && primary.dataset.originalHref) {
    link.setAttribute('href', primary.dataset.originalHref);
@@ -599,9 +606,54 @@
   if (image.width) primary.setAttribute('width', String(image.width));
   if (image.height) primary.setAttribute('height', String(image.height));
   if (image.alt) primary.setAttribute('alt', image.alt);
+  if (image.id && typeof primary.setAttribute === 'function') {
+   primary.setAttribute('data-attachment_id', String(image.id));
+  }
   const link = primary.closest('a');
   if (link) {
    link.setAttribute('href', image.full_src || full);
+  }
+ }
+
+ function stashThumbImage(img) {
+  if (!img || !img.dataset || img.dataset.originalSrc) return;
+  img.dataset.originalSrc = img.getAttribute('src') || '';
+  img.dataset.originalSrcset = img.getAttribute('srcset') || '';
+  img.dataset.originalSizes = img.getAttribute('sizes') || '';
+  if (typeof img.getAttribute === 'function') {
+   const attachment = img.getAttribute('data-attachment_id') || '';
+   if (attachment) img.dataset.originalAttachmentId = attachment;
+  }
+ }
+
+ function restoreThumbImage(img) {
+  if (!img || !img.dataset || !img.dataset.originalSrc) return;
+  img.setAttribute('src', img.dataset.originalSrc);
+  if (img.dataset.originalSrcset) {
+   img.setAttribute('srcset', img.dataset.originalSrcset);
+  } else {
+   img.removeAttribute('srcset');
+  }
+  if (img.dataset.originalSizes) {
+   img.setAttribute('sizes', img.dataset.originalSizes);
+  } else {
+   img.removeAttribute('sizes');
+  }
+  if (img.dataset.originalAttachmentId) {
+   img.setAttribute('data-attachment_id', img.dataset.originalAttachmentId);
+  }
+ }
+
+ function applyImageToThumb(img, image) {
+  if (!img || !image) return;
+  const full = image.full_src || image.src;
+  if (!full) return;
+  stashThumbImage(img);
+  img.setAttribute('src', full);
+  img.removeAttribute('srcset');
+  img.removeAttribute('sizes');
+  if (image.id && typeof img.setAttribute === 'function') {
+   img.setAttribute('data-attachment_id', String(image.id));
   }
  }
 
@@ -809,6 +861,12 @@
   const primary = gallery.querySelector('.jofme-carousel-gallery__slide[data-primary] img');
   stashPrimaryImage(primary);
 
+  function thumbImageAt(i) {
+   const thumb = thumbs[i];
+   if (!thumb || typeof thumb.querySelector !== 'function') return null;
+   return thumb.querySelector('img');
+  }
+
   function refreshCarouselLists() {
    slides = Array.from(gallery.querySelectorAll('.jofme-carousel-gallery__slide'));
    thumbs = Array.from(gallery.querySelectorAll('.jofme-carousel-gallery__thumb'));
@@ -827,8 +885,12 @@
     if (!thumb) return;
     ensureDataset(thumb);
     thumb.dataset.index = String(i);
+    stashThumbImage(thumbImageAt(i));
    });
   }
+
+  // Stash parent thumb sources so variation swaps can restore them.
+  refreshCarouselLists();
 
   function visibleSlideIndexes() {
    const indexes = [];
@@ -960,6 +1022,7 @@
    clearSuppressedItems(slides);
    clearSuppressedItems(thumbs);
    restorePrimaryImage(primary);
+   thumbs.forEach((_, i) => restoreThumbImage(thumbImageAt(i)));
    setGalleryModeClass(gallery, false);
    show(0);
   }
@@ -974,12 +1037,34 @@
    removeVariationTempNodes(gallery);
    refreshCarouselLists();
    restorePrimaryImage(primary);
-   applyImageToPrimary(primary, images[0]);
+   thumbs.forEach((_, i) => restoreThumbImage(thumbImageAt(i)));
 
    const visible = [];
    const track = gallery.querySelector && gallery.querySelector('.jofme-carousel-gallery__track');
-   images.forEach((image) => {
-    let idx = findIndexForImage(slides, image);
+
+   images.forEach((image, imageIndex) => {
+    // First variation image always lives on the primary slide + its thumb,
+    // so the featured thumbnail cannot linger while the main image swaps.
+    if (imageIndex === 0) {
+     applyImageToPrimary(primary, image);
+     applyImageToThumb(thumbImageAt(0), image);
+     if (visible.indexOf(0) === -1) visible.push(0);
+     return;
+    }
+
+    let idx = -1;
+    const attachmentId = image.id ? String(image.id) : '';
+    if (attachmentId) {
+     idx = slides.findIndex((slide, i) => {
+      if (!slide || i === 0 || typeof slide.querySelector !== 'function') return false;
+      const img = slide.querySelector('img');
+      return img && img.getAttribute('data-attachment_id') === attachmentId;
+     });
+    }
+    if (idx < 0) {
+     idx = findIndexForImage(slides.slice(1), image);
+     if (idx >= 0) idx += 1;
+    }
     if (idx < 0 && track && typeof track.appendChild === 'function') {
      ensureCarouselNav(gallery);
      const thumbWrap = ensureCarouselThumbs(gallery);
