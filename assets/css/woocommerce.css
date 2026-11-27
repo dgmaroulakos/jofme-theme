@@ -508,6 +508,352 @@ body.jofme-tabs-boxed .woocommerce div.product .woocommerce-tabs ul.tabs li.acti
 	box-shadow: none;
 }
 
+/* ── Product reviews / rating form ─────────────────────────── */
+.woocommerce #reviews {
+	max-width: 44rem;
+}
+
+.woocommerce #reviews .woocommerce-Reviews-title {
+	font-family: var(--jofme-font-display, inherit);
+	font-size: clamp(1.35rem, 2.4vw, 1.75rem);
+	font-weight: 400;
+	letter-spacing: 0.02em;
+	margin: 0 0 1.25rem;
+	color: inherit;
+}
+
+.woocommerce #reviews .woocommerce-noreviews {
+	margin: 0 0 1.5rem;
+	opacity: 0.85;
+	font-size: 0.95rem;
+	line-height: 1.6;
+}
+
+.woocommerce #reviews .commentlist {
+	list-style: none;
+	margin: 0 0 2rem;
+	padding: 0;
+	display: flex;
+	flex-direction: column;
+	gap: 1.25rem;
+}
+
+.woocommerce #reviews .commentlist li {
+	margin: 0;
+	padding: 0;
+	border: 0;
+	background: transparent;
+}
+
+.woocommerce #reviews .comment_container {
+	display: grid;
+	grid-template-columns: 48px minmax(0, 1fr);
+	gap: 0.85rem 1rem;
+	align-items: start;
+	padding: 1rem 0;
+	border-top: 1px solid rgba(255, 255, 255, 0.16);
+}
+
+.woocommerce #reviews .commentlist > li:first-child .comment_container {
+	border-top: 0;
+	padding-top: 0;
+}
+
+.woocommerce #reviews .comment_container img.avatar {
+	width: 48px;
+	height: 48px;
+	border-radius: 50%;
+	object-fit: cover;
+	margin: 0;
+	background: rgba(255, 255, 255, 0.12);
+}
+
+.woocommerce #reviews .comment-text {
+	margin: 0;
+	border: 0;
+	padding: 0;
+	background: transparent;
+}
+
+.woocommerce #reviews .meta {
+	margin: 0 0 0.45rem;
+	font-size: 12px;
+	letter-spacing: 0.04em;
+	opacity: 0.8;
+}
+
+.woocommerce #reviews .description {
+	margin: 0;
+	font-size: 0.95rem;
+	line-height: 1.65;
+}
+
+.woocommerce #reviews .star-rating {
+	float: none;
+	margin: 0 0 0.5rem;
+	color: var(--jofme-color-accent, #987746);
+}
+
+.woocommerce #review_form_wrapper {
+	margin-top: 0.5rem;
+}
+
+.woocommerce #review_form #respond {
+	margin: 0;
+	padding: clamp(1.25rem, 3vw, 1.85rem);
+	background: var(--jofme-color-surface, #fffdf9);
+	color: var(--jofme-color-text, #302d26);
+	border: 1px solid var(--jofme-color-border, #dbd3c3);
+}
+
+.woocommerce #review_form #reply-title,
+.woocommerce #review_form .comment-reply-title {
+	font-family: var(--jofme-font-display, inherit);
+	font-size: clamp(1.25rem, 2.2vw, 1.55rem);
+	font-weight: 400;
+	letter-spacing: 0.02em;
+	margin: 0 0 1.15rem;
+	display: block;
+}
+
+.woocommerce #review_form .comment-notes,
+.woocommerce #review_form .logged-in-as {
+	margin: 0 0 1rem;
+	font-size: 12px;
+	line-height: 1.5;
+	color: var(--jofme-color-text-muted, #756b59);
+}
+
+.woocommerce #review_form .comment-form {
+	display: grid;
+	grid-template-columns: 1fr 1fr;
+	gap: 0.85rem 1rem;
+	margin: 0;
+}
+
+.woocommerce #review_form .comment-form-rating,
+.woocommerce #review_form .comment-form-comment,
+.woocommerce #review_form .comment-form-cookies-consent,
+.woocommerce #review_form .form-submit {
+	grid-column: 1 / -1;
+}
+
+.woocommerce #review_form .comment-form > p {
+	margin: 0;
+}
+
+.woocommerce #review_form .comment-form label {
+	display: block;
+	margin: 0 0 0.4rem;
+	font-size: 11px;
+	font-weight: 500;
+	letter-spacing: 0.08em;
+	text-transform: uppercase;
+	color: var(--jofme-color-text, #302d26);
+}
+
+.woocommerce #review_form .comment-form .required {
+	color: var(--jofme-color-accent, #987746);
+	text-decoration: none;
+}
+
+.woocommerce #review_form .comment-form input[type="text"],
+.woocommerce #review_form .comment-form input[type="email"],
+.woocommerce #review_form .comment-form input[type="url"],
+.woocommerce #review_form .comment-form textarea,
+.woocommerce #review_form .comment-form select {
+	width: 100%;
+	max-width: none;
+	min-height: 52px;
+	margin: 0;
+	padding: 0.8rem 0.95rem;
+	border: 1px solid var(--jofme-color-border, #dbd3c3);
+	border-radius: 3px;
+	background: var(--jofme-color-surface, #fffdf9);
+	color: var(--jofme-color-text, #302d26);
+	font: inherit;
+	font-size: 14px;
+	line-height: 1.4;
+	box-shadow: none;
+	transition: border-color 0.15s ease;
+}
+
+.woocommerce #review_form .comment-form textarea {
+	min-height: 140px;
+	resize: vertical;
+}
+
+.woocommerce #review_form .comment-form input:focus,
+.woocommerce #review_form .comment-form textarea:focus,
+.woocommerce #review_form .comment-form select:focus {
+	outline: 2px solid var(--jofme-color-accent, #987746);
+	outline-offset: 1px;
+	border-color: var(--jofme-color-accent, #987746);
+}
+
+.woocommerce #review_form .comment-form-cookies-consent {
+	display: flex;
+	align-items: flex-start;
+	gap: 0.65rem;
+	font-size: 13px;
+	line-height: 1.45;
+	color: var(--jofme-color-text-muted, #756b59);
+}
+
+.woocommerce #review_form .comment-form-cookies-consent label {
+	display: inline;
+	margin: 0;
+	font-size: inherit;
+	font-weight: 400;
+	letter-spacing: 0;
+	text-transform: none;
+	color: inherit;
+}
+
+.woocommerce #review_form .comment-form-cookies-consent input {
+	width: 1rem;
+	height: 1rem;
+	min-height: 0;
+	margin: 0.15rem 0 0;
+	flex: 0 0 auto;
+	accent-color: var(--jofme-color-text, #302d26);
+}
+
+.woocommerce #review_form p.stars {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: 0.2rem;
+	margin: 0.2rem 0 0;
+	padding: 0.25rem 0;
+	font-size: 1.35rem;
+	line-height: 1;
+}
+
+.woocommerce #review_form p.stars a {
+	position: relative;
+	display: inline-block;
+	width: 1.5em;
+	height: 1.5em;
+	margin: 0;
+	border: 0;
+	font-size: 1em;
+	line-height: 1.5em;
+	text-indent: -9999px;
+	overflow: hidden;
+	text-decoration: none;
+	transition: transform 0.15s ease;
+}
+
+.woocommerce #review_form p.stars a::before {
+	display: block;
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 1.5em;
+	height: 1.5em;
+	line-height: 1.5em;
+	text-indent: 0;
+	font-family: WooCommerce;
+	content: "\e021";
+	color: var(--jofme-color-border, #dbd3c3);
+	speak: never;
+	transition: color 0.15s ease;
+}
+
+.woocommerce #review_form p.stars a:hover,
+.woocommerce #review_form p.stars a:focus-visible {
+	transform: translateY(-1px);
+}
+
+.woocommerce #review_form p.stars a:focus-visible {
+	outline: 2px solid var(--jofme-color-accent, #987746);
+	outline-offset: 2px;
+}
+
+.woocommerce #review_form p.stars a:hover ~ a::before {
+	color: var(--jofme-color-border, #dbd3c3);
+	content: "\e021";
+}
+
+.woocommerce #review_form p.stars:hover a::before {
+	color: var(--jofme-color-accent, #987746);
+	content: "\e020";
+}
+
+.woocommerce #review_form p.stars.selected a.active::before,
+.woocommerce #review_form p.stars.selected a:not(.active)::before {
+	color: var(--jofme-color-accent, #987746);
+	content: "\e020";
+}
+
+.woocommerce #review_form p.stars.selected a.active ~ a::before {
+	color: var(--jofme-color-border, #dbd3c3);
+	content: "\e021";
+}
+
+.woocommerce #review_form .form-submit {
+	margin-top: 0.35rem;
+}
+
+.woocommerce #review_form #respond .form-submit input#submit,
+.woocommerce #review_form #respond .form-submit .jofme-review-submit,
+.woocommerce #review_form #respond input#submit {
+	width: 100%;
+	min-height: 54px;
+	margin: 0;
+	padding: 0.85rem 1.25rem;
+	border: 0;
+	border-radius: 3px;
+	background: var(--jofme-color-text, #302d26);
+	color: var(--jofme-color-surface, #fffdf9);
+	font: inherit;
+	font-size: 11px;
+	font-weight: 500;
+	letter-spacing: 0.1em;
+	text-transform: uppercase;
+	cursor: pointer;
+	transition: background 0.15s ease;
+}
+
+.woocommerce #review_form #respond .form-submit input#submit:hover,
+.woocommerce #review_form #respond .form-submit .jofme-review-submit:hover,
+.woocommerce #review_form #respond input#submit:hover {
+	background: var(--jofme-color-accent, #987746);
+}
+
+@media (max-width: 767px) {
+	.woocommerce #reviews {
+		max-width: none;
+	}
+
+	.woocommerce #review_form #respond {
+		padding: 1.15rem 1rem 1.35rem;
+	}
+
+	.woocommerce #review_form .comment-form {
+		grid-template-columns: 1fr;
+		gap: 0.75rem;
+	}
+
+	.woocommerce #reviews .comment_container {
+		grid-template-columns: 40px minmax(0, 1fr);
+		gap: 0.65rem 0.75rem;
+	}
+
+	.woocommerce #reviews .comment_container img.avatar {
+		width: 40px;
+		height: 40px;
+	}
+
+	.woocommerce #review_form p.stars a {
+		width: 1.85rem;
+		height: 1.85rem;
+		font-size: 1.6rem;
+		line-height: 1.85rem;
+	}
+}
+
 .woocommerce .related > h2,
 .woocommerce .upsells > h2 {
 	font-size: 1.75rem;

@@ -50,6 +50,7 @@ jobs:
           node .tests/product-page-gallery.cjs
           node .tests/term-description-more.cjs
           node .tests/tabs-bg.cjs
+          node .tests/product-review-form.cjs
           node .tests/sticky-header-jump.cjs
           node .tests/sticky-header-height.cjs
           node .tests/gallery-carousel.cjs

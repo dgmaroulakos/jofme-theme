@@ -197,3 +197,21 @@ function jofme_format_price_range_from_only( $price, $from, $to ) {
 	return sprintf( __( 'From %s', 'woocommerce' ), $formatted );
 }
 add_filter( 'woocommerce_format_price_range', 'jofme_format_price_range_from_only', 10, 3 );
+
+/**
+ * Refine product review form labels and submit control.
+ *
+ * @param array $args Comment form args.
+ * @return array
+ */
+function jofme_product_review_comment_form_args( $args ) {
+	$args['title_reply']          = __( 'Γράψε την αξιολόγησή σου', 'jofme' );
+	$args['title_reply_to']       = __( 'Απάντηση σε %s', 'jofme' );
+	$args['label_submit']         = __( 'Υποβολή αξιολόγησης', 'jofme' );
+	$args['class_submit']         = 'submit jofme-review-submit';
+	$args['submit_button']        = '<button name="%1$s" type="submit" id="%2$s" class="%3$s">%4$s</button>';
+	$args['comment_notes_before'] = '';
+
+	return $args;
+}
+add_filter( 'woocommerce_product_review_comment_form_args', 'jofme_product_review_comment_form_args' );
