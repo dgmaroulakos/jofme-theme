@@ -51,10 +51,15 @@ const colorSelect = {
     return sel === '.jofme-variation-swatches' ? colorWrap : null;
   },
 };
+const megethosWrap = {
+  getAttribute() { return null; },
+};
 const sizeSelect = {
-  name: 'attribute_pa_size',
+  name: 'attribute_pa_megethos',
   value: '',
-  closest() { return null; },
+  closest(sel) {
+    return sel === '.jofme-variation-swatches' ? megethosWrap : null;
+  },
 };
 const sku = { textContent: 'PARENT', dataset: {}, nodeType: 1 };
 const formStore = {};
@@ -62,7 +67,7 @@ const form = {
   classList: { contains(name) { return name === 'variations_form'; } },
   querySelector() { return null; },
   querySelectorAll(sel) {
-    if (sel === '.jofme-variation-swatches select[name^="attribute_"]') return [colorSelect];
+    if (sel === '.jofme-variation-swatches select[name^="attribute_"]') return [colorSelect, sizeSelect];
     if (sel === 'select[name^="attribute_"]') return [colorSelect, sizeSelect];
     return [];
   },
@@ -75,28 +80,28 @@ Object.defineProperty(form, 'dataset', {
 
 const variations = [
   {
-    attributes: { attribute_pa_color: 'gold', attribute_pa_size: 's' },
+    attributes: { attribute_pa_color: 'gold', attribute_pa_megethos: 's' },
     image_id: 11,
     sku: 'GOLD-S',
     image: { src: '/gold-s.jpg', full_src: '/gold-s-full.jpg' },
     jofme_gallery: [{ id: 11, src: '/gold-s-full.jpg', full_src: '/gold-s-full.jpg' }],
   },
   {
-    attributes: { attribute_pa_color: 'gold', attribute_pa_size: 'm' },
+    attributes: { attribute_pa_color: 'gold', attribute_pa_megethos: 'm' },
     image_id: 0,
     sku: 'GOLD-M',
     image: { src: '/parent.jpg', full_src: '/parent-full.jpg' },
     jofme_gallery: [],
   },
   {
-    attributes: { attribute_pa_color: 'gold', attribute_pa_size: 'l' },
+    attributes: { attribute_pa_color: 'gold', attribute_pa_megethos: 'l' },
     image_id: 13,
     sku: 'GOLD-L',
     image: { src: '/gold-l.jpg', full_src: '/gold-l-full.jpg' },
     jofme_gallery: [{ id: 13, src: '/gold-l-full.jpg', full_src: '/gold-l-full.jpg' }],
   },
   {
-    attributes: { attribute_pa_color: 'silver', attribute_pa_size: 's' },
+    attributes: { attribute_pa_color: 'silver', attribute_pa_megethos: 's' },
     image_id: 22,
     sku: 'SILVER-S',
     image: { src: '/silver.jpg', full_src: '/silver-full.jpg' },
@@ -194,7 +199,7 @@ assert.equal(sku.textContent, 'SILVER-S');
 colorSelect.value = '';
 sizeSelect.value = 'm';
 found({
-  attributes: { attribute_pa_size: 'm' },
+  attributes: { attribute_pa_megethos: 'm' },
   image_id: 0,
   sku: 'SIZE-M',
   jofme_gallery: [],

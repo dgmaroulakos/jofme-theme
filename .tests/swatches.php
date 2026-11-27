@@ -190,7 +190,24 @@ verify( true, false !== strpos( $variation, 'jofme-variation-swatches' ), 'varia
 verify( true, false !== strpos( $variation, '<select' ), 'native select preserved' );
 verify( true, false !== strpos( $variation, 'data-jofme-gallery-driver="1"' ), 'color swatch drives gallery' );
 verify( true, jofme_is_size_attribute( 'pa_size' ), 'size attribute detected' );
+verify( true, jofme_is_megethos_attribute( 'pa_megethos' ), 'megethos slug is the size attribute' );
+verify( true, jofme_is_megethos_attribute( 'pa_μέγεθος' ), 'accented Μέγεθος slug matches' );
+verify( true, jofme_is_megethos_attribute( 'Μέγεθος' ), 'Greek label matches' );
+verify( false, jofme_is_megethos_attribute( 'pa_size' ), 'English size slug is not megethos' );
 verify( false, jofme_is_size_attribute( 'pa_color' ), 'color is not a size attribute' );
+
+$megethos = jofme_variation_swatches_html(
+	'<select name="attribute_pa_megethos"><option value="small">Small</option></select>',
+	array(
+		'attribute' => 'pa_megethos',
+		'options'   => array( 'small' ),
+		'selected'  => 'small',
+	)
+);
+verify( true, false !== strpos( $megethos, 'data-jofme-gallery-driver="0"' ), 'megethos does not drive the gallery' );
+verify( true, false !== strpos( $megethos, 'is-text' ), 'megethos renders as a text button' );
+verify( true, false !== strpos( $megethos, 'data-value="small"' ), 'megethos button keeps the term value' );
+verify( false, false !== strpos( $megethos, 'is-color' ), 'megethos is not a color swatch' );
 
 $size_swatch = jofme_variation_swatches_html(
 	'<select name="attribute_pa_size"><option value="m">M</option></select>',
