@@ -3,7 +3,7 @@ Contributors: jofme
 Requires at least: 6.4
 Tested up to: 6.8
 Requires PHP: 7.4
-Stable tag: 1.7.80
+Stable tag: 1.7.83
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -30,6 +30,9 @@ strings / wpml-config.xml.
 * WPML or Polylang
 
 == Changelog ==
+
+= 1.7.83 =
+* Variable products with a size attribute: choosing a color updates the gallery before a size is picked, and a size without its own photo no longer collapses the gallery to the parent image.
 
 = 1.7.80 =
 * Category cover (mobile): stack title and description below the hero image instead of overlaying them.

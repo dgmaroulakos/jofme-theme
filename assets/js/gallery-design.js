@@ -246,15 +246,25 @@
    });
   }
 
-  if (variation && Array.isArray(variation.jofme_gallery)) {
+  if (!variation) return images;
+
+  const explicitGallery = Array.isArray(variation.jofme_gallery);
+  if (explicitGallery) {
    variation.jofme_gallery.forEach(pushImage);
   }
   ['variation_gallery_images', 'variation_gallery', 'gallery_images'].forEach((key) => {
-   if (variation && Array.isArray(variation[key])) {
+   if (Array.isArray(variation[key])) {
     variation[key].forEach(pushImage);
    }
   });
-  if (variation && variation.image) {
+
+  // WooCommerce copies the parent image into variation.image when the
+  // variation has no photo of its own (typical for size). An explicit empty
+  // jofme_gallery means "no variation photos" — do not treat that fallback
+  // as a gallery, or the product gallery collapses to a single slide.
+  const hasOwn = images.length > 0 || !!variation.image_id;
+  const legacyImageOnly = !explicitGallery && !variation.image_id && !images.length;
+  if (variation.image && (hasOwn || legacyImageOnly)) {
    pushImage(
     Object.assign({}, variation.image, {
      id: variation.image_id || variation.image.id || '',
@@ -345,11 +355,87 @@
   });
  }
 
+ function resolveVariationForm(node) {
+  if (node && typeof node.querySelectorAll === 'function') {
+   if (typeof node.matches === 'function' && node.matches('form.variations_form')) return node;
+   const selects = node.querySelectorAll('select[name^="attribute_"]');
+   if ((selects && selects.length) || (node.classList && node.classList.contains('variations_form'))) {
+    return node;
+   }
+  }
+  return document.querySelector('form.variations_form');
+ }
+
+ /** Size / length / diameter attributes must not choose the gallery by themselves. */
+ function isSizeAttributeName(name) {
+  const slug = String(name || '')
+   .replace(/^attribute_/, '')
+   .replace(/^pa_/, '');
+  return /(?:^|[_\-\s])(size|sizes|megethos|length|diameter)(?:$|[_\-\s])|μεγεθ|μήκος|μηκος|διάμετρ|διαμετρ|διαστα|δαχτυλ/i.test(slug);
+ }
+
+ function isGalleryDriverSelect(select) {
+  if (!select || !select.name || typeof select.closest !== 'function') return false;
+  const wrap = select.closest('.jofme-variation-swatches');
+  if (!wrap) return false;
+  if (typeof wrap.getAttribute === 'function' && wrap.getAttribute('data-jofme-gallery-driver') === '0') return false;
+  if (isSizeAttributeName(select.name)) return false;
+  return true;
+ }
+
+ function chosenAttributes(form, driverOnly) {
+  const chosen = {};
+  if (!form || typeof form.querySelectorAll !== 'function') return chosen;
+  const selector = driverOnly
+   ? '.jofme-variation-swatches select[name^="attribute_"]'
+   : 'select[name^="attribute_"]';
+  Array.from(form.querySelectorAll(selector)).forEach((select) => {
+   if (!select || !select.name || !select.value) return;
+   if (driverOnly && !isGalleryDriverSelect(select)) return;
+   chosen[select.name] = String(select.value);
+  });
+  return chosen;
+ }
+
+ function variationMatchesSelection(variation, chosen) {
+  if (!variation || !variation.attributes) return false;
+  const keys = Object.keys(chosen);
+  if (!keys.length) return false;
+  return keys.every((key) => {
+   const value = variation.attributes[key];
+   return value === '' || value === undefined || value === null || String(value) === String(chosen[key]);
+  });
+ }
+
  /**
-  * Simple gallery sync:
+  * Gallery to show for the current selection.
+  * Color (and other non-size swatches) preview a matching variation before
+  * size is chosen. Size alone does not pick a photo.
+  */
+ function findGalleryPreview(form) {
+  if (!$ || !form) return null;
+  const variations = $(form).data('product_variations');
+  if (!Array.isArray(variations)) return null;
+  const drivers = chosenAttributes(form, true);
+  if (!Object.keys(drivers).length) return null;
+  const all = chosenAttributes(form, false);
+  const visible = variations.filter(
+   (variation) => variation && variation.variation_is_visible !== false && variation.variation_is_active !== false
+  );
+  const withImages = (list) => list.find((variation) => variationGalleryImages(variation).length) || null;
+  const exact = withImages(visible.filter((variation) => variationMatchesSelection(variation, all)));
+  if (exact) return exact;
+  if (Object.keys(all).length === Object.keys(drivers).length) return null;
+  return withImages(visible.filter((variation) => variationMatchesSelection(variation, drivers)));
+ }
+
+ /**
+  * Gallery sync:
   * - Page load / clear → parent product photos
-  * - found_variation with photos → that variation’s photos
-  * - found_variation without photos → keep parent photos (SKU still updates)
+  * - Color (or other visual swatch) selected, size still open → that color’s photos
+  * - Full match with its own photos → those photos
+  * - Full match whose only image is the parent fallback (typical size) → keep the color/parent gallery
+  * - Size selected alone → parent photos
   */
  function bindVariationGalleryBridge() {
   if (!$ || typeof $.fn !== 'object') return;
@@ -360,21 +446,48 @@
 
   function onFound(_, variation) {
    syncVariationSku(variation);
-   if (variationGalleryImages(variation).length) {
+   if (variation && variationGalleryImages(variation).length) {
     applyVariationToGalleries(variation);
-   } else {
-    resetVariationGalleries();
+    return;
    }
+   const preview = findGalleryPreview(resolveVariationForm(this));
+   if (preview) {
+    applyVariationToGalleries(preview);
+    return;
+   }
+   resetVariationGalleries();
   }
 
   function onReset() {
    syncVariationSku(null);
+   const preview = findGalleryPreview(resolveVariationForm(this));
+   if (preview) {
+    applyVariationToGalleries(preview);
+    return;
+   }
    resetVariationGalleries();
+  }
+
+  function onCheck() {
+   const form = resolveVariationForm(this);
+   const preview = findGalleryPreview(form);
+   if (preview) {
+    applyVariationToGalleries(preview);
+    return;
+   }
+   if (!Object.keys(chosenAttributes(form, true)).length) {
+    resetVariationGalleries();
+   }
   }
 
   if (document.body) {
    $(document.body).on('found_variation.jofmeGallery', 'form.variations_form', onFound);
    $(document.body).on('reset_data.jofmeGallery hide_variation.jofmeGallery', 'form.variations_form', onReset);
+   $(document.body).on(
+    'check_variations.jofmeGallery woocommerce_variation_has_changed.jofmeGallery',
+    'form.variations_form',
+    onCheck
+   );
   }
 
   // Direct form binds (tests + environments without delegated bubbling).
@@ -384,6 +497,7 @@
    form.dataset.jofmeVarGalleryForm = '1';
    $(form).on('found_variation.jofmeGallery', onFound);
    $(form).on('reset_data.jofmeGallery hide_variation.jofmeGallery', onReset);
+   $(form).on('check_variations.jofmeGallery woocommerce_variation_has_changed.jofmeGallery', onCheck);
   });
  }
 
