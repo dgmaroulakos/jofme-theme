@@ -366,12 +366,29 @@
   return document.querySelector('form.variations_form');
  }
 
- /** Size / length / diameter attributes must not choose the gallery by themselves. */
- function isSizeAttributeName(name) {
-  const slug = String(name || '')
+ /** Fold Greek accents so Μέγεθος matches μεγεθος / megethos. */
+ function foldAttributeName(name) {
+  return String(name || '')
    .replace(/^attribute_/, '')
-   .replace(/^pa_/, '');
-  return /(?:^|[_\-\s])(size|sizes|megethos|length|diameter)(?:$|[_\-\s])|μεγεθ|μήκος|μηκος|διάμετρ|διαμετρ|διαστα|δαχτυλ/i.test(slug);
+   .replace(/^pa_/, '')
+   .toLowerCase()
+   .replace(/ά/g, 'α')
+   .replace(/έ/g, 'ε')
+   .replace(/ή/g, 'η')
+   .replace(/ί|ΐ|ϊ/g, 'ι')
+   .replace(/ό/g, 'ο')
+   .replace(/ύ|ΰ|ϋ/g, 'υ')
+   .replace(/ώ/g, 'ω')
+   .replace(/ς/g, 'σ');
+ }
+
+ /**
+  * Megethos (and other size-like attributes) must not choose the gallery alone.
+  * The store attribute is `megethos`, not the English slug `size`.
+  */
+ function isSizeAttributeName(name) {
+  const slug = foldAttributeName(name);
+  return /(?:^|[_\-\s])(size|sizes|megethos|length|diameter)(?:$|[_\-\s])|μεγεθος|μηκος|διαμετρ|διαστα|δαχτυλ/.test(slug);
  }
 
  function isGalleryDriverSelect(select) {

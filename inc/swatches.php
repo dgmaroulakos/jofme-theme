@@ -102,15 +102,44 @@ function jofme_is_swatch_attribute( $attribute ) {
 }
 
 /**
- * Size-like attributes do not drive the product gallery.
+ * Fold Greek accents so Μέγεθος and μεγεθος match the same key.
  *
- * Picking a size should not swap photos to another color, and a size
- * variation that only inherits the parent image should keep the current set.
- *
- * @param string $attribute Taxonomy or attribute name.
- * @return bool
+ * @param string $value Raw attribute name, slug, or label.
+ * @return string
  */
-function jofme_is_size_attribute( $attribute ) {
+function jofme_fold_attribute_key( $value ) {
+	$map = array(
+		'ά' => 'α',
+		'έ' => 'ε',
+		'ή' => 'η',
+		'ί' => 'ι',
+		'ΐ' => 'ι',
+		'ϊ' => 'ι',
+		'ό' => 'ο',
+		'ύ' => 'υ',
+		'ΰ' => 'υ',
+		'ϋ' => 'υ',
+		'ώ' => 'ω',
+		'ς' => 'σ',
+		'Ά' => 'α',
+		'Έ' => 'ε',
+		'Ή' => 'η',
+		'Ί' => 'ι',
+		'Ό' => 'ο',
+		'Ύ' => 'υ',
+		'Ώ' => 'ω',
+	);
+
+	return strtolower( strtr( (string) $value, $map ) );
+}
+
+/**
+ * Attribute name, slug, and label joined for matching.
+ *
+ * @param string $attribute Taxonomy (pa_megethos) or attribute name (megethos).
+ * @return string
+ */
+function jofme_attribute_match_haystack( $attribute ) {
 	$parts = array( (string) $attribute );
 	$tax   = jofme_get_attribute_object( $attribute );
 	if ( $tax ) {
@@ -118,9 +147,36 @@ function jofme_is_size_attribute( $attribute ) {
 		$parts[] = (string) $tax->attribute_label;
 	}
 
+	return jofme_fold_attribute_key( implode( ' ', $parts ) );
+}
+
+/**
+ * The store's size attribute is `megethos` (Μέγεθος), not the English slug `size`.
+ *
+ * @param string $attribute Taxonomy or attribute name.
+ * @return bool
+ */
+function jofme_is_megethos_attribute( $attribute ) {
+	return (bool) preg_match( '/megethos|μεγεθος/ui', jofme_attribute_match_haystack( $attribute ) );
+}
+
+/**
+ * Size-like attributes do not drive the product gallery.
+ *
+ * Picking megethos should not swap photos to another color, and a megethos
+ * variation that only inherits the parent image should keep the current set.
+ *
+ * @param string $attribute Taxonomy or attribute name.
+ * @return bool
+ */
+function jofme_is_size_attribute( $attribute ) {
+	if ( jofme_is_megethos_attribute( $attribute ) ) {
+		return true;
+	}
+
 	return (bool) preg_match(
-		'/size|megethos|μεγεθ|μήκος|μηκος|length|diameter|διάμετρ|διαμετρ|διαστα|δαχτυλ/ui',
-		implode( ' ', $parts )
+		'/size|μηκος|length|diameter|διαμετρ|διαστα|δαχτυλ/ui',
+		jofme_attribute_match_haystack( $attribute )
 	);
 }
 
@@ -262,12 +318,17 @@ function jofme_swatch_html( $args ) {
 			'selected' => false,
 			'disabled' => false,
 			'input'    => '',
+			'text'     => false,
 		)
 	);
 
 	$classes = array( 'jofme-swatch' );
 	$style   = '';
-	if ( $args['image'] ) {
+	if ( $args['text'] ) {
+		$classes[] = 'is-text';
+		$args['image'] = '';
+		$args['color'] = '';
+	} elseif ( $args['image'] ) {
 		$classes[] = 'is-image';
 	} elseif ( $args['color'] ) {
 		$classes[] = 'is-color';
@@ -819,8 +880,10 @@ function jofme_filter_swatches( $taxonomy, $key, $label ) {
  * @return string
  */
 function jofme_variation_swatches_html( $html, $args ) {
-	$attribute = isset( $args['attribute'] ) ? (string) $args['attribute'] : '';
-	if ( ! $attribute || ! taxonomy_exists( $attribute ) || ! jofme_is_swatch_attribute( $attribute ) ) {
+	$attribute   = isset( $args['attribute'] ) ? (string) $args['attribute'] : '';
+	$is_megethos = jofme_is_megethos_attribute( $attribute );
+	$is_swatch   = $attribute && taxonomy_exists( $attribute ) && jofme_is_swatch_attribute( $attribute );
+	if ( ! $attribute || ( ! $is_megethos && ! $is_swatch ) ) {
 		return $html;
 	}
 
@@ -839,7 +902,7 @@ function jofme_variation_swatches_html( $html, $args ) {
 	foreach ( $options as $option ) {
 		$term        = get_term_by( 'slug', $option, $attribute );
 		$name        = $term instanceof WP_Term ? $term->name : (string) $option;
-		$visuals     = $term instanceof WP_Term ? jofme_term_swatch_visuals( $attribute, $term ) : array( 'color' => '', 'image' => '' );
+		$visuals     = ( ! $is_megethos && $term instanceof WP_Term ) ? jofme_term_swatch_visuals( $attribute, $term ) : array( 'color' => '', 'image' => '' );
 		$is_selected = ( sanitize_title( $selected ) === sanitize_title( $option ) );
 
 		$swatches .= jofme_swatch_html(
@@ -850,6 +913,7 @@ function jofme_variation_swatches_html( $html, $args ) {
 				'image'    => $visuals['image'],
 				'value'    => $option,
 				'selected' => $is_selected,
+				'text'     => $is_megethos,
 			)
 		);
 	}
