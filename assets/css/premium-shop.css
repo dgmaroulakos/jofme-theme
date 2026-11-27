@@ -147,6 +147,27 @@
 }
 .jofme-catalog-heading--cover .jofme-catalog-heading__content .term-description{max-width:100%}
 .jofme-catalog-heading--cover h1,.jofme-catalog-heading--cover .jofme-eyebrow,.jofme-catalog-heading--cover .term-description{color:inherit}
+/* Mobile: image on top, title + description stacked below (no overlay). */
+@media(max-width:767px){
+ .jofme-catalog-heading--cover{
+  flex-direction:column;align-items:stretch;justify-content:flex-start;
+  min-height:0;padding:0;overflow:visible;
+  background:transparent;color:inherit
+ }
+ .jofme-catalog-heading--cover::after{display:none}
+ .jofme-catalog-heading--cover .jofme-catalog-cover{
+  position:relative;inset:auto;display:block;
+  width:100%;height:auto;aspect-ratio:4/3;max-height:min(70vw,420px);
+  object-fit:cover
+ }
+ .jofme-catalog-heading--cover .jofme-catalog-heading__content{
+  width:min(100% - 2rem,var(--jofme-layout-width,var(--jofme-container)));
+  margin:1.25rem auto 0;padding:0
+ }
+ .jofme-catalog-heading--cover .jofme-eyebrow{color:var(--jofme-color-accent)}
+ .jofme-catalog-heading--cover h1{color:var(--jofme-color-text)}
+ .jofme-catalog-heading--cover .term-description{color:var(--jofme-color-text-muted)}
+}
 /* Term description: full on desktop; 20-word preview + More on mobile. */
 .jofme-term-description__preview{display:none}
 .jofme-term-description__more{display:none;appearance:none;border:0;background:none;padding:0;margin:.65rem 0 0;font:inherit;font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:inherit;cursor:pointer;align-items:center;gap:.35rem}
