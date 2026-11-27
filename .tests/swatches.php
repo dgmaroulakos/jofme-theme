@@ -188,6 +188,19 @@ $variation = jofme_variation_swatches_html(
 );
 verify( true, false !== strpos( $variation, 'jofme-variation-swatches' ), 'variation wrapper' );
 verify( true, false !== strpos( $variation, '<select' ), 'native select preserved' );
+verify( true, false !== strpos( $variation, 'data-jofme-gallery-driver="1"' ), 'color swatch drives gallery' );
+verify( true, jofme_is_size_attribute( 'pa_size' ), 'size attribute detected' );
+verify( false, jofme_is_size_attribute( 'pa_color' ), 'color is not a size attribute' );
+
+$size_swatch = jofme_variation_swatches_html(
+	'<select name="attribute_pa_size"><option value="m">M</option></select>',
+	array(
+		'attribute' => 'pa_size',
+		'options'   => array( 'm' ),
+		'selected'  => 'm',
+	)
+);
+verify( true, false !== strpos( $size_swatch, 'data-jofme-gallery-driver="0"' ), 'size swatch does not drive gallery' );
 
 $jofme_options['jofme_attribute_swatch_7'] = 'no';
 $plain = jofme_variation_swatches_html(

@@ -102,6 +102,29 @@ function jofme_is_swatch_attribute( $attribute ) {
 }
 
 /**
+ * Size-like attributes do not drive the product gallery.
+ *
+ * Picking a size should not swap photos to another color, and a size
+ * variation that only inherits the parent image should keep the current set.
+ *
+ * @param string $attribute Taxonomy or attribute name.
+ * @return bool
+ */
+function jofme_is_size_attribute( $attribute ) {
+	$parts = array( (string) $attribute );
+	$tax   = jofme_get_attribute_object( $attribute );
+	if ( $tax ) {
+		$parts[] = (string) $tax->attribute_name;
+		$parts[] = (string) $tax->attribute_label;
+	}
+
+	return (bool) preg_match(
+		'/size|megethos|μεγεθ|μήκος|μηκος|length|diameter|διάμετρ|διαμετρ|διαστα|δαχτυλ/ui',
+		implode( ' ', $parts )
+	);
+}
+
+/**
  * Hex color for an attribute term.
  *
  * @param WP_Term|object $term Term.
@@ -833,6 +856,8 @@ function jofme_variation_swatches_html( $html, $args ) {
 
 	$swatches .= '</div>';
 
-	return '<div class="jofme-variation-swatches" data-attribute="' . esc_attr( $attribute ) . '">' . $swatches . $html . '</div>';
+	$driver = jofme_is_size_attribute( $attribute ) ? '0' : '1';
+
+	return '<div class="jofme-variation-swatches" data-attribute="' . esc_attr( $attribute ) . '" data-jofme-gallery-driver="' . esc_attr( $driver ) . '">' . $swatches . $html . '</div>';
 }
 add_filter( 'woocommerce_dropdown_variation_attribute_options_html', 'jofme_variation_swatches_html', 20, 2 );

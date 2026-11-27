@@ -117,6 +117,14 @@ assert.equal(primary.attrs.src, '/b-full.jpg');
 assert.equal(link.attrs.href, '/b-full.jpg');
 assert.equal(primary.attrs.srcset, undefined);
 
+handlers.found_variation(null, {
+  image_id: 0,
+  jofme_gallery: [],
+  image: { src: '/parent-fallback.jpg', full_src: '/parent-fallback.jpg' },
+});
+assert.equal(primary.attrs.src, '/a.jpg');
+assert.equal(link.attrs.href, '/a-full.jpg');
+
 handlers.reset_data();
 assert.equal(primary.attrs.src, '/a.jpg');
 assert.equal(link.attrs.href, '/a-full.jpg');
