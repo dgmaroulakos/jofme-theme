@@ -3,7 +3,7 @@ Contributors: jofme
 Requires at least: 6.4
 Tested up to: 6.8
 Requires PHP: 7.4
-Stable tag: 1.7.79
+Stable tag: 1.7.80
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -30,6 +30,9 @@ strings / wpml-config.xml.
 * WPML or Polylang
 
 == Changelog ==
+
+= 1.7.80 =
+* Category cover (mobile): stack title and description below the hero image instead of overlaying them.
 
 = 1.7.79 =
 * Product copy: men's collection (pa_collection) uses masculine styling-help text — «Δεν είσαι σίγουρος εάν σου πάει; Ρώτησέ μας».

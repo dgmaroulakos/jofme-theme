@@ -16,4 +16,8 @@ assert.match(css, /min-height:\s*clamp\(260px,\s*32vw,\s*650px\)/);
 assert.match(css, /var\(--jofme-layout-width,\s*var\(--jofme-container\)\)/);
 assert.match(css, /\.jofme-catalog-heading--cover \.jofme-catalog-heading__content \.term-description\{max-width:100%\}/);
 assert.doesNotMatch(css, /\.jofme-catalog-heading--cover[^{]*\{[^}]*padding:\s*clamp/s);
+assert.match(css, /@media\(max-width:767px\)/);
+assert.match(css, /flex-direction:\s*column/);
+assert.match(css, /\.jofme-catalog-heading--cover::after\{display:none\}/);
+assert.match(css, /aspect-ratio:\s*4\/3/);
 console.log('PASS: full-bleed category cover with layout-aligned copy');
