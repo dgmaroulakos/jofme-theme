@@ -10,13 +10,24 @@ body.jofme-card-gallery.woocommerce ul.products li.product>.button,body.jofme-ca
 body.jofme-card-gallery .jofme-shop[data-view] ul.products{gap:1px}
 @media(hover:hover) and (pointer:fine){body.jofme-card-gallery .jofme-card-actions{opacity:0;transform:translateY(4px);pointer-events:none;transition:opacity .2s,transform .2s}body.jofme-card-gallery li.product:hover .jofme-card-actions,body.jofme-card-gallery li.product:focus-within .jofme-card-actions{opacity:1;transform:none;pointer-events:auto}}
 body.jofme-card-gallery.woocommerce .jofme-shop[data-view="list"] ul.products{gap:1rem}body.jofme-card-gallery.woocommerce .jofme-shop[data-view="list"] ul.products li.product{padding-top:24px!important}body.jofme-card-gallery.woocommerce .jofme-shop[data-view="list"] ul.products li.product .jofme-card-media{margin:0;width:30%}body.jofme-card-gallery.woocommerce .jofme-shop[data-view="list"] ul.products li.product .woocommerce-loop-product__link>img{margin:0;width:30%}
-/* Stacked scroll gallery (left) + sticky purchase panel (right), Minas-style. */
+/* Stacked scroll gallery (left) + sticky purchase panel (right), Minas-style.
+   Mobile-first: single column by default so Customizer Additional CSS that
+   copies the desktop 2-col grid cannot leave title beside the gallery. */
 body.jofme-product-gallery.woocommerce div.product:not(.product-category){display:block}
-.jofme-product-intro{position:relative;display:grid;grid-template-columns:minmax(0,1.4fr) minmax(260px,.7fr);gap:clamp(1.5rem,4vw,4rem);align-items:start;isolation:isolate}
+.jofme-product-intro{position:relative;display:grid;grid-template-columns:minmax(0,1fr);grid-template-areas:"title" "images" "summary";gap:0;align-items:start;isolation:isolate}
 body.jofme-product-gallery.woocommerce div.product::before,body.jofme-product-gallery.woocommerce div.product::after{display:none}
 body.jofme-product-gallery.woocommerce div.product div.images,body.jofme-product-gallery.woocommerce div.product div.summary{float:none!important;width:100%!important;max-width:none;margin:0;min-width:0}
-body.jofme-product-gallery.woocommerce div.product div.images{grid-column:1;grid-row:1;position:relative;background:transparent}
-body.jofme-product-gallery.woocommerce div.product div.summary{grid-column:2;grid-row:1;position:sticky;top:calc(var(--jofme-header-h) + 1.5rem);align-self:start;max-width:730px;width:100%;margin-inline:auto;padding:clamp(1.5rem,4vh,3rem) 1rem;z-index:2}
+body.jofme-product-gallery.woocommerce div.product div.images{grid-area:images;position:relative;background:transparent}
+body.jofme-product-gallery.woocommerce div.product div.summary{grid-area:summary;position:relative;top:auto;align-self:start;max-width:none;width:100%;margin-inline:auto;padding:2rem 1.25rem;background:var(--jofme-color-surface);border-radius:12px 12px 0 0;z-index:2}
+.jofme-product-title--mobile{display:block;grid-area:title;margin:0;padding:1.25rem 1.25rem .75rem;font-size:clamp(1.1rem,4.5vw,1.35rem);overflow-wrap:anywhere}
+body.jofme-product-gallery.woocommerce div.product .summary .product_title{display:none}
+@media(min-width:768px){
+ .jofme-product-intro{grid-template-columns:minmax(0,1.4fr) minmax(260px,.7fr);grid-template-areas:none;gap:clamp(1.5rem,4vw,4rem)}
+ .jofme-product-title--mobile{display:none;grid-area:auto;padding:0}
+ body.jofme-product-gallery.woocommerce div.product div.images{grid-area:auto;grid-column:1;grid-row:1}
+ body.jofme-product-gallery.woocommerce div.product div.summary{grid-area:auto;grid-column:2;grid-row:1;position:sticky;top:calc(var(--jofme-header-h) + 1.5rem);max-width:730px;padding:clamp(1.5rem,4vh,3rem) 1rem;background:transparent;border-radius:0}
+ body.jofme-product-gallery.woocommerce div.product .summary .product_title{display:block}
+}
 .jofme-stacked-gallery{position:relative}
 .jofme-stacked-gallery__rail{position:absolute;inset-block:0;inset-inline-start:10px;width:16px;z-index:3;pointer-events:none}
 .jofme-stacked-gallery__dots{position:sticky;top:50%;transform:translateY(-50%);display:flex;flex-direction:column;align-items:center;gap:10px;pointer-events:auto;width:16px}
@@ -47,9 +58,10 @@ body.jofme-product-gallery.woocommerce div.product div.summary{grid-column:2;gri
 .jofme-carousel-gallery__thumb{appearance:none;border:0;background:transparent;padding:0;width:112px;height:112px;cursor:pointer;overflow:hidden}
 .jofme-carousel-gallery__thumb img{display:block;width:100%;height:100%;object-fit:contain;object-position:left center;padding:0;background:transparent}
 .jofme-carousel-gallery__thumb.is-active,.jofme-carousel-gallery__thumb[aria-current=true]{outline:2px solid var(--jofme-color-text);outline-offset:2px}
-body.jofme-gallery-carousel.jofme-product-gallery.woocommerce div.product div.summary{position:sticky;top:calc(var(--jofme-header-stuck-h,var(--jofme-header-h)) + 1.5rem)}
+@media(min-width:768px){
+ body.jofme-gallery-carousel.jofme-product-gallery.woocommerce div.product div.summary{position:sticky;top:calc(var(--jofme-header-stuck-h,var(--jofme-header-h)) + 1.5rem)}
+}
 body.jofme-product-gallery.woocommerce div.product .product_title{font-family:var(--jofme-font-body);font-size:clamp(20px,2vw,28px);font-weight:400;line-height:1.35;text-transform:uppercase;letter-spacing:.015em;margin:12px 0}
-.jofme-product-title--mobile{display:none}
 .jofme-product-details__description[open] summary{font-weight:500}
 body.jofme-product-gallery .jofme-product-category{font-size:11px;text-transform:uppercase;text-decoration:underline;text-underline-offset:3px}
 body.jofme-product-gallery .jofme-product-sku{font-size:12px;letter-spacing:.04em;color:var(--jofme-color-text-muted,#6b6560);margin:0 0 1.25rem}
@@ -72,11 +84,12 @@ body.jofme-product-gallery.woocommerce div.product>.woocommerce-tabs,body.jofme-
  body.jofme-card-gallery.woocommerce ul.products li.product .woocommerce-loop-product__link>img,body.jofme-card-gallery.woocommerce ul.products li.product .jofme-card-media img{padding:20px}
  body.jofme-card-gallery.woocommerce ul.products li.product .woocommerce-loop-product__title{font-size:12px;line-height:1.4}
  body.jofme-card-gallery.woocommerce .jofme-shop[data-view="list"] ul.products li.product .jofme-card-media,body.jofme-card-gallery.woocommerce .jofme-shop[data-view="list"] ul.products li.product .woocommerce-loop-product__link>img{margin:0;width:34%}
- .jofme-product-intro{grid-template-columns:minmax(0,1fr);grid-template-areas:"title" "images" "summary";gap:0}
- .jofme-product-title--mobile{display:block;grid-area:title;margin:0;padding:1.25rem 1.25rem .75rem;font-size:clamp(1.1rem,4.5vw,1.35rem);overflow-wrap:anywhere}
- body.jofme-product-gallery.woocommerce div.product div.images{grid-area:images;grid-column:auto;grid-row:auto}
- body.jofme-product-gallery.woocommerce div.product div.summary{position:relative;top:auto;grid-area:summary;grid-column:auto;grid-row:auto;background:var(--jofme-color-surface);border-radius:12px 12px 0 0;padding:2rem 1.25rem;max-width:none}
- body.jofme-product-gallery.woocommerce div.product .summary .product_title{display:none}
+ /* Beat Customizer Additional CSS that re-declares the desktop 2-col intro grid. */
+ body.jofme-product-gallery .jofme-product-intro{grid-template-columns:minmax(0,1fr)!important;grid-template-areas:"title" "images" "summary"!important;gap:0!important}
+ body.jofme-product-gallery .jofme-product-title--mobile{display:block!important;grid-area:title!important}
+ body.jofme-product-gallery.woocommerce div.product div.images{grid-area:images!important;grid-column:auto!important;grid-row:auto!important}
+ body.jofme-product-gallery.woocommerce div.product div.summary{position:relative!important;top:auto!important;grid-area:summary!important;grid-column:auto!important;grid-row:auto!important;background:var(--jofme-color-surface);border-radius:12px 12px 0 0;padding:2rem 1.25rem;max-width:none!important;width:100%!important}
+ body.jofme-product-gallery.woocommerce div.product .summary .product_title{display:none!important}
  .jofme-stacked-gallery__rail{display:none}
  .jofme-carousel-gallery__nav{width:44px;height:44px}
  .jofme-carousel-gallery__thumbs{gap:.55rem}

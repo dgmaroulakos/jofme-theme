@@ -18,6 +18,8 @@ assert.match(php, /function jofme_carousel_product_gallery/);
 assert.match(php, /function jofme_product_gallery/);
 assert.match(css, /\.jofme-product-title--mobile/);
 assert.match(css, /grid-template-areas:\s*"title"\s*"images"\s*"summary"/);
+assert.match(css, /@media\(min-width:768px\)/);
+assert.match(css, /body\.jofme-product-gallery \.jofme-product-intro\{grid-template-columns:minmax\(0,1fr\)!important/);
 assert.match(css, /#jofme-gallery-lightbox/);
 assert.match(css, /\.jofme-carousel-gallery/);
 assert.match(js, /openLightbox/);
